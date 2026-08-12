@@ -1,0 +1,16 @@
+{
+  "schema_version": "canlab.writer-separation-evidence.v1",
+  "status": "passed",
+  "verifier_mode": "read-only",
+  "main_before": "2583d6e47ec4c890fa63b9f81b80f07e5c2586ef",
+  "main_after": "2583d6e47ec4c890fa63b9f81b80f07e5c2586ef",
+  "refs_before_sha256": "fe06169bc80cb50bb4679ffd9081f1f5357e655b61be239836f96e6c61a0ad8f",
+  "refs_after_sha256": "fe06169bc80cb50bb4679ffd9081f1f5357e655b61be239836f96e6c61a0ad8f",
+  "refs_unchanged": true,
+  "cas_state": "pending-owner-action",
+  "authorized_writer": "token-gated-kernel-control-plane",
+  "forbidden_callers": [
+    "verify",
+    "tools/verify-p0-release.sh"
+  ]
+}

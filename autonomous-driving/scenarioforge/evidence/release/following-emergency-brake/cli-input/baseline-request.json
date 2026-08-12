@@ -1,0 +1,1 @@
+{"schema_version":"scenarioforge.run-request.v1","scenario_digest":"3ee472ea1061766ab9af5d3dd2d2984e17e7f81523d54fe31ffc3f4b5a1a1cd8","seeds":[17],"profile":"default","limits":{"workers":1,"aggregate_cpu_threads":2,"max_steps":160,"max_simulated_seconds":30.0,"case_wall_seconds":60.0,"bundle_wall_seconds":600.0,"bundle_disk_bytes":1073741824}}

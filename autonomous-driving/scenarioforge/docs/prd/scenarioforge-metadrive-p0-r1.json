@@ -1,0 +1,416 @@
+{
+  "schema_version": "channel-prd.v1",
+  "channel_id": "ch-prd-clarification-e8ef183385",
+  "thread_id": "main",
+  "revision": 1,
+  "previous_ref": "",
+  "previous_digest": "",
+  "readiness_ref": "channels/ch-prd-clarification-e8ef183385/prd/r1-readiness.json",
+  "readiness_digest": "c7d8b89768cf549c073893fa4d402dcb4d83088d8626ac48421bb381ff78e1ef",
+  "body": {
+    "summary": "交付一个本地单用户、MetaDrive-only 的端到端 ScenarioForge P0：用户可在 Web 中导入、编辑、校验和导出版本化 ScenarioSpec，经 MetaDrive compiler 与受限 runner 执行一个有界 seed batch，获得指标、不可变 Run Bundle、Three.js 精确记录回放及容差型重新仿真报告。P0 以源码、锁文件和本地安装文档交付；依赖锁定、容差校准、许可证矩阵和真实 MetaDrive 容量 benchmark 是发布门禁。",
+    "title": "ScenarioForge MetaDrive-only One-Run P0 PRD",
+    "synthesis": {
+      "title": "ScenarioForge MetaDrive-only One-Run P0 PRD",
+      "decision": "proceed_to_consensus_review",
+      "summary": "交付一个本地单用户、MetaDrive-only 的端到端 ScenarioForge P0：用户可在 Web 中导入、编辑、校验和导出版本化 ScenarioSpec，经 MetaDrive compiler 与受限 runner 执行一个有界 seed batch，获得指标、不可变 Run Bundle、Three.js 精确记录回放及容差型重新仿真报告。P0 以源码、锁文件和本地安装文档交付；依赖锁定、容差校准、许可证矩阵和真实 MetaDrive 容量 benchmark 是发布门禁。",
+      "decisions": [
+        {
+          "id": "D-01",
+          "decision": "P0 唯一执行后端为 MetaDrive，不实现或预埋通用多后端执行路径。",
+          "resolution": "owner_decision",
+          "source_ref": "event:evt-e6be102d30a9"
+        },
+        {
+          "id": "D-02",
+          "decision": "ScenarioSpec 保持 seed-independent；RunRequest 持有有序 seed 列表，CompiledBundle 固化逐 case seed、有效 MetaDrive config 和 provenance。",
+          "resolution": "owner_decision",
+          "source_ref": "event:evt-e6be102d30a9"
+        },
+        {
+          "id": "D-03",
+          "decision": "资源采用安全默认上限/硬 schema 最大值：cases 4/16、actors 4/8、workers 1/2、aggregate CPU threads 2/4、steps 3000/10000、simulated seconds 30/60、wall seconds per case 60/120、bundle wall minutes 10/30、bundle disk GiB 1/2。",
+          "resolution": "owner_decision",
+          "source_ref": "event:evt-e6be102d30a9"
+        },
+        {
+          "id": "D-04",
+          "decision": "配置可以收紧资源限制；提高默认档须有容量证据，放宽硬 schema 最大值必须绑定记录化真实 MetaDrive benchmark 和受控合同修订。",
+          "resolution": "owner_decision",
+          "source_ref": "event:evt-e6be102d30a9"
+        },
+        {
+          "id": "D-05",
+          "decision": "Exact replay 仅读取并校验不可变记录产物；re-simulation 是独立动作，生成新 Run Bundle，并按版本化容差 profile 检查可复现性。",
+          "resolution": "owner_decision",
+          "source_ref": "event:evt-e6be102d30a9"
+        },
+        {
+          "id": "D-06",
+          "decision": "P0 以源码、依赖锁文件和本地安装文档交付，不发布未经逐项许可核验的第三方数据集、资产、容器或二进制。",
+          "resolution": "owner_decision",
+          "source_ref": "event:evt-e6be102d30a9"
+        },
+        {
+          "id": "D-07",
+          "decision": "dependency pins、tolerance calibration、license matrix 和 capacity benchmark 是 implementation/release evidence gates，不是未决产品范围。",
+          "resolution": "owner_decision",
+          "source_ref": "event:evt-e6be102d30a9"
+        },
+        {
+          "id": "D-08",
+          "decision": "repaired-routing 事故中的重复终态按 target_member_id 加 request_id 折叠；同 run_generation 仅采用最新 completed body，旧副本仅作为 incident provenance。",
+          "resolution": "owner_decision",
+          "source_ref": "event:evt-e6be102d30a9",
+          "canonical_bodies": [
+            "sha256:23c4e777d2b85734838a9cd5171a685f53d74b41276af02d270bb1fc92127e26",
+            "sha256:5060a62ec508e9e27447acdfa6debfb114c159359129db1ad657f408e5aaf9e6"
+          ],
+          "discarded_incident_provenance": [
+            "sha256:a570e1e9256d1a6b2506fb60b197b4df9371689cdd46261568b5e81cf363862c",
+            "sha256:d29e85f508876172e2bfd24b2d2e734e258554477e3d7e8f7c4668883bd34daa"
+          ]
+        }
+      ],
+      "assumptions": [
+        "ScenarioSpec、CompiledBundle、RunRecord、RunBundle 和 trace 各自具有独立版本；JSON/YAML 经严格 schema 校验后转换为 RFC 8785 canonical JSON，并以 SHA-256 建立身份链。",
+        "RunRequest seed 列表有序且不重复；Web 默认提交一个 seed，默认 profile 最多接受 4 cases，硬 schema 最大值为 16。",
+        "actors 数量包含恰好一个 ego；默认 profile 最多 4 个 actors，硬 schema 最大值为 8。",
+        "执行期间只有 staging workspace 和 JobStatus 可变；成功、失败、超时、取消或全局故障均须封存可审计 Run Bundle，封存后不得覆盖、追加或恢复。",
+        "场景碰撞或 assertion failure 是有效仿真结果；单 case runtime failure 生成终态记录后可在干净 worker 中继续，取消、bundle 配额或 supervisor 故障停止剩余 cases。",
+        "所有 ScenarioSpec、上传文件、归档、Run Bundle、trace 和 metadata 都是不可信输入；Web 仅监听 loopback，runner 采用最小环境、禁止外网和任意代码执行。",
+        "参考验收环境为锁定的 Linux CPU/headless MetaDrive 和受支持 Chromium；不承诺跨平台、GPU、视频字节或 WebGL 像素一致。",
+        "核心指标至少包括 execution status、scenario verdict、termination reason、steps、simulated seconds、collision/off-road 状态、route progress 和资源使用。",
+        "数值 tolerance profile 只能由重复真实 MetaDrive 运行校准；未有证据前不得宣称既定公差已被验证。"
+      ],
+      "out_of_scope": [
+        "SMARTS 集成",
+        "跨后端映射、执行或结果比较",
+        "自然语言场景生成",
+        "失败用例最小化、搜索或优化",
+        "云端、分布式或多用户执行",
+        "任意 Python、插件或用户策略执行",
+        "自由道路/CAD 级地图创作和未核验外部数据集",
+        "真实车辆、HIL、公共道路决策或安全认证",
+        "跨操作系统、CPU/GPU 的 bitwise trajectory、video 或 pixel 一致性"
+      ],
+      "acceptance_criteria": [
+        {
+          "id": "AC-01",
+          "criterion": "When 语义等价的 JSON 和 YAML ScenarioSpec 被导入，the system shall 生成相同 canonical bytes 和 scenario_digest，并在导出后重新导入时保持语义等价。",
+          "evidence": "schema fixtures、round-trip report、canonical digest report",
+          "evidence_owner": "arch",
+          "reviewer": "critic"
+        },
+        {
+          "id": "AC-02",
+          "criterion": "When 输入含未知版本或字段、非有限数值、危险 YAML、代码、URL、路径、环境引用、越界 seed、actor 或资源值，the system shall 在执行前拒绝并返回字段级诊断。",
+          "evidence": "negative schema and injection fixture matrix",
+          "evidence_owner": "arch",
+          "reviewer": "security_reviewer"
+        },
+        {
+          "id": "AC-03",
+          "criterion": "When 同一 ScenarioSpec 和 RunRequest 被重复编译，the compiler shall 为每个字段产生明确 MetaDrive 映射或错误，并生成相同 CompiledBundle/config digests。",
+          "evidence": "field-mapping coverage、golden compiled configs、digest repeat test",
+          "evidence_owner": "arch",
+          "reviewer": "critic"
+        },
+        {
+          "id": "AC-04",
+          "criterion": "When 一个有效 RunRequest 被接受，the runner shall 仅调用锁定的 MetaDrive backend，并为每个 seed 产生 RunRecord、trace、指标和终态。",
+          "evidence": "real-provider headless smoke Run Bundle、backend call trace、version provenance",
+          "evidence_owner": "arch",
+          "reviewer": "product_pm"
+        },
+        {
+          "id": "AC-05",
+          "criterion": "When 请求处于默认档或硬最大值边界，the runner shall 遵守 cases、actors、workers、CPU threads、steps、simulated time、wall time、bundle time 和 disk 限制；超过最大值的请求必须预检拒绝。",
+          "evidence": "boundary suite、capacity benchmark、limit-hit RunRecords",
+          "evidence_owner": "arch",
+          "reviewer": "security_reviewer"
+        },
+        {
+          "id": "AC-06",
+          "criterion": "When case crash、timeout、cancel、disk exhaustion 或 supervisor failure 被注入，the system shall 保留已完成结果、记录当前和剩余 case 的明确终态、终止进程树并封存 partial/cancelled/aborted Bundle，且不得静默重试。",
+          "evidence": "fault-injection bundles and lifecycle report",
+          "evidence_owner": "arch",
+          "reviewer": "critic"
+        },
+        {
+          "id": "AC-07",
+          "criterion": "When Three.js 加载有效封存 Bundle，the replay shall 在 runner 停止且断网时支持 case 选择、播放、暂停、逐 step、seek、倍速、事件和指标联动，并在 canonical tick 显示记录原值而不调用 MetaDrive。",
+          "evidence": "Chromium replay E2E、checkpoint value assertions、zero MetaDrive/network call log",
+          "evidence_owner": "product_pm",
+          "reviewer": "critic"
+        },
+        {
+          "id": "AC-08",
+          "criterion": "When Bundle、manifest、trace 或 artifact digest 被篡改，the replay and verifier shall 在解析或渲染前 fail closed，并报告具体完整性错误。",
+          "evidence": "tamper matrix and immutable bundle tests",
+          "evidence_owner": "security_reviewer",
+          "reviewer": "critic"
+        },
+        {
+          "id": "AC-09",
+          "criterion": "When 同一 scenario 和 seed 在兼容锁定环境重新仿真，the verifier shall 创建新 Bundle，并以 exact 离散字段和校准后的 tolerance profile 返回 pass 或 regression；兼容键不匹配时只能返回 incompatible。",
+          "evidence": "dependency pins、five-run calibration、oracle diff、baseline compatibility tests",
+          "evidence_owner": "arch",
+          "reviewer": "critic"
+        },
+        {
+          "id": "AC-10",
+          "criterion": "When 用户在受支持 Chromium 走完整黄金路径，the Web application shall 完成导入、编辑、字段错误定位、canonical preview、真实 MetaDrive run、指标、Three.js replay 和 JSON/YAML 导出，关键路径不得使用 mock provider。",
+          "evidence": "production-build Chromium E2E and demo transcript",
+          "evidence_owner": "product_pm",
+          "reviewer": "critic"
+        },
+        {
+          "id": "AC-11",
+          "criterion": "When 依赖和允许资产按文档安装后外网被关闭，the application shall 仅通过 loopback 完成运行和回放；缺失资产时必须 fail closed，不得自动联网。",
+          "evidence": "clean-install report、offline network capture、asset manifest",
+          "evidence_owner": "security_reviewer",
+          "reviewer": "arch"
+        },
+        {
+          "id": "AC-12",
+          "criterion": "When Web/API 接收到非法 Origin、CSRF、能力令牌、路径穿越、symlink/hardlink、archive bomb、XSS、pickle 或 secret canary，the system shall 拒绝请求且不得把 secret、header、cookie 或宿主绝对路径写入日志和 Bundle。",
+          "evidence": "security negative suite、secret scan、process/network isolation report",
+          "evidence_owner": "security_reviewer",
+          "reviewer": "critic"
+        },
+        {
+          "id": "AC-13",
+          "criterion": "When release candidate 被组装，the delivery shall 包含源码、依赖锁、local-install 文档、production build、CI results、SBOM、LICENSE/NOTICE、license matrix、资产来源、capacity benchmark、tolerance report、威胁模型、演示 Bundle 和非生产安全免责声明。",
+          "evidence": "release evidence index",
+          "evidence_owner": "security_reviewer",
+          "reviewer": "product_pm"
+        },
+        {
+          "id": "AC-14",
+          "criterion": "When CI 和 release gates 执行，the project shall 通过 focused schema/compiler/runtime tests、ruff check、pytest、Web production build、Chromium E2E、真实 MetaDrive smoke、容量/确定性 benchmark、许可证和 secret checks。",
+          "evidence": "CI run manifest and release-gate report",
+          "evidence_owner": "arch",
+          "reviewer": "critic"
+        }
+      ],
+      "open_questions": [],
+      "risks": [
+        {
+          "risk": "Owner 冻结的资源默认值或最大值可能无法在真实 MetaDrive 参考环境稳定满足。",
+          "mitigation": "发布前执行容量 benchmark；默认值可凭证据收紧，提高默认档需证据，放宽 schema 最大值需受控合同修订。",
+          "severity": "high"
+        },
+        {
+          "risk": "MetaDrive、Python、物理或数值依赖变化造成轨迹漂移。",
+          "mitigation": "精确依赖锁、platform fingerprint、版本化 tolerance profile 和 incompatible 结果语义。",
+          "severity": "high"
+        },
+        {
+          "risk": "不可信 ScenarioSpec、归档或 replay 数据导致路径逃逸、代码执行、资源耗尽或 XSS。",
+          "mitigation": "严格 schema、安全解析、loopback/CSRF、无 pickle/eval、路径隔离、进程与网络限制及负面测试。",
+          "severity": "high"
+        },
+        {
+          "risk": "封存证据被修改或 replay 被误当作重新仿真的证明。",
+          "mitigation": "完整摘要链、不可变 Bundle、exact replay 与 re-simulation API/UX 分离。",
+          "severity": "high"
+        },
+        {
+          "risk": "MetaDrive 顶层许可证被误认为覆盖所有传递依赖和资产。",
+          "mitigation": "P0 源码交付、SBOM、license matrix、NOTICE、资产来源和 fail-closed packaging gate。",
+          "severity": "high"
+        },
+        {
+          "risk": "repaired-routing 重复终态可能膨胀参与轮次或投票权重。",
+          "mitigation": "按 target_member_id 与 request_id 折叠，仅消费最新 completed body；旧摘要只作 incident provenance。",
+          "severity": "medium"
+        }
+      ],
+      "recommended_workflow": {
+        "status": "recommendation_only_not_started",
+        "type": "dag",
+        "requires_owner_action": true,
+        "work_packages": [
+          {
+            "id": "WP-1",
+            "scope": "ScenarioSpec、CompiledBundle、RunRecord/RunBundle schema、canonicalization、digest 和 fixtures",
+            "depends_on": []
+          },
+          {
+            "id": "WP-2",
+            "scope": "MetaDrive-only compiler、字段映射、逐 case config 和 provenance",
+            "depends_on": [
+              "WP-1"
+            ]
+          },
+          {
+            "id": "WP-3",
+            "scope": "RunWorkspace、worker pool、资源门禁、生命周期、partial semantics 和原子 Bundle sealing",
+            "depends_on": [
+              "WP-1",
+              "WP-2"
+            ]
+          },
+          {
+            "id": "WP-4",
+            "scope": "trace、metrics、oracle、baseline compatibility、tolerance calibration 和 capacity benchmark",
+            "depends_on": [
+              "WP-3"
+            ]
+          },
+          {
+            "id": "WP-5",
+            "scope": "Web editor、validation UX、2D preview、run controls 和状态展示",
+            "depends_on": [
+              "WP-1",
+              "WP-3"
+            ]
+          },
+          {
+            "id": "WP-6",
+            "scope": "Three.js exact recorded replay、完整性校验、timeline、事件和指标",
+            "depends_on": [
+              "WP-4"
+            ]
+          },
+          {
+            "id": "WP-7",
+            "scope": "loopback/API、输入与路径隔离、offline、secret、license 和安全负面测试",
+            "depends_on": [
+              "WP-2",
+              "WP-3",
+              "WP-5",
+              "WP-6"
+            ]
+          },
+          {
+            "id": "WP-8",
+            "scope": "production build、CI、source/lockfile packaging、本地安装文档和端到端 release evidence",
+            "depends_on": [
+              "WP-4",
+              "WP-5",
+              "WP-6",
+              "WP-7"
+            ]
+          }
+        ],
+        "release_gates": [
+          "dependency pins",
+          "real-MetaDrive capacity benchmark",
+          "tolerance calibration",
+          "license matrix and SBOM",
+          "offline/security negative suite",
+          "production build and Chromium E2E",
+          "focused tests and executable demo"
+        ],
+        "task_created": false,
+        "workflow_started": false
+      },
+      "source_refs": [
+        "event:evt-f1569932306c",
+        "event:evt-041a492be57f",
+        "event:evt-d5ff2c53f058",
+        "event:evt-7e861db2db3d",
+        "event:evt-c4a9f370fa1c",
+        "event:evt-8ed7d6ffa58c",
+        "event:evt-375b10d99d3c",
+        "event:evt-e6be102d30a9",
+        "event:evt-1c1d47f2e68c",
+        "incident-provenance:sha256:a570e1e9256d1a6b2506fb60b197b4df9371689cdd46261568b5e81cf363862c",
+        "incident-provenance:sha256:d29e85f508876172e2bfd24b2d2e734e258554477e3d7e8f7c4668883bd34daa"
+      ],
+      "evidence_refs": [
+        "https://github.com/metadriverse/metadrive",
+        "https://metadrive-simulator.readthedocs.io/en/latest/system_design.html",
+        "https://metadrive-simulator.readthedocs.io/en/latest/install.html",
+        "context-pack:ctx-4a8d440f544a2439#sha256=d2613c73fcd146c5b6731837ed4a9d01d677c0ff1b3a7c02eb13443fef063df4"
+      ],
+      "consumed_contribution_refs": [
+        "channels/ch-prd-clarification-e8ef183385/messages/msg-reply-f77ffac3c6e917ca-reply-82db3cc1e5e1b87c.json",
+        "channels/ch-prd-clarification-e8ef183385/messages/msg-reply-8a493c5c23a9a0e0-reply-9dc1d16bad6aba2e.json",
+        "channels/ch-prd-clarification-e8ef183385/messages/msg-reply-650278b2f3453997-reply-91920e193c77d013.json",
+        "channels/ch-prd-clarification-e8ef183385/messages/msg-reply-2a2ec14e234bd37d-reply-23c4e777d2b85734.json",
+        "channels/ch-prd-clarification-e8ef183385/messages/msg-reply-a310a13d6e8f653e-reply-5060a62ec508e9e2.json"
+      ],
+      "consumed_contribution_digests": [
+        "sha256:82db3cc1e5e1b87ce299620c1f43ff35b2b4053c01f3d7887c64ecfc71732d4a",
+        "sha256:9dc1d16bad6aba2ee1631ee29a5d1ea25d851727a108f3012e57070fbb97d709",
+        "sha256:91920e193c77d0133e30082e63c4ea92b61927b618a49ecc761e94f80586c0ae",
+        "sha256:23c4e777d2b85734838a9cd5171a685f53d74b41276af02d270bb1fc92127e26",
+        "sha256:5060a62ec508e9e27447acdfa6debfb114c159359129db1ad657f408e5aaf9e6"
+      ],
+      "classification": {
+        "template_id": "prd-clarification",
+        "priority": "p0",
+        "scope": "one-run-local-mvp",
+        "execution_backend": "metadrive",
+        "distribution": "source-lockfile-local-install",
+        "readiness": "ready_for_consensus_review"
+      },
+      "dissent": [
+        {
+          "roles": [
+            "arch",
+            "critic",
+            "product_pm",
+            "security_reviewer"
+          ],
+          "content": "早期资源上限与并发提案互相冲突，且缺少真实 MetaDrive benchmark，不能把任一候选值描述为已验证容量。",
+          "resolution": "Owner 已冻结新的默认/最大值对；综合稿将其视为产品边界，同时保留 capacity benchmark 为发布门禁。",
+          "evidence_that_can_change_conclusion": "绑定参考硬件、依赖锁和完整资源观测的真实 MetaDrive benchmark；放宽 schema 最大值还需要受控合同修订。"
+        },
+        {
+          "role": "security_reviewer",
+          "content": "反对将本地来源或 Run Bundle 视为受信输入。",
+          "resolution": "采纳；所有输入、归档和 replay 产物均按不可信数据处理。",
+          "evidence_that_can_change_conclusion": "无；这是 P0 安全不变量。"
+        },
+        {
+          "role": "product_pm",
+          "content": "Round 1 曾建议更大的 batch 和并发。",
+          "resolution": "该建议已撤回，且被 owner 的 cases 4/16、workers 1/2 新资源合同取代。",
+          "evidence_that_can_change_conclusion": "未来真实 MetaDrive benchmark 和新的 owner 决策，仅适用于后续合同版本。"
+        },
+        {
+          "roles": [
+            "security_reviewer",
+            "synthesizer"
+          ],
+          "content": "路由修复期间同一 request_id/run_generation 产生重复 terminal bodies。",
+          "resolution": "按 owner 指示仅采用各角色最新 completed body；旧副本不计为讨论轮次、贡献或投票。",
+          "evidence_that_can_change_conclusion": "仅 incident 审计能纠正 canonical latest-body 身份；不得按正文数量重新计票。"
+        }
+      ],
+      "confidence": "high"
+    },
+    "markdown": "# ScenarioForge MetaDrive-only One-Run P0 PRD\n\n## Source Requirement\nDefine a realistic, executable one-run MVP for Zaofu ScenarioForge. P0 must use MetaDrive as its only execution backend and include a versioned ScenarioSpec; JSON/YAML import, export, and schema validation; a Web scenario editor; MetaDrive compilation and lifecycle controls; Three.js replay; metrics; bounded local batch execution; deterministic seed replay; traceability to scenario, code, upstream version, and seed; focused tests; a production build; CI; licenses; and a non-production safety disclaimer. SMARTS integration, cross-backend comparison, natural-language scenario generation, and failure-case minimization are explicit P1/P2 non-goals and must not enter P0. Evaluate the scope through product, simulation architecture, frontend/interaction, verification/safety, and open-source compliance perspectives. Resolve adapter boundaries, reproducibility guarantees, resource limits, acceptance evidence, executable-demo criteria, and explicit non-goals into a coherent PRD suitable for one end-to-end run.\n\n## Requirement\n交付一个本地单用户、MetaDrive-only 的端到端 ScenarioForge P0：用户可在 Web 中导入、编辑、校验和导出版本化 ScenarioSpec，经 MetaDrive compiler 与受限 runner 执行一个有界 seed batch，获得指标、不可变 Run Bundle、Three.js 精确记录回放及容差型重新仿真报告。P0 以源码、锁文件和本地安装文档交付；依赖锁定、容差校准、许可证矩阵和真实 MetaDrive 容量 benchmark 是发布门禁。\n\n## Decisions\n- {\"decision\":\"P0 唯一执行后端为 MetaDrive，不实现或预埋通用多后端执行路径。\",\"id\":\"D-01\",\"resolution\":\"owner_decision\",\"source_ref\":\"event:evt-e6be102d30a9\"}\n- {\"decision\":\"ScenarioSpec 保持 seed-independent；RunRequest 持有有序 seed 列表，CompiledBundle 固化逐 case seed、有效 MetaDrive config 和 provenance。\",\"id\":\"D-02\",\"resolution\":\"owner_decision\",\"source_ref\":\"event:evt-e6be102d30a9\"}\n- {\"decision\":\"资源采用安全默认上限/硬 schema 最大值：cases 4/16、actors 4/8、workers 1/2、aggregate CPU threads 2/4、steps 3000/10000、simulated seconds 30/60、wall seconds per case 60/120、bundle wall minutes 10/30、bundle disk GiB 1/2。\",\"id\":\"D-03\",\"resolution\":\"owner_decision\",\"source_ref\":\"event:evt-e6be102d30a9\"}\n- {\"decision\":\"配置可以收紧资源限制；提高默认档须有容量证据，放宽硬 schema 最大值必须绑定记录化真实 MetaDrive benchmark 和受控合同修订。\",\"id\":\"D-04\",\"resolution\":\"owner_decision\",\"source_ref\":\"event:evt-e6be102d30a9\"}\n- {\"decision\":\"Exact replay 仅读取并校验不可变记录产物；re-simulation 是独立动作，生成新 Run Bundle，并按版本化容差 profile 检查可复现性。\",\"id\":\"D-05\",\"resolution\":\"owner_decision\",\"source_ref\":\"event:evt-e6be102d30a9\"}\n- {\"decision\":\"P0 以源码、依赖锁文件和本地安装文档交付，不发布未经逐项许可核验的第三方数据集、资产、容器或二进制。\",\"id\":\"D-06\",\"resolution\":\"owner_decision\",\"source_ref\":\"event:evt-e6be102d30a9\"}\n- {\"decision\":\"dependency pins、tolerance calibration、license matrix 和 capacity benchmark 是 implementation/release evidence gates，不是未决产品范围。\",\"id\":\"D-07\",\"resolution\":\"owner_decision\",\"source_ref\":\"event:evt-e6be102d30a9\"}\n- {\"canonical_bodies\":[\"sha256:23c4e777d2b85734838a9cd5171a685f53d74b41276af02d270bb1fc92127e26\",\"sha256:5060a62ec508e9e27447acdfa6debfb114c159359129db1ad657f408e5aaf9e6\"],\"decision\":\"repaired-routing 事故中的重复终态按 target_member_id 加 request_id 折叠；同 run_generation 仅采用最新 completed body，旧副本仅作为 incident provenance。\",\"discarded_incident_provenance\":[\"sha256:a570e1e9256d1a6b2506fb60b197b4df9371689cdd46261568b5e81cf363862c\",\"sha256:d29e85f508876172e2bfd24b2d2e734e258554477e3d7e8f7c4668883bd34daa\"],\"id\":\"D-08\",\"resolution\":\"owner_decision\",\"source_ref\":\"event:evt-e6be102d30a9\"}\n\n## Assumptions\n- ScenarioSpec、CompiledBundle、RunRecord、RunBundle 和 trace 各自具有独立版本；JSON/YAML 经严格 schema 校验后转换为 RFC 8785 canonical JSON，并以 SHA-256 建立身份链。\n- RunRequest seed 列表有序且不重复；Web 默认提交一个 seed，默认 profile 最多接受 4 cases，硬 schema 最大值为 16。\n- actors 数量包含恰好一个 ego；默认 profile 最多 4 个 actors，硬 schema 最大值为 8。\n- 执行期间只有 staging workspace 和 JobStatus 可变；成功、失败、超时、取消或全局故障均须封存可审计 Run Bundle，封存后不得覆盖、追加或恢复。\n- 场景碰撞或 assertion failure 是有效仿真结果；单 case runtime failure 生成终态记录后可在干净 worker 中继续，取消、bundle 配额或 supervisor 故障停止剩余 cases。\n- 所有 ScenarioSpec、上传文件、归档、Run Bundle、trace 和 metadata 都是不可信输入；Web 仅监听 loopback，runner 采用最小环境、禁止外网和任意代码执行。\n- 参考验收环境为锁定的 Linux CPU/headless MetaDrive 和受支持 Chromium；不承诺跨平台、GPU、视频字节或 WebGL 像素一致。\n- 核心指标至少包括 execution status、scenario verdict、termination reason、steps、simulated seconds、collision/off-road 状态、route progress 和资源使用。\n- 数值 tolerance profile 只能由重复真实 MetaDrive 运行校准；未有证据前不得宣称既定公差已被验证。\n\n## Out of Scope\n- SMARTS 集成\n- 跨后端映射、执行或结果比较\n- 自然语言场景生成\n- 失败用例最小化、搜索或优化\n- 云端、分布式或多用户执行\n- 任意 Python、插件或用户策略执行\n- 自由道路/CAD 级地图创作和未核验外部数据集\n- 真实车辆、HIL、公共道路决策或安全认证\n- 跨操作系统、CPU/GPU 的 bitwise trajectory、video 或 pixel 一致性\n\n## Acceptance Criteria\n- {\"criterion\":\"When 语义等价的 JSON 和 YAML ScenarioSpec 被导入，the system shall 生成相同 canonical bytes 和 scenario_digest，并在导出后重新导入时保持语义等价。\",\"evidence\":\"schema fixtures、round-trip report、canonical digest report\",\"evidence_owner\":\"arch\",\"id\":\"AC-01\",\"reviewer\":\"critic\"}\n- {\"criterion\":\"When 输入含未知版本或字段、非有限数值、危险 YAML、代码、URL、路径、环境引用、越界 seed、actor 或资源值，the system shall 在执行前拒绝并返回字段级诊断。\",\"evidence\":\"negative schema and injection fixture matrix\",\"evidence_owner\":\"arch\",\"id\":\"AC-02\",\"reviewer\":\"security_reviewer\"}\n- {\"criterion\":\"When 同一 ScenarioSpec 和 RunRequest 被重复编译，the compiler shall 为每个字段产生明确 MetaDrive 映射或错误，并生成相同 CompiledBundle/config digests。\",\"evidence\":\"field-mapping coverage、golden compiled configs、digest repeat test\",\"evidence_owner\":\"arch\",\"id\":\"AC-03\",\"reviewer\":\"critic\"}\n- {\"criterion\":\"When 一个有效 RunRequest 被接受，the runner shall 仅调用锁定的 MetaDrive backend，并为每个 seed 产生 RunRecord、trace、指标和终态。\",\"evidence\":\"real-provider headless smoke Run Bundle、backend call trace、version provenance\",\"evidence_owner\":\"arch\",\"id\":\"AC-04\",\"reviewer\":\"product_pm\"}\n- {\"criterion\":\"When 请求处于默认档或硬最大值边界，the runner shall 遵守 cases、actors、workers、CPU threads、steps、simulated time、wall time、bundle time 和 disk 限制；超过最大值的请求必须预检拒绝。\",\"evidence\":\"boundary suite、capacity benchmark、limit-hit RunRecords\",\"evidence_owner\":\"arch\",\"id\":\"AC-05\",\"reviewer\":\"security_reviewer\"}\n- {\"criterion\":\"When case crash、timeout、cancel、disk exhaustion 或 supervisor failure 被注入，the system shall 保留已完成结果、记录当前和剩余 case 的明确终态、终止进程树并封存 partial/cancelled/aborted Bundle，且不得静默重试。\",\"evidence\":\"fault-injection bundles and lifecycle report\",\"evidence_owner\":\"arch\",\"id\":\"AC-06\",\"reviewer\":\"critic\"}\n- {\"criterion\":\"When Three.js 加载有效封存 Bundle，the replay shall 在 runner 停止且断网时支持 case 选择、播放、暂停、逐 step、seek、倍速、事件和指标联动，并在 canonical tick 显示记录原值而不调用 MetaDrive。\",\"evidence\":\"Chromium replay E2E、checkpoint value assertions、zero MetaDrive/network call log\",\"evidence_owner\":\"product_pm\",\"id\":\"AC-07\",\"reviewer\":\"critic\"}\n- {\"criterion\":\"When Bundle、manifest、trace 或 artifact digest 被篡改，the replay and verifier shall 在解析或渲染前 fail closed，并报告具体完整性错误。\",\"evidence\":\"tamper matrix and immutable bundle tests\",\"evidence_owner\":\"security_reviewer\",\"id\":\"AC-08\",\"reviewer\":\"critic\"}\n- {\"criterion\":\"When 同一 scenario 和 seed 在兼容锁定环境重新仿真，the verifier shall 创建新 Bundle，并以 exact 离散字段和校准后的 tolerance profile 返回 pass 或 regression；兼容键不匹配时只能返回 incompatible。\",\"evidence\":\"dependency pins、five-run calibration、oracle diff、baseline compatibility tests\",\"evidence_owner\":\"arch\",\"id\":\"AC-09\",\"reviewer\":\"critic\"}\n- {\"criterion\":\"When 用户在受支持 Chromium 走完整黄金路径，the Web application shall 完成导入、编辑、字段错误定位、canonical preview、真实 MetaDrive run、指标、Three.js replay 和 JSON/YAML 导出，关键路径不得使用 mock provider。\",\"evidence\":\"production-build Chromium E2E and demo transcript\",\"evidence_owner\":\"product_pm\",\"id\":\"AC-10\",\"reviewer\":\"critic\"}\n- {\"criterion\":\"When 依赖和允许资产按文档安装后外网被关闭，the application shall 仅通过 loopback 完成运行和回放；缺失资产时必须 fail closed，不得自动联网。\",\"evidence\":\"clean-install report、offline network capture、asset manifest\",\"evidence_owner\":\"security_reviewer\",\"id\":\"AC-11\",\"reviewer\":\"arch\"}\n- {\"criterion\":\"When Web/API 接收到非法 Origin、CSRF、能力令牌、路径穿越、symlink/hardlink、archive bomb、XSS、pickle 或 secret canary，the system shall 拒绝请求且不得把 secret、header、cookie 或宿主绝对路径写入日志和 Bundle。\",\"evidence\":\"security negative suite、secret scan、process/network isolation report\",\"evidence_owner\":\"security_reviewer\",\"id\":\"AC-12\",\"reviewer\":\"critic\"}\n- {\"criterion\":\"When release candidate 被组装，the delivery shall 包含源码、依赖锁、local-install 文档、production build、CI results、SBOM、LICENSE/NOTICE、license matrix、资产来源、capacity benchmark、tolerance report、威胁模型、演示 Bundle 和非生产安全免责声明。\",\"evidence\":\"release evidence index\",\"evidence_owner\":\"security_reviewer\",\"id\":\"AC-13\",\"reviewer\":\"product_pm\"}\n- {\"criterion\":\"When CI 和 release gates 执行，the project shall 通过 focused schema/compiler/runtime tests、ruff check、pytest、Web production build、Chromium E2E、真实 MetaDrive smoke、容量/确定性 benchmark、许可证和 secret checks。\",\"evidence\":\"CI run manifest and release-gate report\",\"evidence_owner\":\"arch\",\"id\":\"AC-14\",\"reviewer\":\"critic\"}\n\n## Risks\n- {\"mitigation\":\"发布前执行容量 benchmark；默认值可凭证据收紧，提高默认档需证据，放宽 schema 最大值需受控合同修订。\",\"risk\":\"Owner 冻结的资源默认值或最大值可能无法在真实 MetaDrive 参考环境稳定满足。\",\"severity\":\"high\"}\n- {\"mitigation\":\"精确依赖锁、platform fingerprint、版本化 tolerance profile 和 incompatible 结果语义。\",\"risk\":\"MetaDrive、Python、物理或数值依赖变化造成轨迹漂移。\",\"severity\":\"high\"}\n- {\"mitigation\":\"严格 schema、安全解析、loopback/CSRF、无 pickle/eval、路径隔离、进程与网络限制及负面测试。\",\"risk\":\"不可信 ScenarioSpec、归档或 replay 数据导致路径逃逸、代码执行、资源耗尽或 XSS。\",\"severity\":\"high\"}\n- {\"mitigation\":\"完整摘要链、不可变 Bundle、exact replay 与 re-simulation API/UX 分离。\",\"risk\":\"封存证据被修改或 replay 被误当作重新仿真的证明。\",\"severity\":\"high\"}\n- {\"mitigation\":\"P0 源码交付、SBOM、license matrix、NOTICE、资产来源和 fail-closed packaging gate。\",\"risk\":\"MetaDrive 顶层许可证被误认为覆盖所有传递依赖和资产。\",\"severity\":\"high\"}\n- {\"mitigation\":\"按 target_member_id 与 request_id 折叠，仅消费最新 completed body；旧摘要只作 incident provenance。\",\"risk\":\"repaired-routing 重复终态可能膨胀参与轮次或投票权重。\",\"severity\":\"medium\"}\n\n## Dissent\n- {\"content\":\"早期资源上限与并发提案互相冲突，且缺少真实 MetaDrive benchmark，不能把任一候选值描述为已验证容量。\",\"evidence_that_can_change_conclusion\":\"绑定参考硬件、依赖锁和完整资源观测的真实 MetaDrive benchmark；放宽 schema 最大值还需要受控合同修订。\",\"resolution\":\"Owner 已冻结新的默认/最大值对；综合稿将其视为产品边界，同时保留 capacity benchmark 为发布门禁。\",\"roles\":[\"arch\",\"critic\",\"product_pm\",\"security_reviewer\"]}\n- {\"content\":\"反对将本地来源或 Run Bundle 视为受信输入。\",\"evidence_that_can_change_conclusion\":\"无；这是 P0 安全不变量。\",\"resolution\":\"采纳；所有输入、归档和 replay 产物均按不可信数据处理。\",\"role\":\"security_reviewer\"}\n- {\"content\":\"Round 1 曾建议更大的 batch 和并发。\",\"evidence_that_can_change_conclusion\":\"未来真实 MetaDrive benchmark 和新的 owner 决策，仅适用于后续合同版本。\",\"resolution\":\"该建议已撤回，且被 owner 的 cases 4/16、workers 1/2 新资源合同取代。\",\"role\":\"product_pm\"}\n- {\"content\":\"路由修复期间同一 request_id/run_generation 产生重复 terminal bodies。\",\"evidence_that_can_change_conclusion\":\"仅 incident 审计能纠正 canonical latest-body 身份；不得按正文数量重新计票。\",\"resolution\":\"按 owner 指示仅采用各角色最新 completed body；旧副本不计为讨论轮次、贡献或投票。\",\"roles\":[\"security_reviewer\",\"synthesizer\"]}\n\n## Open Questions\n- None.\n\n## Recommended Workflow\n```json\n{\n  \"release_gates\": [\n    \"dependency pins\",\n    \"real-MetaDrive capacity benchmark\",\n    \"tolerance calibration\",\n    \"license matrix and SBOM\",\n    \"offline/security negative suite\",\n    \"production build and Chromium E2E\",\n    \"focused tests and executable demo\"\n  ],\n  \"requires_owner_action\": true,\n  \"status\": \"recommendation_only_not_started\",\n  \"task_created\": false,\n  \"type\": \"dag\",\n  \"work_packages\": [\n    {\n      \"depends_on\": [],\n      \"id\": \"WP-1\",\n      \"scope\": \"ScenarioSpec、CompiledBundle、RunRecord/RunBundle schema、canonicalization、digest 和 fixtures\"\n    },\n    {\n      \"depends_on\": [\n        \"WP-1\"\n      ],\n      \"id\": \"WP-2\",\n      \"scope\": \"MetaDrive-only compiler、字段映射、逐 case config 和 provenance\"\n    },\n    {\n      \"depends_on\": [\n        \"WP-1\",\n        \"WP-2\"\n      ],\n      \"id\": \"WP-3\",\n      \"scope\": \"RunWorkspace、worker pool、资源门禁、生命周期、partial semantics 和原子 Bundle sealing\"\n    },\n    {\n      \"depends_on\": [\n        \"WP-3\"\n      ],\n      \"id\": \"WP-4\",\n      \"scope\": \"trace、metrics、oracle、baseline compatibility、tolerance calibration 和 capacity benchmark\"\n    },\n    {\n      \"depends_on\": [\n        \"WP-1\",\n        \"WP-3\"\n      ],\n      \"id\": \"WP-5\",\n      \"scope\": \"Web editor、validation UX、2D preview、run controls 和状态展示\"\n    },\n    {\n      \"depends_on\": [\n        \"WP-4\"\n      ],\n      \"id\": \"WP-6\",\n      \"scope\": \"Three.js exact recorded replay、完整性校验、timeline、事件和指标\"\n    },\n    {\n      \"depends_on\": [\n        \"WP-2\",\n        \"WP-3\",\n        \"WP-5\",\n        \"WP-6\"\n      ],\n      \"id\": \"WP-7\",\n      \"scope\": \"loopback/API、输入与路径隔离、offline、secret、license 和安全负面测试\"\n    },\n    {\n      \"depends_on\": [\n        \"WP-4\",\n        \"WP-5\",\n        \"WP-6\",\n        \"WP-7\"\n      ],\n      \"id\": \"WP-8\",\n      \"scope\": \"production build、CI、source/lockfile packaging、本地安装文档和端到端 release evidence\"\n    }\n  ],\n  \"workflow_started\": false\n}\n```\n\n## Provenance\n- Channel: `ch-prd-clarification-e8ef183385`\n- Thread: `main`\n- Source: `event:evt-c4a9f370fa1c`\n- Source: `event:evt-8ed7d6ffa58c`\n- Source: `event:evt-3a928b6f0d7c`\n- Source: `event:evt-375b10d99d3c`\n- Source: `event:evt-e6be102d30a9`\n- Source: `event:evt-ff9707d48524`\n- Source: `event:evt-acbdd545b3b3`\n- Source: `event:evt-1c1d47f2e68c`\n- Source: `event:evt-a90100a7e2ff`\n- Source: `event:evt-f1569932306c`\n- Source: `event:evt-041a492be57f`\n- Source: `event:evt-d5ff2c53f058`\n- Source: `event:evt-7e861db2db3d`\n- Source: `incident-provenance:sha256:a570e1e9256d1a6b2506fb60b197b4df9371689cdd46261568b5e81cf363862c`\n- Source: `incident-provenance:sha256:d29e85f508876172e2bfd24b2d2e734e258554477e3d7e8f7c4668883bd34daa`\n- Source: `event:evt-c63f9fe9ad9e`\n- Source: `channel:ch-prd-clarification-e8ef183385/main`\n",
+    "spec_path": "channel-artifacts/ch-prd-clarification-e8ef183385/synth-f8126aab62fb.md",
+    "spec_digest": "23a3446bef59ce94e0052eed09f637e931281e93b9f70421532d9b434f45be59",
+    "source_refs": [
+      "event:evt-c4a9f370fa1c",
+      "event:evt-8ed7d6ffa58c",
+      "event:evt-3a928b6f0d7c",
+      "event:evt-375b10d99d3c",
+      "event:evt-e6be102d30a9",
+      "event:evt-ff9707d48524",
+      "event:evt-acbdd545b3b3",
+      "event:evt-1c1d47f2e68c",
+      "event:evt-a90100a7e2ff",
+      "event:evt-f1569932306c",
+      "event:evt-041a492be57f",
+      "event:evt-d5ff2c53f058",
+      "event:evt-7e861db2db3d",
+      "incident-provenance:sha256:a570e1e9256d1a6b2506fb60b197b4df9371689cdd46261568b5e81cf363862c",
+      "incident-provenance:sha256:d29e85f508876172e2bfd24b2d2e734e258554477e3d7e8f7c4668883bd34daa",
+      "event:evt-c63f9fe9ad9e",
+      "channel:ch-prd-clarification-e8ef183385/main"
+    ],
+    "evidence_refs": [
+      "https://github.com/metadriverse/metadrive",
+      "https://metadrive-simulator.readthedocs.io/en/latest/system_design.html",
+      "https://metadrive-simulator.readthedocs.io/en/latest/install.html",
+      "context-pack:ctx-4a8d440f544a2439#sha256=d2613c73fcd146c5b6731837ed4a9d01d677c0ff1b3a7c02eb13443fef063df4"
+    ]
+  }
+}

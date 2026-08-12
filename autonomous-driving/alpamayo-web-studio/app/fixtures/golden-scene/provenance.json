@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "golden-scene-provenance.v1",
+  "scene": {
+    "name": "public-road-driving-demo",
+    "navigationInstruction": "Continue through the intersection while yielding to crossing traffic.",
+    "cameras": [
+      {
+        "cameraId": 0,
+        "frames": [
+          { "frameId": "cam-0-000", "assetRef": "renders/camera-0/frame-000.png", "contentType": "image/png", "sha256": "fda4e0e5b49cdb194b44beadd718a9a125311b3181e3069832e46e5c810d0dc0" },
+          { "frameId": "cam-0-001", "assetRef": "renders/camera-0/frame-001.png", "contentType": "image/png", "sha256": "45e1f7245623f784c5eb5400f930bb479704d317c688a6dd50dd610e9a9ce8af" },
+          { "frameId": "cam-0-002", "assetRef": "renders/camera-0/frame-002.png", "contentType": "image/png", "sha256": "2348349c50c2a3bb81e7cd7e8976d4c940e48ed7a696b6742af5a8f3f45ffbff" },
+          { "frameId": "cam-0-003", "assetRef": "renders/camera-0/frame-003.png", "contentType": "image/png", "sha256": "b96641b8be2bfaef14342d8ae8f0641305a167c212553e4c34b38b7722915f23" }
+        ]
+      },
+      {
+        "cameraId": 1,
+        "frames": [
+          { "frameId": "cam-1-000", "assetRef": "renders/camera-1/frame-000.png", "contentType": "image/png", "sha256": "a56ab82bf32802344d2c8dc1bd23814fbaee133a31adddfa0b3957e960dabd3a" },
+          { "frameId": "cam-1-001", "assetRef": "renders/camera-1/frame-001.png", "contentType": "image/png", "sha256": "d6bf6c66ca944061b688fdc27a42507a8255bddf872f840a4314423e5eaf7196" },
+          { "frameId": "cam-1-002", "assetRef": "renders/camera-1/frame-002.png", "contentType": "image/png", "sha256": "6fbbd6bef1cde2e584252819354bc3bdb76c3736d2f7353fcb77b6d1cb852eae" },
+          { "frameId": "cam-1-003", "assetRef": "renders/camera-1/frame-003.png", "contentType": "image/png", "sha256": "ce176cab585ccbebc36aa31ad60d71145e1ce4de8265a958321bb4b12b02ca45" }
+        ]
+      },
+      {
+        "cameraId": 2,
+        "frames": [
+          { "frameId": "cam-2-000", "assetRef": "renders/camera-2/frame-000.png", "contentType": "image/png", "sha256": "472bc43788283e96d2682b436aa0e7261b0c49b40bb6783c06bbc4811b134af1" },
+          { "frameId": "cam-2-001", "assetRef": "renders/camera-2/frame-001.png", "contentType": "image/png", "sha256": "58dce9f5ed579ab33070c465636d29b7d58433175b4149b68bec08136e30d972" },
+          { "frameId": "cam-2-002", "assetRef": "renders/camera-2/frame-002.png", "contentType": "image/png", "sha256": "97b7605c7c5c47d7f1aedcf188d1d467f72b1af9a5e3a3f22881869f1ee068e0" },
+          { "frameId": "cam-2-003", "assetRef": "renders/camera-2/frame-003.png", "contentType": "image/png", "sha256": "0c32af554bb0aaca59b810fe9210ec19c4a69f217713fc6135a5aeab53f681b6" }
+        ]
+      },
+      {
+        "cameraId": 6,
+        "frames": [
+          { "frameId": "cam-6-000", "assetRef": "renders/camera-6/frame-000.png", "contentType": "image/png", "sha256": "ddca9bc738ba8c117a73f5e90ecbb14cef3266a09c9f8d3d7871af2d6446dfb5" },
+          { "frameId": "cam-6-001", "assetRef": "renders/camera-6/frame-001.png", "contentType": "image/png", "sha256": "8d6630be08e1b5ec5041f88ee764556ccbb4d6c6def30d7eb10805a1eb7dc65d" },
+          { "frameId": "cam-6-002", "assetRef": "renders/camera-6/frame-002.png", "contentType": "image/png", "sha256": "aec442c346747f8c55c271629c5f495b2f0393a99b9453c9d9e1c91d3f532c6d" },
+          { "frameId": "cam-6-003", "assetRef": "renders/camera-6/frame-003.png", "contentType": "image/png", "sha256": "6d23b153453777d291e801ec6148bd136d9d687e5a819b1839e4fb0d9ea48174" }
+        ]
+      }
+    ],
+    "history": {
+      "positions": [[-1.5, 0, 0], [-1.4, 0, 0], [-1.3, 0, 0], [-1.2, 0, 0], [-1.1, 0, 0], [-1, 0, 0], [-0.9, 0, 0], [-0.8, 0, 0], [-0.7, 0, 0], [-0.6, 0, 0], [-0.5, 0, 0], [-0.4, 0, 0], [-0.3, 0, 0], [-0.2, 0, 0], [-0.1, 0, 0], [0, 0, 0]],
+      "rotations": [[[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]]]
+    }
+  },
+  "provenance": {
+    "sourceId": "wikimedia-commons-road-24769469397",
+    "sourceType": "public-domain-road-photograph",
+    "roadVisual": {
+      "assetRef": "e2e/studio/fixtures/highway.png",
+      "contentType": "image/png",
+      "sha256": "a2e1c579e0575b158b4655b810e58c2faab9acda91f91331182457bb1fbf8326",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Road_(24769469397).png",
+      "license": "CC0-1.0"
+    },
+    "authorization": {
+      "reference": "DEMO-AUTH-2026-001",
+      "approvedFor": "Internal demo and evaluation only",
+      "approvedByRole": "demo-data-governance",
+      "approvedAt": "2026-08-01"
+    },
+    "replay": {
+      "generator": "synthetic-scene-renderer",
+      "generatorVersion": "1.0.0",
+      "seed": 20260810,
+      "checksumAlgorithm": "sha256"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+VERSION "1.0.0"
+
+NS_ :
+    NS_DESC_
+    CM_
+    BA_DEF_
+    BA_
+    VAL_
+
+BS_:
+
+BU_: CANLAB
+
+BO_ 256 Powertrain: 8 CANLAB
+ SG_ EngineRpm : 0|16@1+ (0.25,0) [0|16000] "rpm" CANLAB
+ SG_ VehicleSpeed : 16|16@1+ (0.01,0) [0|655.35] "km/h" CANLAB
+ SG_ ThrottlePosition : 32|8@1+ (0.4,0) [0|100] "%" CANLAB
+ SG_ BrakePressure : 40|8@1+ (0.5,0) [0|127.5] "bar" CANLAB
+ SG_ SelectedGear : 48|8@1+ (1,0) [0|3] "" CANLAB
+ SG_ TurnIndicator : 56|8@1+ (1,0) [0|3] "" CANLAB
+
+BO_ 512 Chassis: 8 CANLAB
+ SG_ SteeringAngle : 7|16@0- (0.1,0) [-780|780] "deg" CANLAB
+
+BO_ 2147484416 EnvironmentExtended: 8 CANLAB
+ SG_ AmbientTemperature : 0|8@1- (1,-40) [-40|215] "deg C" CANLAB
+ SG_ BatteryVoltage : 8|8@1+ (0.1,0) [0|25.5] "V" CANLAB
+
+VAL_ 256 SelectedGear 0 "Park" 1 "Reverse" 2 "Neutral" 3 "Drive" ;
+VAL_ 256 TurnIndicator 0 "Off" 1 "Left" 2 "Right" 3 "Hazard" ;
+
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 10000;
+BA_DEF_DEF_ "GenMsgCycleTime" 0;
+BA_ "GenMsgCycleTime" BO_ 256 100;
+BA_ "GenMsgCycleTime" BO_ 512 200;
+BA_ "GenMsgCycleTime" BO_ 2147484416 1000;
+
+CM_ "Project-authored synthetic fixture for offline CAN protocol exploration.";

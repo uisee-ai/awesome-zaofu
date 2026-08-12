@@ -1,0 +1,22 @@
+{
+  "schema_version": "canlab.chromium-qualification.v1",
+  "status": "qualified",
+  "channel": "stable",
+  "platform": "linux64",
+  "stable_version": "151.0.7922.77",
+  "stable_revision": "1654411",
+  "browser_version": "151.0.7922.77",
+  "executable_path": "/opt/chrome/chrome-linux64/chrome",
+  "executable_sha256": "3ecd43f567afe5204b7673b2dd2ccf05603f41b2f62ad3bca9e691d0b3d54128",
+  "archive_sha256": "60a324a6e1d27b20f2035a2cdaf71641a739fe1f5571f63794773225820bce8a",
+  "image_ref": "canlab-p0-chromium:qualified",
+  "image_digest": "sha256:c2d869e6299d6f2b6022777ee3dac5536978abadc21a442cc821f11291f714a7",
+  "target_commit": "63c713547ae2f612db847ef0e495f858b521e9f3",
+  "target_tree": "25c475ad470668fe578e2e7d34b1e35dae4829d9",
+  "qualification_snapshot": {
+    "source_url": "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json",
+    "source_sha256": "d96f77d1b046dfab4b764fe8ae240f1aff540079403fb0b68d11c14dbe850fd5",
+    "published_at": "2026-08-08T21:12:48.825Z",
+    "download_url": "https://storage.googleapis.com/chrome-for-testing-public/151.0.7922.77/linux64/chrome-linux64.zip"
+  }
+}

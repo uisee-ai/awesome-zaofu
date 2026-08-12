@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "golden-release-suite.v1",
+  "suiteId": "authorized-first-inference-v1",
+  "releaseAuthorization": {
+    "reference": "DEMO-AUTH-2026-001",
+    "approvedFor": "internal demo and evaluation",
+    "dataClass": "internal-synthetic"
+  },
+  "measurementPolicy": {
+    "timingStart": "immediately-before-first-user-submission",
+    "successRateDenominator": "all-eligible-samples",
+    "illegalInputHandling": "excluded-before-submission",
+    "maxFirstInferenceSeconds": 300,
+    "minimumSuccessRate": 0.95
+  },
+  "submission": {
+    "path": "/api/runs",
+    "method": "POST"
+  },
+  "eligibleSamples": [
+    {
+      "sampleId": "authorized-synthetic-intersection-001",
+      "authorization": {
+        "reference": "DEMO-AUTH-2026-001",
+        "status": "approved"
+      },
+      "scene": {
+        "navigationInstruction": "Continue through the intersection while yielding to crossing traffic.",
+        "cameras": [
+          { "cameraId": 0, "frames": [{ "assetRef": "renders/camera-0/frame-000.png" }, { "assetRef": "renders/camera-0/frame-001.png" }, { "assetRef": "renders/camera-0/frame-002.png" }, { "assetRef": "renders/camera-0/frame-003.png" }] },
+          { "cameraId": 1, "frames": [{ "assetRef": "renders/camera-1/frame-000.png" }, { "assetRef": "renders/camera-1/frame-001.png" }, { "assetRef": "renders/camera-1/frame-002.png" }, { "assetRef": "renders/camera-1/frame-003.png" }] },
+          { "cameraId": 2, "frames": [{ "assetRef": "renders/camera-2/frame-000.png" }, { "assetRef": "renders/camera-2/frame-001.png" }, { "assetRef": "renders/camera-2/frame-002.png" }, { "assetRef": "renders/camera-2/frame-003.png" }] },
+          { "cameraId": 6, "frames": [{ "assetRef": "renders/camera-6/frame-000.png" }, { "assetRef": "renders/camera-6/frame-001.png" }, { "assetRef": "renders/camera-6/frame-002.png" }, { "assetRef": "renders/camera-6/frame-003.png" }] }
+        ],
+        "history": {
+          "positions": [[-1.5, 0, 0], [-1.4, 0, 0], [-1.3, 0, 0], [-1.2, 0, 0], [-1.1, 0, 0], [-1, 0, 0], [-0.9, 0, 0], [-0.8, 0, 0], [-0.7, 0, 0], [-0.6, 0, 0], [-0.5, 0, 0], [-0.4, 0, 0], [-0.3, 0, 0], [-0.2, 0, 0], [-0.1, 0, 0], [0, 0, 0]],
+          "rotations": [[[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], [[1, 0, 0], [0, 1, 0], [0, 0, 1]]]
+        }
+      }
+    }
+  ]
+}

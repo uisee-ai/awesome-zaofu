@@ -1,0 +1,132 @@
+{
+  "schema_version": "canlab.passive-boundary-evidence.v1",
+  "status": "passed",
+  "policy": {
+    "file": "config/passive-boundary-policy.json",
+    "version": "1.0.0",
+    "sha256": "b5afa70a6c2f125e6f2bd267cf27d446bdea9225d5a73fe2f5a4932426118120"
+  },
+  "allowlist": {
+    "browser_apis": [
+      "fetch",
+      "crypto.subtle"
+    ],
+    "url_scopes": [
+      "relative",
+      "same-origin",
+      "loopback-http"
+    ],
+    "loopback_hosts": [
+      "127.0.0.1",
+      "localhost",
+      "[::1]"
+    ]
+  },
+  "denylist_rule_ids": [
+    "webhid",
+    "webbluetooth",
+    "websocket",
+    "eventsource",
+    "webrtc",
+    "serviceworker",
+    "hardware_access",
+    "can_transmit",
+    "persistence_write"
+  ],
+  "persistence_surfaces": [
+    "cookies",
+    "service-worker-registrations",
+    "localStorage",
+    "sessionStorage",
+    "IndexedDB",
+    "CacheStorage"
+  ],
+  "checked_production_files": [
+    "index.html",
+    "public/_headers",
+    "src/App.tsx",
+    "src/app/load.ts",
+    "src/domain/dashboard/index.ts",
+    "src/domain/dbc/index.ts",
+    "src/domain/decode/index.ts",
+    "src/domain/health/index.ts",
+    "src/domain/log/index.ts",
+    "src/domain/replay/index.ts",
+    "src/domain/trace/index.ts",
+    "src/main.tsx",
+    "src/ui/dashboard/index.tsx",
+    "src/ui/explorer/index.tsx",
+    "src/ui/replay/index.tsx",
+    "src/ui/shared/index.tsx",
+    "src/ui/shared/model.ts",
+    "src/ui/trace/index.tsx"
+  ],
+  "production_violations": [],
+  "negative_fixtures": [
+    {
+      "file": "webhid.js",
+      "expected_rule": "webhid",
+      "detected_rule_ids": [
+        "webhid"
+      ],
+      "rejected": true
+    },
+    {
+      "file": "webbluetooth.js",
+      "expected_rule": "webbluetooth",
+      "detected_rule_ids": [
+        "webbluetooth"
+      ],
+      "rejected": true
+    },
+    {
+      "file": "websocket.js",
+      "expected_rule": "websocket",
+      "detected_rule_ids": [
+        "websocket"
+      ],
+      "rejected": true
+    },
+    {
+      "file": "eventsource.js",
+      "expected_rule": "eventsource",
+      "detected_rule_ids": [
+        "eventsource"
+      ],
+      "rejected": true
+    },
+    {
+      "file": "webrtc.js",
+      "expected_rule": "webrtc",
+      "detected_rule_ids": [
+        "webrtc"
+      ],
+      "rejected": true
+    },
+    {
+      "file": "serviceworker.js",
+      "expected_rule": "serviceworker",
+      "detected_rule_ids": [
+        "serviceworker"
+      ],
+      "rejected": true
+    },
+    {
+      "file": "hardware-access.js",
+      "expected_rule": "hardware_access",
+      "detected_rule_ids": [
+        "hardware_access"
+      ],
+      "rejected": true
+    },
+    {
+      "file": "can-send.js",
+      "expected_rule": "can_transmit",
+      "detected_rule_ids": [
+        "can_transmit"
+      ],
+      "rejected": true
+    }
+  ],
+  "fixture_failures": []
+}

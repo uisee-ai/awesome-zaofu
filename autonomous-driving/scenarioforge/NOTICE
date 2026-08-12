@@ -1,0 +1,14 @@
+ScenarioForge 0.1.0 release notice
+
+ScenarioForge is non-production research software. It is not a safety system
+and must not control a vehicle or be used as the sole basis for a safety claim.
+
+The locked Python and JavaScript dependency inventories are recorded in
+sbom/scenarioforge.spdx.json and sbom/license-matrix.json. Their upstream
+license notices remain controlling. A NOASSERTION entry is not a license grant
+and requires review before redistributing that dependency's source.
+
+MetaDrive 0.4.3 simulator assets are not included in this source release.
+Their redistribution is prohibited until release-license review is complete.
+The installer accepts only the size and SHA-256 allowlisted in
+config/metadrive-assets.lock.json.

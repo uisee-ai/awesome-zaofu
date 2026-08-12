@@ -1,0 +1,13 @@
+# ZaoFu runtime state
+/.zf-alpamayo-web-studio/
+
+# Product-local build and runtime outputs
+/app/.next/
+/app/.venv/
+/app/node_modules/
+/app/tsconfig.tsbuildinfo
+/app/data/
+/app/backend/**/*.egg-info/
+/data/
+**/__pycache__/
+*.pyc

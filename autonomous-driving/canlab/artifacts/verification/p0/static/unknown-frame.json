@@ -1,0 +1,18 @@
+{
+  "schema_version": "canlab.unknown-frame-evidence.v1",
+  "status": "passed",
+  "dbc_sha256": "d5e6ab74ba4fccb17493cdfae79ae115e0b9b64c3153033531a3d3c74a1d23f7",
+  "log_sha256": "31e49897877e494e147cac0564d2a4f9c09d25ecb5c1fc6cf3d3603e3edc1110",
+  "frames": [
+    {
+      "frameSeq": 121,
+      "timestamp_us": 7500000,
+      "can_id": "0x555",
+      "isExtended": false,
+      "frame_format": "standard",
+      "dlc": 8,
+      "raw_bytes": "DEADBEEF01020304",
+      "undecoded_reason": "No standard DBC message for 0x555"
+    }
+  ]
+}

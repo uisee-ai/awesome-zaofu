@@ -1,0 +1,9 @@
+schema_version: scenarioforge.scenario-spec.v1
+name: following
+map: {block_sequence: S, lane_count: 2, lane_width: 3.5}
+actors:
+  - {id: ego, role: ego, initial_state: {lane: 0, longitudinal: 5.0, speed: 8.0}, goal: {kind: route_progress, minimum_progress: 0.9}, behavior: follow_lead}
+  - {id: lead, role: traffic, initial_state: {lane: 0, longitudinal: 20.0, speed: 6.0}, behavior: keep_lane}
+environment: {traffic_density: 0.1}
+safety: {max_speed: 20.0, minimum_headway: 1.5, collision_free: true}
+tags: [following, metadrive-only]

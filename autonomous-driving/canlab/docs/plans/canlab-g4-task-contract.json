@@ -1,0 +1,140 @@
+{
+  "contract": {
+    "locale": "zh-CN",
+    "campaign": "CAN Lab P0 MVP small-slice OA blocking run",
+    "phase": "PRD delivery",
+    "behavior": "基于 Owner 已确认的 canonical PRD 实现 CAN Lab P0 MVP。保持 AC-01 至 AC-17、D-06、D-08 以及 synthetic/offline/passive-only 边界不变。Plan 必须生成 6 至 7 个小型 implementation work units；每个单元只交付一个可观察结果，目标 2 至 5 个 AC、4 至 10 个具体文件或路径、一个 owner 和一个主要验证命令。Candidate Verify 独立于 writer。实现约束与 Critic 修复项不得升级为新的产品 AC。Plan rejection 必须在本 Task、本 Run 内 bounded replan，不创建下一代 Task。",
+    "verification": "npm run lint && npm test && npm run build && npm run test:e2e -- --project=chromium",
+    "verification_tiers": [
+      "static",
+      "runtime",
+      "e2e",
+      "manual_evidence"
+    ],
+    "validation": {
+      "kind": "command",
+      "command": "npm run lint && npm test && npm run build && npm run test:e2e -- --project=chromium",
+      "task_slicing_policy": {
+        "target_work_units_min": 6,
+        "target_work_units_max": 7,
+        "target_acceptance_criteria_per_unit_min": 2,
+        "target_acceptance_criteria_per_unit_max": 5,
+        "hard_acceptance_criteria_per_unit_max": 8,
+        "target_scope_entries_per_unit_min": 4,
+        "target_scope_entries_per_unit_max": 10,
+        "hard_scope_entries_per_unit_max": 12,
+        "single_owner_required": true,
+        "single_primary_verification_required": true,
+        "candidate_verify_is_not_writer": true
+      },
+      "product_contract_policy": {
+        "canonical_acceptance_count": 17,
+        "new_product_acceptance_forbidden": true,
+        "critic_feedback_destination": [
+          "task_map",
+          "test_matrix",
+          "risk_register",
+          "backlog"
+        ]
+      },
+      "browser_e2e_policy": {
+        "surface": "project controlled verification input",
+        "latest_stable_required": true,
+        "generic_runtime_subsystem_required": false,
+        "non_loopback_application_requests": 0
+      },
+      "orchestrator_agent": {
+        "checkpoint": "plan_candidate",
+        "mode": "blocking",
+        "allowed_decisions": [
+          "adopt",
+          "revise",
+          "clarify",
+          "block"
+        ]
+      }
+    },
+    "spec_ref": "channel-artifacts/ch-prd-clarification-2621451543/synth-23ef56fb52e97ab2.md",
+    "scope": [
+      "src/**",
+      "tests/**",
+      "public/**",
+      "tools/**",
+      "package.json",
+      "package-lock.json",
+      "playwright.config.*",
+      "vitest.config.*",
+      "tsconfig*.json",
+      "vite.config.*",
+      "eslint.config.*",
+      "README.md"
+    ],
+    "exclusions": [
+      "真实车辆、CAN 适配器、SocketCAN、WebSerial、WebUSB、硬件输入和 CAN transmit path",
+      "业务后端、数据库、认证、云同步、CDN、远程资产和非 loopback 应用请求",
+      "用户 DBC 或日志导入、编辑、保存和跨会话持久化",
+      "完整 DBC 方言、CAN FD、生产车辆标定和安全关键决策",
+      "把 command registry、Runtime receipt、环境资格或 Critic 修复项新增为产品 AC",
+      "单个 Foundation writer 同时拥有 package/config、assets、fixture 和 boundary scanner",
+      "implementation writer 自行生成 Candidate Verify 权威证据"
+    ],
+    "acceptance": "Canonical PRD AC-01 through AC-17 are closed with durable evidence; npm run lint, npm test, npm run build, and npm run test:e2e -- --project=chromium exit 0.",
+    "evidence_contract": {
+      "channel_prd_digest": "d624368053ffda0f77dc6be58d0c4cc95430c5b64e38be783255341bc0f58662",
+      "channel_id": "ch-prd-clarification-2621451543",
+      "thread_id": "main",
+      "planning_input_ref": "docs/plans/canlab-g4-small-slices-oa-blocking.md",
+      "canonical_acceptance_count": 17,
+      "oa_blocking_pilot_id": "canlab-small-slices-plan-candidate-v1",
+      "reuse_prior_generation_requirements": false
+    },
+    "complexity": "complex",
+    "owner_role": "prd-planner",
+    "handoff_artifacts": [
+      "channel-artifacts/ch-prd-clarification-2621451543/synth-23ef56fb52e97ab2.md",
+      "docs/plans/canlab-g4-small-slices-oa-blocking.md"
+    ],
+    "source_ref": "channel:ch-prd-clarification-2621451543/main",
+    "source_mode": "channel_prd_small_slice_rerun",
+    "source_title": "ZaoFu CAN Lab P0 MVP - small-slice OA blocking run",
+    "product_contract_ref": "channel-artifacts/ch-prd-clarification-2621451543/synth-23ef56fb52e97ab2.md",
+    "acceptance_criteria": [
+      "AC-01 - 应用仅加载随包 DBC 与 NDJSON fixture，并在无外网环境完成核心功能。",
+      "AC-02 - DBC 浏览与搜索展示消息/信号层级、名称/CAN ID 搜索和完整 64 位信号定义。",
+      "AC-03 - DBC 资产信息展示 synthetic fixture、v1.0.0、CC0-1.0、SHA-256 和向量版本。",
+      "AC-04 - DBC 校验覆盖标准/扩展 ID、Intel/Motorola、signed/unsigned、缩放、偏移、单位和枚举，未支持构造原子失败。",
+      "AC-05 - 相同 schema、DBC 版本和 seed 生成字节相同的 NDJSON 与 SHA-256，并覆盖完整驾驶阶段。",
+      "AC-06 - play、pause、speed、seek 和 loop 只按整数微秒事件时间改变领域状态，墙钟抖动不改变结果。",
+      "AC-07 - Step 原子处理下一组相同 timestamp_us 的帧，按原始 seq 稳定排序并显示组信息。",
+      "AC-08 - seek 到 T 重建 timestamp_us <= T 的状态并暂停；loop 清空并从头重建。",
+      "AC-09 - 已知信号展示完整 raw/DBC/formula/display trace；未知帧不伪造信号链。",
+      "AC-10 - HealthMetrics 严格按 DBC 周期和回放事件时间计算 stale、missing 和 frequency，无周期时显示 N/A。",
+      "AC-11 - manifest 周期与 DBC 不一致时 fail closed；seek/loop 后 HealthMetrics 从事件历史重建。",
+      "AC-12 - 固定仪表和六条趋势从同一 DashboardProjection 更新，横轴使用回放事件时间。",
+      "AC-13 - 生产代码、依赖和 UI 不包含硬件接入、实时输入或 CAN 发送能力。",
+      "AC-14 - 浏览器 E2E 观测零非 loopback 请求、禁止远程连接且不写浏览器持久存储。",
+      "AC-15 - 单元与集成测试覆盖 DBC、fixture、decode、replay、seek/loop、health 和未知帧。",
+      "AC-16 - 唯一 Chromium E2E 覆盖 fixture、搜索、位布局、全部回放控件、trace、异常状态和仪表。",
+      "AC-17 - lint、unit/integration、build 和 Chromium E2E 全部通过并保存证据。"
+    ],
+    "goal_claim_ids": [
+      "AC-01",
+      "AC-02",
+      "AC-03",
+      "AC-04",
+      "AC-05",
+      "AC-06",
+      "AC-07",
+      "AC-08",
+      "AC-09",
+      "AC-10",
+      "AC-11",
+      "AC-12",
+      "AC-13",
+      "AC-14",
+      "AC-15",
+      "AC-16",
+      "AC-17"
+    ]
+  }
+}

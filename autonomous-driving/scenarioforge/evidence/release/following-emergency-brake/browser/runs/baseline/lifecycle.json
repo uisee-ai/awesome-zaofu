@@ -1,0 +1,1 @@
+{"clean_worker_per_case":true,"fault_count":0,"max_observed_workers":1,"max_workers":1,"ordered_seeds":[17],"retry_policy":"zero","run_id":"baseline","schema_version":"scenarioforge.lifecycle-report.v1","status":"completed","worker_pids":[1970536]}

@@ -1,0 +1,110 @@
+{
+  "schema_version": "canlab.passive-boundary-policy.v1",
+  "policy_version": "1.0.0",
+  "production_sources": [
+    "src",
+    "index.html",
+    "public/_headers"
+  ],
+  "allowed_browser_apis": [
+    "fetch",
+    "crypto.subtle"
+  ],
+  "allowed_url_scopes": [
+    "relative",
+    "same-origin",
+    "loopback-http"
+  ],
+  "allowed_loopback_hosts": [
+    "127.0.0.1",
+    "localhost",
+    "[::1]"
+  ],
+  "forbidden_rules": [
+    {
+      "id": "webhid",
+      "label": "WebHID",
+      "patterns": [
+        "\\bnavigator\\s*\\.\\s*hid\\b",
+        "\\bHIDDevice\\b"
+      ]
+    },
+    {
+      "id": "webbluetooth",
+      "label": "WebBluetooth",
+      "patterns": [
+        "\\bnavigator\\s*\\.\\s*bluetooth\\b",
+        "\\bBluetoothDevice\\b"
+      ]
+    },
+    {
+      "id": "websocket",
+      "label": "WebSocket",
+      "patterns": [
+        "\\bWebSocket\\s*\\(",
+        "\\bwss?://"
+      ]
+    },
+    {
+      "id": "eventsource",
+      "label": "EventSource",
+      "patterns": [
+        "\\bEventSource\\s*\\("
+      ]
+    },
+    {
+      "id": "webrtc",
+      "label": "WebRTC",
+      "patterns": [
+        "\\bRTCPeerConnection\\s*\\(",
+        "\\bRTCDataChannel\\b",
+        "\\bgetUserMedia\\s*\\("
+      ]
+    },
+    {
+      "id": "serviceworker",
+      "label": "ServiceWorker registration",
+      "patterns": [
+        "\\bnavigator\\s*\\.\\s*serviceWorker\\s*\\.\\s*register\\s*\\(",
+        "\\bServiceWorkerRegistration\\b"
+      ]
+    },
+    {
+      "id": "hardware_access",
+      "label": "browser or native hardware access",
+      "patterns": [
+        "\\bnavigator\\s*\\.\\s*(?:serial|usb)\\b",
+        "\\b(?:WebSerial|WebUSB|socketcan|serialport|canusb|pcan)\\b"
+      ]
+    },
+    {
+      "id": "can_transmit",
+      "label": "CAN transmit entry point",
+      "patterns": [
+        "\\b(?:send|transmit|write)[A-Za-z0-9_]*(?:Can|CAN|Frame|Message)\\s*\\(",
+        "\\bcan[A-Za-z0-9_]*(?:Send|Transmit|Write)\\s*\\("
+      ]
+    },
+    {
+      "id": "persistence_write",
+      "label": "browser persistence write",
+      "patterns": [
+        "\\b(?:localStorage|sessionStorage)\\s*\\.\\s*setItem\\s*\\(",
+        "\\bindexedDB\\s*\\.\\s*open\\s*\\(",
+        "\\bcaches\\s*\\.\\s*(?:open|add|addAll)\\s*\\(",
+        "\\bdocument\\s*\\.\\s*cookie\\s*="
+      ]
+    }
+  ],
+  "blocked_dependency_patterns": [
+    "(?:^|[-_/])(?:socketcan|serialport|webserial|webusb|canusb|pcan|usb)(?:$|[-_/])"
+  ],
+  "persistence_surfaces": [
+    "cookies",
+    "service-worker-registrations",
+    "localStorage",
+    "sessionStorage",
+    "IndexedDB",
+    "CacheStorage"
+  ]
+}

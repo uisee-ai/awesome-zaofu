@@ -1,0 +1,15 @@
+{
+  "schema_version": "canlab.release-candidate.v1",
+  "status": "verified-awaiting-owner-cas",
+  "base_commit": "2583d6e47ec4c890fa63b9f81b80f07e5c2586ef",
+  "candidate_commit": "63c713547ae2f612db847ef0e495f858b521e9f3",
+  "candidate_tree": "25c475ad470668fe578e2e7d34b1e35dae4829d9",
+  "evidence_manifest_ref": "artifacts/verification/p0/manifest.json",
+  "required_gate_ids": [
+    "V-P0-STATIC",
+    "V-P0-QUALIFY",
+    "V-P0-BROWSER",
+    "V-P0-RELEASE"
+  ],
+  "promotion_action": "ACTION-CAS-01"
+}

@@ -1,0 +1,71 @@
+name: release-gates
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      SCENARIOFORGE_METADRIVE_ASSET_ARCHIVE: /tmp/metadrive-assets-0.4.3.zip
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: 0.11.3
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.14.1
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install system runtime
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libgl1
+          LIBGL_PATH="$(ldconfig -p | awk '$1 == "libGL.so.1" { print $NF; exit }')"
+          test -f "$LIBGL_PATH"
+          echo "SCENARIOFORGE_SYSTEM_LIBRARY_ROOT=$(dirname "$LIBGL_PATH")" >> "$GITHUB_ENV"
+      - name: Install exact dependency graphs
+        run: |
+          uv sync --frozen --all-groups --python 3.11
+          npm --prefix web ci
+          npx --prefix web playwright install chromium
+      - name: Stage allowlisted MetaDrive assets
+        run: |
+          curl --fail --location --retry 3 --output "$SCENARIOFORGE_METADRIVE_ASSET_ARCHIVE" \
+            https://github.com/metadriverse/metadrive/releases/download/MetaDrive-0.4.3/assets.zip
+          ASSET_ROOT="$(.venv/bin/python -c "import sysconfig; print(sysconfig.get_paths()['purelib'])")/metadrive/assets"
+          .venv/bin/python scripts/release/install_metadrive_assets.py \
+            --archive "$SCENARIOFORGE_METADRIVE_ASSET_ARCHIVE" --target "$ASSET_ROOT"
+      - name: Build compliance artifacts
+        run: uv run --frozen --python 3.11 python scripts/release/generate_compliance_artifacts.py
+      - name: Contract verification
+        run: |
+          python -c "import subprocess; base='e7d4a12a0e0a878a9f607aac706f0984d2465dcb'; head=subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip(); assert head != base; subprocess.check_call(['git','merge-base','--is-ancestor',base,head])"
+          uv run --frozen --python 3.11 python -c "import sys; assert sys.version_info[:2] == (3, 11), sys.version"
+          uv run --frozen --python 3.11 python -m pytest -q tests/scaffold/test_scaffold_contract.py tests/release/test_release_contract.py
+          uv run --frozen --python 3.11 python -c "from pathlib import Path; paths=['scripts/release/run_production_browser_e2e.py','scripts/release/run_clean_install_offline_e2e.py']; needle='/tmp/scenarioforge-sfp0-002-libs'; assert all(needle not in Path(path).read_text(encoding='utf-8') for path in paths)"
+          uv run --frozen --python 3.11 python -m ruff check .
+          uv run --frozen --python 3.11 python -m pytest -q
+          npm --prefix web run build
+          PYTHONPATH=src uv run --frozen --python 3.11 python scripts/backend/run_metadrive_smoke.py --profile default --output evidence/release/metadrive-smoke
+          uv run --frozen --python 3.11 python scripts/release/run_production_browser_e2e.py --output evidence/release/browser-production
+          uv run --frozen --python 3.11 python scripts/release/run_clean_install_offline_e2e.py --output evidence/release/clean-install-offline
+          PYTHONPATH=src uv run --frozen --python 3.11 python scripts/backend/run_capacity_benchmark.py --profile boundary --output evidence/release/capacity
+          PYTHONPATH=src uv run --frozen --python 3.11 python scripts/backend/run_tolerance_calibration.py --runs 5 --output evidence/release/tolerance
+          uv run --frozen --python 3.11 python scripts/release/publish_ci_run_manifest.py --output evidence/release/ci/ci-run-manifest.json
+          uv run --frozen --python 3.11 python scripts/release/release_gate.py --ci-manifest evidence/release/ci/ci-run-manifest.json --output evidence/release/release-gate.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scenarioforge-release-evidence
+          path: evidence/release
+          if-no-files-found: error

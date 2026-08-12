@@ -1,0 +1,17 @@
+{
+  "schema_version": "canlab.release-verification.v1",
+  "status": "passed",
+  "mode": "read-only",
+  "release_status": "candidate-ready-awaiting-owner-cas",
+  "expected_old_main": "2583d6e47ec4c890fa63b9f81b80f07e5c2586ef",
+  "observed_main": "2583d6e47ec4c890fa63b9f81b80f07e5c2586ef",
+  "candidate_commit": "63c713547ae2f612db847ef0e495f858b521e9f3",
+  "candidate_tree": "25c475ad470668fe578e2e7d34b1e35dae4829d9",
+  "evidence_manifest_ref": "artifacts/verification/p0/manifest.json",
+  "evidence_artifact_count": 20,
+  "clean_checkout_gate_count": 7,
+  "refs_unchanged": true,
+  "owner_cas_required": true,
+  "pending_intent_rebound": false,
+  "pending_intent_lineage_proof": "evidence-only"
+}

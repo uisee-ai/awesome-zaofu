@@ -1,0 +1,32 @@
+{
+  "schema_version": "scenarioforge.browser-exact-replay-evidence.v1",
+  "acceptance_criterion": "AC-07",
+  "bundle_id": "bundle",
+  "provider": "metadrive-simulator@0.4.3",
+  "runner_state": "stopped",
+  "metadrive_calls": 0,
+  "external_network_attempts": [],
+  "controls_verified": [
+    "case",
+    "play",
+    "pause",
+    "step",
+    "seek",
+    "rate",
+    "events",
+    "metrics"
+  ],
+  "terminal_frame": {
+    "step": 20,
+    "position": [
+      7.8343329429626465,
+      3.5
+    ],
+    "heading": -5.326322183307752e-7,
+    "speed_km_h": 10.517005062104593,
+    "collision": false,
+    "off_road": false,
+    "route_progress": 0.0634676881231387
+  },
+  "result": "passed"
+}

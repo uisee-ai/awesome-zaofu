@@ -1,0 +1,1 @@
+[{"case_index":0,"descendant_pids":[2444801],"reason":"disk_exhaustion","retry_count":0,"root_pid":2444772,"schema_version":"scenarioforge.fault-receipt.v1","signals":["SIGTERM"],"survivor_pids":[]}]

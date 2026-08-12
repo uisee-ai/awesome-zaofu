@@ -1,0 +1,10 @@
+SPDX-License-Identifier: CC0-1.0
+
+CAN Lab Demo v1.0.0 is a project-authored synthetic fixture. It contains no
+vehicle-derived, manufacturer-derived, or captured bus data.
+
+To the extent possible under law, the authors have dedicated this synthetic
+asset to the public domain under the Creative Commons CC0 1.0 Universal
+Public Domain Dedication.
+
+License text and terms: https://creativecommons.org/publicdomain/zero/1.0/

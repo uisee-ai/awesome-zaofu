@@ -1,0 +1,132 @@
+{
+  "schema_version": "canlab.dbc-corpus.v1",
+  "sources": {
+    "cantools": {
+      "repository": "https://github.com/cantools/cantools",
+      "commit": "814211a8ebcacbc46568959ef4c74903927bdc6c",
+      "license": "MIT",
+      "license_file": "licenses/cantools-MIT.txt",
+      "license_sha256": "ed3d93b4e2ffa21ef96f74325a3789bbeeaa30e4292579885b485d7712752fe9"
+    },
+    "opendbc": {
+      "repository": "https://github.com/commaai/opendbc",
+      "commit": "44f2987cb6ed28f7dcd99d5930abf6c2917d8f60",
+      "license": "MIT",
+      "license_file": "licenses/opendbc-MIT.txt",
+      "license_sha256": "6543c4a66b46affddae1b9ae1e1992687f0b7191e74ba3a7235388b9f42a6d13"
+    }
+  },
+  "cases": [
+    {
+      "id": "cantools-can-fd",
+      "file": "files/cantools-can-fd.dbc",
+      "source": "cantools",
+      "upstream_path": "tests/files/dbc/fd_test.dbc",
+      "sha256": "525136162176e531f0ce508038c31f81e52efdf52691fed9bfd2ec01fd80efcb",
+      "bytes": 1738,
+      "declarations": { "messages": 4, "signals": 4 },
+      "feature_tags": ["can-fd", "standard-id", "extended-id", "attributes"],
+      "markers": ["\"CAN FD\"", "\"StandardCAN_FD\"", "\"ExtendedCAN_FD\""],
+      "baseline": {
+        "status": "rejected",
+        "error": {
+          "code": "UNSUPPORTED_CONSTRUCT",
+          "line": 10,
+          "message": "Unsupported DBC statement: CAT_DEF_"
+        }
+      }
+    },
+    {
+      "id": "cantools-floating-point",
+      "file": "files/cantools-floating-point.dbc",
+      "source": "cantools",
+      "upstream_path": "tests/files/dbc/floating_point.dbc",
+      "sha256": "b50c9bbf22bcdd899e91668007b235103fd897d844170b96e4bfcd932fda09b4",
+      "bytes": 891,
+      "declarations": { "messages": 2, "signals": 3 },
+      "feature_tags": ["float32", "float64", "signal-value-type"],
+      "markers": ["SIG_VALTYPE_ 1024 Signal1 : 2;", "SIG_VALTYPE_ 1025 Signal1 : 1;"],
+      "baseline": {
+        "status": "rejected",
+        "error": {
+          "code": "UNSUPPORTED_CONSTRUCT",
+          "line": 10,
+          "message": "Unsupported DBC statement: CAT_DEF_"
+        }
+      }
+    },
+    {
+      "id": "cantools-motohawk",
+      "file": "files/cantools-motohawk.dbc",
+      "source": "cantools",
+      "upstream_path": "tests/files/dbc/motohawk.dbc",
+      "sha256": "e077649cd9653268f94ca088cfb17363b6732667f400c92eda6c8446c74821f1",
+      "bytes": 822,
+      "declarations": { "messages": 1, "signals": 3 },
+      "feature_tags": ["classical-can", "motorola", "signed", "choices", "comments", "multiple-receivers"],
+      "markers": ["SG_ Temperature : 0|12@0-", "PCM1,FOO", "VAL_ 496 Enable", "CM_ BO_ 496"],
+      "baseline": {
+        "status": "rejected",
+        "error": {
+          "code": "UNSUPPORTED_CONSTRUCT",
+          "line": 10,
+          "message": "Unsupported DBC statement: CAT_DEF_"
+        }
+      }
+    },
+    {
+      "id": "cantools-multiplex",
+      "file": "files/cantools-multiplex.dbc",
+      "source": "cantools",
+      "upstream_path": "tests/files/dbc/multiplex.dbc",
+      "sha256": "2b34c7ade5bb1e0f3f4ae512d78b41a49adb23a2e9f870d3f48054865ae30293",
+      "bytes": 2355,
+      "declarations": { "messages": 1, "signals": 12 },
+      "feature_tags": ["multiplexor", "multiplexed-signal", "extended-multiplex-ranges", "j1939"],
+      "markers": ["SG_ Multiplexor M", "SG_ BIT_K m24", "SG_MUL_VAL_"],
+      "baseline": {
+        "status": "rejected",
+        "error": {
+          "code": "UNSUPPORTED_CONSTRUCT",
+          "line": 10,
+          "message": "Unsupported DBC statement: CAT_DEF_"
+        }
+      }
+    },
+    {
+      "id": "opendbc-comma-body",
+      "file": "files/opendbc-comma-body.dbc",
+      "source": "opendbc",
+      "upstream_path": "opendbc/dbc/comma_body.dbc",
+      "sha256": "9040592f1138f0110224c2acd781edbfb32d032cecb86ca8ec6356ec961b35ce",
+      "bytes": 3521,
+      "declarations": { "messages": 14, "signals": 60 },
+      "feature_tags": ["classical-can", "motorola", "signed", "variable-dlc", "multi-message"],
+      "markers": ["VERSION \"0.0.02\"", "BO_ 513 MOTORS_DATA", "SG_ SPEED_L"],
+      "baseline": {
+        "status": "accepted",
+        "messages": 14,
+        "signals": 60
+      }
+    },
+    {
+      "id": "opendbc-vw-mqb",
+      "file": "files/opendbc-vw-mqb.dbc",
+      "source": "opendbc",
+      "upstream_path": "opendbc/dbc/vw_mqb.dbc",
+      "sha256": "d43e922d1f0dfbb7cc125126cfc15587eb8c3acd796f08d775dbbd57355c2af9",
+      "bytes": 126786,
+      "declarations": { "messages": 113, "signals": 1348 },
+      "feature_tags": ["large-real-world", "attributes", "choices", "many-nodes", "mixed-byte-order"],
+      "markers": ["BO_ 290 ACC_06", "BO_ 279 ACC_10", "BA_DEF_", "VAL_"],
+      "baseline": {
+        "status": "rejected",
+        "error": {
+          "code": "UNSUPPORTED_CONSTRUCT",
+          "line": 10,
+          "message": "Unsupported DBC statement: CAT_DEF_"
+        }
+      }
+    }
+  ]
+}

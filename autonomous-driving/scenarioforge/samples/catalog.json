@@ -1,0 +1,11 @@
+{
+  "backend": "metadrive-simulator",
+  "samples": [
+    {"id": "following", "json": "following.json", "yaml": "following.yaml"},
+    {"id": "following-emergency-brake", "json": "following-emergency-brake.json", "yaml": "following-emergency-brake.yaml"},
+    {"id": "merge", "json": "merge.json", "yaml": "merge.yaml"},
+    {"id": "lane-conflict", "json": "lane-conflict.json", "yaml": "lane-conflict.yaml"},
+    {"id": "intersection", "json": "intersection.json", "yaml": "intersection.yaml"},
+    {"id": "static-obstacle-avoidance", "json": "static-obstacle-avoidance.json", "yaml": "static-obstacle-avoidance.yaml"}
+  ]
+}

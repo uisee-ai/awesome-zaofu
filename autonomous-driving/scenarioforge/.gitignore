@@ -1,0 +1,14 @@
+# ZaoFu runtime state
+/.zf-scenarioforge-case2-full-20260802t133411z/
+/.zf-scenarioforge-case2-p0-completion-20260808/
+/.codex/hooks.json
+
+# Generated caches, dependency installs, and source-only showcase builds.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+node_modules/
+web/dist/
+
+# Generated video renders (keep source HTML and audit images tracked)
+reports/videos/*.mp4

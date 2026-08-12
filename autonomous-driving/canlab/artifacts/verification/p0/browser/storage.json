@@ -1,0 +1,28 @@
+{
+  "schema_version": "canlab.zero-persistence-evidence.v1",
+  "status": "passed",
+  "surfaces": [
+    "cookies",
+    "service-worker-registrations",
+    "localStorage",
+    "sessionStorage",
+    "IndexedDB",
+    "CacheStorage"
+  ],
+  "before_refresh": {
+    "cookies": [],
+    "localStorageEntries": 0,
+    "sessionStorageEntries": 0,
+    "indexedDatabases": [],
+    "cacheStorageKeys": [],
+    "serviceWorkerRegistrations": []
+  },
+  "after_refresh": {
+    "cookies": [],
+    "localStorageEntries": 0,
+    "sessionStorageEntries": 0,
+    "indexedDatabases": [],
+    "cacheStorageKeys": [],
+    "serviceWorkerRegistrations": []
+  }
+}

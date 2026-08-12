@@ -1,0 +1,1 @@
+[{"case_index":0,"descendant_pids":[2444761],"reason":"bundle_cancel","retry_count":0,"root_pid":2444722,"schema_version":"scenarioforge.fault-receipt.v1","signals":["SIGTERM"],"survivor_pids":[]}]

@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling==1.31.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "scenarioforge"
+version = "0.1.0"
+description = "MetaDrive-only scenario authoring, execution, and replay"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "fastapi==0.141.1",
+  "httpx==0.28.1",
+  "metadrive-simulator==0.4.3",
+  "psutil==7.2.2",
+  "pydantic==2.13.4",
+  "python-multipart==0.0.32",
+  "PyYAML==6.0.3",
+  "rfc8785==0.1.4",
+  "uvicorn[standard]==0.52.1",
+]
+
+[project.scripts]
+scenarioforge = "scenarioforge.app:main"
+
+[dependency-groups]
+dev = [
+  "pytest==9.1.1",
+  "pytest-timeout==2.4.0",
+  "ruff==0.16.1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scenarioforge"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]

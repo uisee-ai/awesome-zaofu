@@ -1,0 +1,31 @@
+{
+  "name": "alpamayo-web-studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "dev:api": "PYTHONPATH=backend uvicorn studio.app.main:app --host 0.0.0.0 --port 8000",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0",
+    "lint": "tsc --noEmit",
+    "test": "tsx --test",
+    "test:backend": "python -m pytest tests/backend -q --no-cov",
+    "test:e2e": "playwright test --config tests/e2e/playwright.config.ts",
+    "test:e2e:docker": "bash deploy/scripts/test-product-e2e.sh"
+  },
+  "dependencies": {
+    "lucide-react": "1.31.0",
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@types/node": "26.2.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "tsx": "4.23.11",
+    "typescript": "7.0.2"
+  }
+}

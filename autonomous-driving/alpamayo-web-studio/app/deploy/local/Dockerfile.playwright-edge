@@ -1,0 +1,11 @@
+FROM mcr.microsoft.com/playwright:v1.62.1-noble
+
+WORKDIR /work/app
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Branded Edge must be installed while the image is root; test execution is non-root.
+RUN npx playwright install msedge
+RUN id -u pwuser >/dev/null 2>&1 || useradd --create-home --shell /bin/bash pwuser
+RUN chown -R pwuser:pwuser /work
+USER pwuser

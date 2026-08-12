@@ -1,0 +1,20 @@
+{
+  "schema_version": "canlab.cas-intent.v1",
+  "status": "pending-owner-action",
+  "issued": false,
+  "immutable_receipt_present": false,
+  "action_id": "ACTION-CAS-01",
+  "expected_old_main": "2583d6e47ec4c890fa63b9f81b80f07e5c2586ef",
+  "candidate_commit": "63c713547ae2f612db847ef0e495f858b521e9f3",
+  "candidate_tree": "25c475ad470668fe578e2e7d34b1e35dae4829d9",
+  "candidate_manifest_sha256": "8c51dfe7cc31b6b3e72a8b8deeabc1000bb41592104a8085e78c87c495b7a0c3",
+  "authorization": {
+    "required": true,
+    "actor": "owner",
+    "mechanism": "token-gated-kernel-control-plane"
+  },
+  "forbidden_callers": [
+    "verify",
+    "tools/verify-p0-release.sh"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "scenarioforge.metadrive-assets.v1",
+  "backend": {
+    "distribution": "metadrive-simulator",
+    "version": "0.4.3"
+  },
+  "runtime_policy": {
+    "network_access": "denied",
+    "auto_download": false,
+    "missing_or_mismatched": "fail_closed"
+  },
+  "artifacts": [
+    {
+      "id": "metadrive-assets-0.4.3",
+      "source_url": "https://github.com/metadriverse/metadrive/releases/download/MetaDrive-0.4.3/assets.zip",
+      "media_type": "application/zip",
+      "size_bytes": 134074203,
+      "sha256": "4f0da9f5143a1258131c5b55f77bdf170c0f9bce8a9f18dd41b3678df779eac9",
+      "redistribution": "prohibited_until_release_license_review"
+    }
+  ]
+}

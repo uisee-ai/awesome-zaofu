@@ -1,0 +1,56 @@
+{
+  "schema_version": "canlab.clean-checkout-evidence.v1",
+  "status": "passed",
+  "candidate_commit": "63c713547ae2f612db847ef0e495f858b521e9f3",
+  "candidate_tree": "25c475ad470668fe578e2e7d34b1e35dae4829d9",
+  "integrated_candidate_commit": "795f04cf70b4793e96a4c92d3a54695216363a6f",
+  "source_to_integrated_mapping": {
+    "source_commit": "795f04cf70b4793e96a4c92d3a54695216363a6f",
+    "integrated_commit": "795f04cf70b4793e96a4c92d3a54695216363a6f"
+  },
+  "method": "git-archive-to-ephemeral-directory",
+  "command_receipts": [
+    {
+      "command": "npm ci",
+      "exit_code": 0,
+      "stdout_sha256": "578656ddde1c823292ce841e277cb28e0acd2f9b2145ad51e7e71137f84df5f0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "npm run lint",
+      "exit_code": 0,
+      "stdout_sha256": "fc4b8fdf8b82d24a2a2234913c3269ce3c3230be5d2b25f12896e82ce9484176",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "npm test",
+      "exit_code": 0,
+      "stdout_sha256": "efebdf3afd76d4432c96c90d7b1f3bf89da121c8d1cb5b2d9645fa0ab763c530",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "npm run build",
+      "exit_code": 0,
+      "stdout_sha256": "e1f2a36c652fc4d1bf9b572c8bab262cbd96648c1b5c8101ea46ede4b36c19ba",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "node tools/verify-assets.mjs --output artifacts/verification/p0/static/assets.json",
+      "exit_code": 0,
+      "stdout_sha256": "ab0d9f14c114f3a1ac3b02c7d130cff7f0c14d7c4062a98e458d06ce5fd6e97f",
+      "stderr_sha256": "40c63570a96ae9c686c5abff6330f7ae28b28d491ce9945f93d42f41e9fba05a"
+    },
+    {
+      "command": "node tools/check-passive-boundary.mjs --policy config/passive-boundary-policy.json --fixtures tests/fixtures/passive-boundary --output artifacts/verification/p0/static/boundary-matrix.json",
+      "exit_code": 0,
+      "stdout_sha256": "2d8af3ba7ae8662a54ed0f4a80d8962a56c06987afaac55e8bf8d686c598ca01",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "node tools/check-csp-delivery.mjs --policy config/csp-policy.json --server tools/serve-p0-preview.mjs --output artifacts/verification/p0/static/csp.json",
+      "exit_code": 0,
+      "stdout_sha256": "48e0db7e2a3d2013aba2806c28e689f29354a4c978eeba5ebb0209002e8fd21b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

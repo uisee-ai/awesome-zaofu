@@ -1,0 +1,30 @@
+services:
+  studio:
+    build:
+      context: ../..
+      dockerfile: deploy/local/Dockerfile.studio
+    ports:
+      - "8000:8000"
+    environment:
+      ALPAMAYO_STUDIO_PROVIDER_MODE: ${ALPAMAYO_STUDIO_PROVIDER_MODE:-mock}
+      ALPAMAYO_STUDIO_STATE_PATH: /workspace/data/studio-state.json
+      ALPAMAYO_STUDIO_PROVIDER_ARTIFACT_DIR: /workspace/data/provider-responses
+      LITELLM_BASE_URL:
+      LITELLM_API_KEY:
+      LITELLM_MODEL_NAME:
+    volumes:
+      - studio-data:/workspace/data
+
+  web:
+    build:
+      context: ../..
+      dockerfile: deploy/local/Dockerfile.web
+      args:
+        ALPAMAYO_STUDIO_API_ORIGIN: http://studio:8000
+    depends_on:
+      - studio
+    ports:
+      - "3000:3000"
+
+volumes:
+  studio-data:

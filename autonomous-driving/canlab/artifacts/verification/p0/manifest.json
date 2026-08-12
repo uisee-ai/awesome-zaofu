@@ -1,0 +1,120 @@
+{
+  "schema_version": "canlab.p0-evidence-manifest.v1",
+  "status": "candidate-verified",
+  "subject": {
+    "target_commit": "63c713547ae2f612db847ef0e495f858b521e9f3",
+    "target_tree": "25c475ad470668fe578e2e7d34b1e35dae4829d9"
+  },
+  "asset_identity": {
+    "dbc_sha256": "d5e6ab74ba4fccb17493cdfae79ae115e0b9b64c3153033531a3d3c74a1d23f7",
+    "vectors_sha256": "9ca0fb7a52ed9307337b23b6bc7bf5556e50ad6cc83f637ffeffed3c8d3436b4",
+    "log_sha256": "31e49897877e494e147cac0564d2a4f9c09d25ecb5c1fc6cf3d3603e3edc1110"
+  },
+  "browser_qualification": {
+    "version": "151.0.7922.77",
+    "executable_sha256": "3ecd43f567afe5204b7673b2dd2ccf05603f41b2f62ad3bca9e691d0b3d54128",
+    "image_digest": "sha256:c2d869e6299d6f2b6022777ee3dac5536978abadc21a442cc821f11291f714a7"
+  },
+  "artifacts": [
+    {
+      "path": "artifacts/verification/p0/static/tests.json",
+      "sha256": "9c59b2c4f948ff5a9b1f301215fcce154a21cd14b536dfe56729d8c00e0d6916",
+      "byte_count": 23599
+    },
+    {
+      "path": "artifacts/verification/p0/static/assets.json",
+      "sha256": "bc4ecd983cae6a08a5100f21c46e5560d04ab89d5f154c08fce7d11a58a22f65",
+      "byte_count": 1735
+    },
+    {
+      "path": "artifacts/verification/p0/static/unknown-frame.json",
+      "sha256": "61868c45183b1cf8c778bf9053ca23e6be6011a2624b4c6d33b3ab3d2e7db4b7",
+      "byte_count": 537
+    },
+    {
+      "path": "artifacts/verification/p0/static/determinism.json",
+      "sha256": "7d78cad34da2a63c05f30f33ed59cced3c9d0e0dc7dbf3d7a3381b6a5419bf55",
+      "byte_count": 1383
+    },
+    {
+      "path": "artifacts/verification/p0/static/boundary-matrix.json",
+      "sha256": "031b9aa18365bd704b61a2862f09bc26872ea5bbabdd32f719983eaab3ffbbfa",
+      "byte_count": 2841
+    },
+    {
+      "path": "artifacts/verification/p0/static/csp.json",
+      "sha256": "3bc9b997e79f4e5b61984ac91b2c7e3ddaded39eaca0d718e79e67f7528f7a9b",
+      "byte_count": 1631
+    },
+    {
+      "path": "artifacts/verification/p0/browser/qualification.json",
+      "sha256": "847e2a4195c89e7bbb71899542cd5fb8bd56d836519af92b774bf8074f0cc89d",
+      "byte_count": 1152
+    },
+    {
+      "path": "artifacts/verification/p0/browser/fail-closed.json",
+      "sha256": "6ecb62b478ff59430104f5f4f522d80a4014965e9140c77ac7cddf34a552cc3a",
+      "byte_count": 781
+    },
+    {
+      "path": "artifacts/verification/p0/browser/csp-evidence.json",
+      "sha256": "2d5509d777caa7d07d5d75bf08b849d59f753e6d2428e8edb4803ae055293fad",
+      "byte_count": 977
+    },
+    {
+      "path": "artifacts/verification/p0/browser/golden-journey.png",
+      "sha256": "3db866e3f90b94a343f8f6af39e6db9b776e58abdececeb9952923d1454926c4",
+      "byte_count": 139381
+    },
+    {
+      "path": "artifacts/verification/p0/browser/unknown-frame.png",
+      "sha256": "1370105054728b6f0ac8aeea4160d883e6b2e8796adb431823a6670eaa3a6c6e",
+      "byte_count": 39751
+    },
+    {
+      "path": "artifacts/verification/p0/browser/network.json",
+      "sha256": "64e90e928b849fb901892d9113429dac58a5a88ebc5d24803b591f03c03cba74",
+      "byte_count": 2911
+    },
+    {
+      "path": "artifacts/verification/p0/browser/storage.json",
+      "sha256": "c861e9d47ca1231033ae1941105337ff77ad014530a4e13b90bfe108cd6f2d22",
+      "byte_count": 635
+    },
+    {
+      "path": "artifacts/verification/p0/browser/trace.zip",
+      "sha256": "3ed06a6744839414eaa20d78672749da41e872f5cc80493f82f0f5d65028d86c",
+      "byte_count": 1401263
+    },
+    {
+      "path": "artifacts/verification/p0/release-candidate.json",
+      "sha256": "8c51dfe7cc31b6b3e72a8b8deeabc1000bb41592104a8085e78c87c495b7a0c3",
+      "byte_count": 505
+    },
+    {
+      "path": "artifacts/verification/p0/release/cas-receipt.json",
+      "sha256": "ccc5ac8620ff8196068e37c25c63b728a10e1c2304d586515eb5880ddd983b8d",
+      "byte_count": 667
+    },
+    {
+      "path": "artifacts/verification/p0/release/clean-checkout.json",
+      "sha256": "02656322316defa46ba4cff6d03e120fdbe7eddbfb2dac3eb440ec28205fe2da",
+      "byte_count": 2661
+    },
+    {
+      "path": "artifacts/verification/p0/release/writer-separation.json",
+      "sha256": "e990f1af31302c3c7a0737aef0a26264324fc088e49d8b9f75e0583d43704db6",
+      "byte_count": 622
+    },
+    {
+      "path": "artifacts/verification/p0/release/runtime-audit.json",
+      "sha256": "104fc6d0e292efe2d230c31fefd17cb755e966fc19dd74c3f2c5ddbf9edf58fd",
+      "byte_count": 309
+    },
+    {
+      "path": "artifacts/verification/p0/release/final-verification.json",
+      "sha256": "2b78213173ee27eb1b32f0dcf29cd243ac803c230af10d46b7c3fb6207e84d9d",
+      "byte_count": 699
+    }
+  ]
+}

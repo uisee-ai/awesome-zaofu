@@ -1,0 +1,2786 @@
+version: '1.0'
+preset: ''
+project:
+  name: alpamayo-web-studio
+  description: Alpamayo Web Studio v0.2 delivery from the canonical PRD. Plan work
+    as small independently implementable, verifiable, and revertible tasks while
+    preserving shared schema and dependency ordering across Web, API, worker,
+    persistence, and Kubernetes surfaces.
+  workspace: .
+  state_dir: .zf-alpamayo-web-studio
+session:
+  tmux_session: zf-alpamayo-web-studio
+  tmux_layout: pane_grid
+orchestrator:
+  backend: codex
+  model: ''
+  loop:
+    max_iterations: 20
+    idle_exit_after: 3
+  transport_timeout_s: 120.0
+  max_turns: 30
+  rate_limit_cooldown_s: 60.0
+  wake_min_interval_s: 5.0
+constraints:
+  allowed_paths: []
+  blocked_paths: []
+  max_steps: 0
+workflow:
+  gan_rounds: 1
+  harness_profile: baseline
+  allow_unverified_candidate: false
+  candidate_quality_source: task_contract_required
+  impl_self_check_required: true
+  orchestration:
+    mode: semantic_control
+    checkpoints:
+    - plan_candidate
+    checkpoint_policies:
+      plan_candidate: shadow
+    pilot_id: ''
+    shadow_sample_percent: 25
+    flow_policies:
+      research:
+        mode: exception_advisor
+        checkpoints: []
+        checkpoint_policies: {}
+        pilot_id: ''
+        shadow_sample_percent: 100
+      workflow:
+        mode: exception_advisor
+        checkpoints: []
+        checkpoint_policies: {}
+        pilot_id: ''
+        shadow_sample_percent: 100
+    max_plan_revisions: 2
+    no_progress_limit: 2
+  attempt_lease_grace_s: 900.0
+  event_actions: []
+  rework_routing:
+    prd.scan.failed: planner
+    prd.plan.failed: planner
+    integration.failed: planner
+    static_gate.failed: dev-lane-0
+    test.failed: dev-lane-0
+  kind_routes:
+    prd:
+      pattern_id: prd-scan
+      alias: ''
+      default_tier: standard
+      tier_routes: {}
+  execution_profiles:
+    bounded-direct-v1:
+      schema_version: execution-profile.v1
+      strategy: direct
+      continuation: turn
+      collaboration: single
+      access: read_only
+      capability_policy: require
+      limits:
+        max_children: 0
+        max_depth: 0
+        timeout_seconds: 900.0
+        max_usage_samples: 60
+        token_budget: 4000000
+        cost_budget_usd: 12.0
+  run_limits:
+    timeout_seconds: 14400.0
+    token_budget: 40000000
+    cost_budget_usd: 120.0
+  admission_replan:
+    enabled: true
+    resynth_trigger: prd.scan.completed
+  run_admission:
+    version: v1
+    mode: serial
+    max_active_runs: 1
+  task_attempt:
+    version: v1
+    mode: shadow
+    max_attempts: 3
+  stages:
+  - id: prd-scan
+    trigger: prd.requested
+    flow_kind: prd
+    topology: fanout_reader
+    operation: ''
+    attempt_domain: ''
+    result_semantics: artifact_production
+    input_ports: []
+    output_ports: []
+    dependencies: []
+    dependency_events: []
+    dependency_failure_events: []
+    dependency_barrier_id: ''
+    dependency_barrier_digest: ''
+    roles:
+    - product-scan
+    - tech-scan
+    target_ref: HEAD
+    task_map: ''
+    aggregate:
+      mode: wait_for_all
+      success_event: prd.scan.completed
+      failure_event: prd.scan.failed
+      child_success_event: prd.scan.child.completed
+      child_failure_event: prd.scan.child.failed
+      synth_role: ''
+      max_retries: 0
+      review_strategy: ''
+      pending_event: ''
+      quorum: 0
+      synth_timeout_seconds: 0
+    timeout_seconds: 0
+    criteria:
+      instructions:
+      - This is the initial PRD scan stage, not implementation verification.
+      - Missing product code is expected before impl; record it as required work,
+        risk, or gap input, not as a blocking scan failure.
+      - Emit success when you can read the PRD/scope and produce a useful product/technical
+        scan report for planning.
+      - For a complete scan report, set status to passed and recommendation to approve;
+        record downstream product decisions, implementation gaps, and planning work
+        in findings instead of marking this scan operation needs_rework.
+      - Emit failure only when the PRD/scope cannot be read or the scan report cannot
+        be produced.
+      success_criteria: []
+      output:
+        required_keys: []
+        required_artifacts: []
+        artifact_kinds: []
+      retry:
+        max_attempts: 0
+        backoff_seconds: 0
+        on_failure: rework
+    gate_profile: []
+    retrigger_requires_delta: false
+    synthesize_canonical_tasks: false
+  - id: prd-plan
+    trigger: prd.scan.completed
+    flow_kind: prd
+    topology: fanout_reader
+    operation: ''
+    attempt_domain: plan
+    result_semantics: ''
+    input_ports: []
+    output_ports: []
+    dependencies: []
+    dependency_events: []
+    dependency_failure_events: []
+    dependency_barrier_id: ''
+    dependency_barrier_digest: ''
+    roles:
+    - planner
+    target_ref: ''
+    task_map: ''
+    aggregate:
+      mode: wait_for_all
+      success_event: task_map.ready
+      failure_event: prd.plan.failed
+      child_success_event: prd.plan.child.completed
+      child_failure_event: prd.plan.child.failed
+      synth_role: plan-critic
+      max_retries: 0
+      review_strategy: ''
+      pending_event: ''
+      quorum: 0
+      synth_timeout_seconds: 0
+    timeout_seconds: 0
+    criteria:
+      instructions:
+      - Convert the completed PRD scan into a machine-readable task_map and a human-readable
+        plan.
+      - The task_map must be JSON and must contain implementable tasks with stable
+        ids, owned paths, acceptance criteria, and verification.
+      - Do not treat unimplemented product requirements as plan failure; they belong
+        in the task_map.
+      - 'Task-map hard contract: write valid JSON with top-level `schema_version`
+        exactly `task-map.v1`.'
+      - 'Task-map hard contract: when the workflow has a target root, include top-level
+        `target_root` and keep all paths repo-relative.'
+      - 'Task-map hard contract: include `shared_conventions.test_path_prefix` and
+        package/scaffold conventions such as `package_root` and `packaging_file` when
+        more than one task depends on them.'
+      - 'Task-map hard contract: top-level `tasks` must be a non-empty array; each
+        task must have a stable `task_id`, `title`, scoped `allowed_paths`, structured
+        `validation.commands`, `acceptance_criteria`, and `blocked_by` (empty array
+        when none).'
+      - 'Task-map hard contract: when `allowed_paths` is non-empty, include `allowed_paths_reason`
+        or `scope_reason` explaining the ownership boundary.'
+      - 'Task-map hard contract: `allowed_paths` grants exclusive write ownership.
+        No concrete path or overlapping subtree may appear in multiple tasks, even
+        with `blocked_by`; coarsen tasks or assign one integration owner.'
+      - 'Task-map hard contract: dependencies in `blocked_by` must reference existing
+        task ids and must not point to a later wave.'
+      - 'Task-map hard contract: new plans use `validation.commands[]`; each command
+        has stable `id`, executable `command`, `acceptance_ids`, `owner`, `tier`,
+        `deterministic`, `reusable`, and `timeout_seconds`; commands that produce
+        required files also declare `producer_paths`. Keep commands independent; do
+        not join them with `&&`. Legacy `verification` remains accepted only as an
+        adapter.'
+      - 'Task-map hard contract: downstream gates execute each canonical `command`
+        exactly as stored. Never validate a rewritten or equivalent command; put escape-sensitive
+        assertions in repository test/script files instead of nested `node -e` or
+        `python -c` payloads.'
+      - 'Task-map hard contract: acceptance entries use stable `id`, observable `statement`,
+        `mandatory`, `verification_owner`, `verification_tier`, and `verification_command_ids`.
+        An AC is a product outcome, not a test command or implementation step.'
+      - 'Task-map hard contract: verification may read sibling-owned paths; do not
+        duplicate read-only operands in `allowed_paths`. Represent each repo-relative
+        path once (for example `app/tests/...`, not bare `tests/...`).'
+      - 'Task-map hard contract: scaffold owners must list package metadata files
+        they create, including `package.json`, `pyproject.toml`, `setup.py`, `setup.cfg`,
+        `tsconfig.json`, or lockfiles.'
+      - 'Plan handoff hard contract: produce a non-empty human-readable Markdown plan
+        and expose it as plan_artifact_ref/plan_ref or plan_md.'
+      - 'Plan handoff hard contract: produce source-index.v1 and expose source_index_ref
+        or a source_index plan port; every task needs source_key, source_ref, and
+        source_excerpt.'
+      - 'Goal handoff hard contract: explicit mandatory goal_claims must be mapped
+        through task goal_claim_ids to structured acceptance criteria and verification
+        command ids; every command and acceptance criterion needs an owner and tier.'
+      success_criteria: []
+      output:
+        required_keys: []
+        required_artifacts: []
+        artifact_kinds: []
+      retry:
+        max_attempts: 0
+        backoff_seconds: 0
+        on_failure: rework
+    gate_profile: []
+    retrigger_requires_delta: false
+    synthesize_canonical_tasks: false
+  - id: prd-post-verify-discovery
+    trigger: flow.discovery.requested
+    flow_kind: prd
+    topology: fanout_reader
+    operation: ''
+    attempt_domain: ''
+    result_semantics: ''
+    input_ports: []
+    output_ports: []
+    dependencies: []
+    dependency_events: []
+    dependency_failure_events: []
+    dependency_barrier_id: ''
+    dependency_barrier_digest: ''
+    roles:
+    - flow-discovery
+    target_ref: ''
+    task_map: ''
+    aggregate:
+      mode: wait_for_all
+      success_event: flow.discovery.completed
+      failure_event: flow.discovery.failed
+      child_success_event: flow.discovery.child.completed
+      child_failure_event: flow.discovery.child.failed
+      synth_role: ''
+      max_retries: 0
+      review_strategy: ''
+      pending_event: ''
+      quorum: 0
+      synth_timeout_seconds: 0
+    timeout_seconds: 0
+    criteria:
+      instructions:
+      - This stage runs after implementation verification and should inspect the delivered
+        candidate for residual gaps.
+      - Use concrete evidence from files, tests, and prior artifacts; emit failure
+        for blocking product/regression/parity gaps that still need rework.
+      - 'If no blocking gaps remain, emit success with explicit zero-gap closure evidence:
+        include `evidence_refs` and at least one of `test_refs`, `e2e_refs`, `demo_refs`,
+        `regression_refs`, or `parity_refs` as applicable.'
+      - If gaps remain, emit bounded `gap_tasks` with source refs and verification
+        commands instead of a prose-only finding.
+      success_criteria: []
+      output:
+        required_keys: []
+        required_artifacts: []
+        artifact_kinds: []
+      retry:
+        max_attempts: 0
+        backoff_seconds: 0
+        on_failure: rework
+    gate_profile: []
+    retrigger_requires_delta: false
+    synthesize_canonical_tasks: false
+  - id: prd-lanes-impl
+    trigger: task_map.ready
+    flow_kind: prd
+    topology: fanout_writer_scoped
+    operation: ''
+    attempt_domain: ''
+    result_semantics: ''
+    input_ports: []
+    output_ports: []
+    dependencies: []
+    dependency_events: []
+    dependency_failure_events: []
+    dependency_barrier_id: ''
+    dependency_barrier_digest: ''
+    roles:
+    - dev-lane-0
+    - dev-lane-1
+    target_ref: ''
+    task_map: ${task_map_ref}
+    aggregate:
+      mode: candidate_integration
+      success_event: candidate.ready
+      failure_event: integration.failed
+      child_success_event: dev.build.done
+      child_failure_event: dev.failed
+      synth_role: ''
+      max_retries: 1
+      review_strategy: ''
+      pending_event: ''
+      quorum: 0
+      synth_timeout_seconds: 0
+    timeout_seconds: 0
+    criteria:
+      instructions: []
+      success_criteria: []
+      output:
+        required_keys: []
+        required_artifacts: []
+        artifact_kinds: []
+      retry:
+        max_attempts: 0
+        backoff_seconds: 0
+        on_failure: rework
+    gate_profile: []
+    retrigger_requires_delta: false
+    synthesize_canonical_tasks: true
+    fanout:
+      assignment:
+        strategy: affinity_stage_slots
+        role_pool: []
+        lane_profile: prd-lanes-slot
+        stage_slot: impl
+  - id: prd-lanes-verify
+    trigger: candidate.ready
+    flow_kind: prd
+    topology: fanout_reader
+    operation: ''
+    attempt_domain: ''
+    result_semantics: ''
+    input_ports: []
+    output_ports: []
+    dependencies: []
+    dependency_events: []
+    dependency_failure_events: []
+    dependency_barrier_id: ''
+    dependency_barrier_digest: ''
+    roles:
+    - verify-lane-0
+    - verify-lane-1
+    target_ref: ''
+    task_map: ''
+    aggregate:
+      mode: wait_for_all
+      success_event: test.passed
+      failure_event: test.failed
+      child_success_event: verify.child.completed
+      child_failure_event: verify.child.failed
+      synth_role: ''
+      max_retries: 1
+      review_strategy: ''
+      pending_event: ''
+      quorum: 0
+      synth_timeout_seconds: 0
+    timeout_seconds: 0
+    criteria:
+      instructions: []
+      success_criteria: []
+      output:
+        required_keys: []
+        required_artifacts: []
+        artifact_kinds: []
+      retry:
+        max_attempts: 0
+        backoff_seconds: 0
+        on_failure: rework
+    on_fail:
+      event: verify.child.failed
+      restart_stage: prd-lanes-impl
+      restart_role: ''
+      target_affinity: same_lane
+      max_attempts: 2
+      feedback_artifact: required
+      emit: impl.rework.requested
+    gate_profile: []
+    retrigger_requires_delta: false
+    synthesize_canonical_tasks: false
+  - id: prd-lanes-final
+    trigger: flow.goal.closed
+    flow_kind: prd
+    topology: fanout_reader
+    operation: ''
+    attempt_domain: ''
+    result_semantics: ''
+    input_ports: []
+    output_ports: []
+    dependencies: []
+    dependency_events: []
+    dependency_failure_events: []
+    dependency_barrier_id: ''
+    dependency_barrier_digest: ''
+    roles:
+    - judge-prd
+    target_ref: ''
+    task_map: ''
+    aggregate:
+      mode: wait_for_all
+      success_event: goal.closure.synthesized
+      failure_event: goal.closure.synthesis.failed
+      child_success_event: judge.child.completed
+      child_failure_event: judge.child.failed
+      synth_role: ''
+      max_retries: 0
+      review_strategy: ''
+      pending_event: ''
+      quorum: 0
+      synth_timeout_seconds: 0
+    timeout_seconds: 0
+    criteria:
+      instructions: []
+      success_criteria: []
+      output:
+        required_keys: []
+        required_artifacts: []
+        artifact_kinds: []
+      retry:
+        max_attempts: 0
+        backoff_seconds: 0
+        on_failure: rework
+    gate_profile: []
+    retrigger_requires_delta: false
+    synthesize_canonical_tasks: false
+  pipelines:
+  - id: prd-lanes
+    kind: lane_pipeline
+    trigger: task_map.ready
+    affinity_key: affinity_tag
+    lane_count: 2
+    overflow: first_released_lane
+    max_rework_attempts: 2
+    trace_budget: 6
+    require_artifact_digests: false
+    stages:
+    - id: impl
+      role_pattern: dev-lane-{lane}
+      terminal:
+        success: dev.build.done
+        failure: dev.failed
+    - id: verify
+      role_pattern: verify-lane-{lane}
+      terminal:
+        success: verify.child.completed
+        failure: verify.child.failed
+      on_failure:
+        rework_to: impl
+        feedback_artifact: required
+    flow_kind: prd
+    task_source:
+      task_map_ref: ${task_map_ref}
+    final:
+      when: all_tasks_verified
+      role: judge-prd
+      success: goal.closure.synthesized
+      failure: goal.closure.synthesis.failed
+    barriers:
+      stage_transition: stage_barrier
+      final: ''
+    lane_role_template:
+      backend: codex
+      transport: tmux
+      model: ''
+      model_reasoning_effort: high
+      context_window_tokens: 200000
+      permission_mode: bypass
+      stuck_threshold_seconds: 900.0
+      spawn_ready_timeout_seconds: 240.0
+      budget_usd: null
+      allowed_tools: []
+      plugins: []
+      skills_by_stage:
+        impl:
+        - zf-yoke-dev-worker-role-context
+        verify:
+        - zf-workflow-adaptation-boundary
+        - zf-project-adapter-matrix-enrichment
+        - zf-yoke-test-evaluator-role-context
+      role_kind_by_stage: {}
+      backend_by_stage: {}
+      provider_session: null
+      provider_session_by_stage: {}
+      lifecycle:
+        mode: on_demand
+        idle_seconds: 120.0
+        cooldown_seconds: 180.0
+        preserve_session: true
+        preserve_workdir: true
+      lifecycle_by_stage: {}
+      execution:
+        command: ''
+        default_profile: bounded-direct-v1
+        profile_allowlist:
+        - bounded-direct-v1
+      publishes_extra_by_stage: {}
+      role_stages_by_stage: {}
+    schema_profile: canonical-dag/v8
+    assembly: none
+  affinity_lanes:
+    prd-lanes-slot:
+      affinity_key: affinity_tag
+      queue:
+        order: priority_fifo
+      lanes:
+      - id: lane0
+        impl: dev-lane-0
+        review: ''
+        verify: verify-lane-0
+      - id: lane1
+        impl: dev-lane-1
+        review: ''
+        verify: verify-lane-1
+  wake_extensions:
+    hooks:
+      enabled: false
+      include: []
+      rate_limit_per_minute: 0
+    agent:
+      enabled: false
+      include: []
+      rate_limit_per_minute: 0
+  dag:
+    enabled: false
+    graph_static_gate_action: false
+    graph_review_test_judge_reconcile: false
+    default_gate_level: permissive
+    dev_requires_orchestrator_backlog: false
+    design_to_backlog_owner: ''
+    design_events: {}
+    required_backlog_refs: []
+    stage_order: []
+    event_schemas:
+      task_map.ready:
+        required:
+        - task_map_ref
+      candidate.ready:
+        required:
+        - fanout_id
+        - candidate_ref
+        - candidate_base_commit
+      candidate.conflict:
+        required:
+        - fanout_id
+        - status
+      integration.failed:
+        required:
+        - fanout_id
+        - status
+      review.approved:
+        required:
+        - fanout_id
+        - stage_id
+        - status
+      review.rejected:
+        required:
+        - fanout_id
+        - stage_id
+        - status
+      review.child.completed:
+        required:
+        - fanout_id
+        - child_id
+        - status
+        - summary
+        - evidence_refs
+        - report
+        - workflow_run_id
+        - task_id
+        - contract_revision
+        - task_map_generation
+        - base_commit
+        - task_ref
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_commit
+        - target_snapshot_digest
+        - verification_result
+        non_empty:
+        - summary
+        - workflow_run_id
+        - task_id
+        - contract_revision
+        - task_map_generation
+        - base_commit
+        - task_ref
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_commit
+        - target_snapshot_digest
+        nested:
+          verification_result:
+            required:
+            - schema_version
+            - execution_status
+            - verdict
+            - failure_class
+            - workflow_run_id
+            - task_id
+            - contract_revision
+            - task_map_generation
+            - base_commit
+            - task_ref
+            - contract_snapshot_ref
+            - contract_snapshot_digest
+            - target_snapshot_ref
+            - target_commit
+            - target_snapshot_digest
+            - verification_owner
+            - verification_tier
+            - requirement_results
+            non_empty:
+            - schema_version
+            - execution_status
+            - verdict
+            - failure_class
+            - workflow_run_id
+            - task_id
+            - contract_revision
+            - task_map_generation
+            - base_commit
+            - task_ref
+            - contract_snapshot_ref
+            - contract_snapshot_digest
+            - target_snapshot_ref
+            - target_commit
+            - target_snapshot_digest
+            - verification_owner
+            - verification_tier
+            enum:
+              execution_status:
+              - completed
+              - failed
+              verdict:
+              - passed
+              - rejected
+              - blocked
+              - abstained
+              failure_class:
+              - none
+              - product_failure
+              - dependency_blocked
+              - verifier_execution_failure
+              - verifier_contract_failure
+              verification_owner:
+              - impl_self_check
+              - task_verify
+              - candidate_verify
+              - human
+              verification_tier:
+              - fast
+              - task_non_smoke
+              - integration
+              - real_e2e
+              - release
+            list_item:
+              requirement_results:
+                required:
+                - acceptance_id
+                - status
+                - verification_owner
+                - verification_tier
+                - evidence_refs
+                - findings
+                - reproduction_commands
+                non_empty:
+                - acceptance_id
+                - status
+                - verification_owner
+                - verification_tier
+                enum:
+                  status:
+                  - passed
+                  - failed
+                  - blocked
+                  - waived
+                  - not_applicable
+                  verification_owner:
+                  - impl_self_check
+                  - task_verify
+                  - candidate_verify
+                  - human
+                  verification_tier:
+                  - fast
+                  - task_non_smoke
+                  - integration
+                  - real_e2e
+                  - release
+            when:
+              if:
+                execution_status: completed
+              then:
+                non_empty:
+                - requirement_results
+      review.child.failed:
+        required:
+        - fanout_id
+        - child_id
+        - status
+        - summary
+        - evidence_refs
+        - report
+        - workflow_run_id
+        - task_id
+        - contract_revision
+        - task_map_generation
+        - base_commit
+        - task_ref
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_commit
+        - target_snapshot_digest
+        - verification_result
+        non_empty:
+        - summary
+        - workflow_run_id
+        - task_id
+        - contract_revision
+        - task_map_generation
+        - base_commit
+        - task_ref
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_commit
+        - target_snapshot_digest
+        nested:
+          verification_result:
+            required:
+            - schema_version
+            - execution_status
+            - verdict
+            - failure_class
+            - workflow_run_id
+            - task_id
+            - contract_revision
+            - task_map_generation
+            - base_commit
+            - task_ref
+            - contract_snapshot_ref
+            - contract_snapshot_digest
+            - target_snapshot_ref
+            - target_commit
+            - target_snapshot_digest
+            - verification_owner
+            - verification_tier
+            - requirement_results
+            non_empty:
+            - schema_version
+            - execution_status
+            - verdict
+            - failure_class
+            - workflow_run_id
+            - task_id
+            - contract_revision
+            - task_map_generation
+            - base_commit
+            - task_ref
+            - contract_snapshot_ref
+            - contract_snapshot_digest
+            - target_snapshot_ref
+            - target_commit
+            - target_snapshot_digest
+            - verification_owner
+            - verification_tier
+            enum:
+              execution_status:
+              - completed
+              - failed
+              verdict:
+              - passed
+              - rejected
+              - blocked
+              - abstained
+              failure_class:
+              - none
+              - product_failure
+              - dependency_blocked
+              - verifier_execution_failure
+              - verifier_contract_failure
+              verification_owner:
+              - impl_self_check
+              - task_verify
+              - candidate_verify
+              - human
+              verification_tier:
+              - fast
+              - task_non_smoke
+              - integration
+              - real_e2e
+              - release
+            list_item:
+              requirement_results:
+                required:
+                - acceptance_id
+                - status
+                - verification_owner
+                - verification_tier
+                - evidence_refs
+                - findings
+                - reproduction_commands
+                non_empty:
+                - acceptance_id
+                - status
+                - verification_owner
+                - verification_tier
+                enum:
+                  status:
+                  - passed
+                  - failed
+                  - blocked
+                  - waived
+                  - not_applicable
+                  verification_owner:
+                  - impl_self_check
+                  - task_verify
+                  - candidate_verify
+                  - human
+                  verification_tier:
+                  - fast
+                  - task_non_smoke
+                  - integration
+                  - real_e2e
+                  - release
+            when:
+              if:
+                execution_status: completed
+              then:
+                non_empty:
+                - requirement_results
+      test.passed:
+        required:
+        - fanout_id
+        - stage_id
+        - status
+      test.failed:
+        required:
+        - fanout_id
+        - stage_id
+        - status
+      verify.child.completed:
+        required:
+        - fanout_id
+        - child_id
+        - status
+        - summary
+        - evidence_refs
+        - report
+        - workflow_run_id
+        - task_id
+        - contract_revision
+        - task_map_generation
+        - base_commit
+        - task_ref
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_commit
+        - target_snapshot_digest
+        - verification_result
+        non_empty:
+        - summary
+        - workflow_run_id
+        - task_id
+        - contract_revision
+        - task_map_generation
+        - base_commit
+        - task_ref
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_commit
+        - target_snapshot_digest
+        nested:
+          verification_result:
+            required:
+            - schema_version
+            - execution_status
+            - verdict
+            - failure_class
+            - workflow_run_id
+            - task_id
+            - contract_revision
+            - task_map_generation
+            - base_commit
+            - task_ref
+            - contract_snapshot_ref
+            - contract_snapshot_digest
+            - target_snapshot_ref
+            - target_commit
+            - target_snapshot_digest
+            - verification_owner
+            - verification_tier
+            - requirement_results
+            non_empty:
+            - schema_version
+            - execution_status
+            - verdict
+            - failure_class
+            - workflow_run_id
+            - task_id
+            - contract_revision
+            - task_map_generation
+            - base_commit
+            - task_ref
+            - contract_snapshot_ref
+            - contract_snapshot_digest
+            - target_snapshot_ref
+            - target_commit
+            - target_snapshot_digest
+            - verification_owner
+            - verification_tier
+            enum:
+              execution_status:
+              - completed
+              - failed
+              verdict:
+              - passed
+              - rejected
+              - blocked
+              - abstained
+              failure_class:
+              - none
+              - product_failure
+              - dependency_blocked
+              - verifier_execution_failure
+              - verifier_contract_failure
+              verification_owner:
+              - impl_self_check
+              - task_verify
+              - candidate_verify
+              - human
+              verification_tier:
+              - fast
+              - task_non_smoke
+              - integration
+              - real_e2e
+              - release
+            list_item:
+              requirement_results:
+                required:
+                - acceptance_id
+                - status
+                - verification_owner
+                - verification_tier
+                - evidence_refs
+                - findings
+                - reproduction_commands
+                non_empty:
+                - acceptance_id
+                - status
+                - verification_owner
+                - verification_tier
+                enum:
+                  status:
+                  - passed
+                  - failed
+                  - blocked
+                  - waived
+                  - not_applicable
+                  verification_owner:
+                  - impl_self_check
+                  - task_verify
+                  - candidate_verify
+                  - human
+                  verification_tier:
+                  - fast
+                  - task_non_smoke
+                  - integration
+                  - real_e2e
+                  - release
+            when:
+              if:
+                execution_status: completed
+              then:
+                non_empty:
+                - requirement_results
+      verify.child.failed:
+        required:
+        - fanout_id
+        - child_id
+        - status
+        - summary
+        - evidence_refs
+        - report
+        - workflow_run_id
+        - task_id
+        - contract_revision
+        - task_map_generation
+        - base_commit
+        - task_ref
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_commit
+        - target_snapshot_digest
+        - verification_result
+        non_empty:
+        - summary
+        - workflow_run_id
+        - task_id
+        - contract_revision
+        - task_map_generation
+        - base_commit
+        - task_ref
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_commit
+        - target_snapshot_digest
+        nested:
+          verification_result:
+            required:
+            - schema_version
+            - execution_status
+            - verdict
+            - failure_class
+            - workflow_run_id
+            - task_id
+            - contract_revision
+            - task_map_generation
+            - base_commit
+            - task_ref
+            - contract_snapshot_ref
+            - contract_snapshot_digest
+            - target_snapshot_ref
+            - target_commit
+            - target_snapshot_digest
+            - verification_owner
+            - verification_tier
+            - requirement_results
+            non_empty:
+            - schema_version
+            - execution_status
+            - verdict
+            - failure_class
+            - workflow_run_id
+            - task_id
+            - contract_revision
+            - task_map_generation
+            - base_commit
+            - task_ref
+            - contract_snapshot_ref
+            - contract_snapshot_digest
+            - target_snapshot_ref
+            - target_commit
+            - target_snapshot_digest
+            - verification_owner
+            - verification_tier
+            enum:
+              execution_status:
+              - completed
+              - failed
+              verdict:
+              - passed
+              - rejected
+              - blocked
+              - abstained
+              failure_class:
+              - none
+              - product_failure
+              - dependency_blocked
+              - verifier_execution_failure
+              - verifier_contract_failure
+              verification_owner:
+              - impl_self_check
+              - task_verify
+              - candidate_verify
+              - human
+              verification_tier:
+              - fast
+              - task_non_smoke
+              - integration
+              - real_e2e
+              - release
+            list_item:
+              requirement_results:
+                required:
+                - acceptance_id
+                - status
+                - verification_owner
+                - verification_tier
+                - evidence_refs
+                - findings
+                - reproduction_commands
+                non_empty:
+                - acceptance_id
+                - status
+                - verification_owner
+                - verification_tier
+                enum:
+                  status:
+                  - passed
+                  - failed
+                  - blocked
+                  - waived
+                  - not_applicable
+                  verification_owner:
+                  - impl_self_check
+                  - task_verify
+                  - candidate_verify
+                  - human
+                  verification_tier:
+                  - fast
+                  - task_non_smoke
+                  - integration
+                  - real_e2e
+                  - release
+            when:
+              if:
+                execution_status: completed
+              then:
+                non_empty:
+                - requirement_results
+      judge.passed:
+        required:
+        - fanout_id
+        - stage_id
+        - status
+      judge.failed:
+        required:
+        - fanout_id
+        - stage_id
+        - status
+      judge.child.completed:
+        required:
+        - fanout_id
+        - child_id
+        - status
+        - summary
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - task_map_generation
+        - target_commit
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_snapshot_digest
+        - goal_closure_result
+        non_empty:
+        - summary
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - task_map_generation
+        - target_commit
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_snapshot_digest
+        nested:
+          goal_closure_result:
+            required:
+            - schema_version
+            - workflow_run_id
+            - goal_id
+            - flow_kind
+            - task_map_generation
+            - target_commit
+            - objective_ref
+            - goal_claim_set_ref
+            - goal_claim_set_digest
+            - planning_result_ref
+            - candidate_ref
+            - closure_fact_ref
+            - closure_fact_digest
+            - input_result_refs
+            - goal_coverage
+            - open_gap_refs
+            - verdict
+            - recommended_action
+            - summary
+            non_empty:
+            - schema_version
+            - workflow_run_id
+            - goal_id
+            - flow_kind
+            - task_map_generation
+            - target_commit
+            - objective_ref
+            - goal_claim_set_ref
+            - goal_claim_set_digest
+            - planning_result_ref
+            - candidate_ref
+            - closure_fact_ref
+            - closure_fact_digest
+            - input_result_refs
+            - goal_coverage
+            - verdict
+            - recommended_action
+            - summary
+            enum:
+              flow_kind:
+              - issue
+              - prd
+              - refactor
+              verdict:
+              - passed
+              - rejected
+              - blocked
+              recommended_action:
+              - complete
+              - gap_plan
+              - replan
+              - candidate_verify
+              - human
+              - hold
+            list_item:
+              goal_coverage:
+                required:
+                - goal_claim_id
+                - status
+                - supporting_result_refs
+                non_empty:
+                - goal_claim_id
+                - status
+                enum:
+                  status:
+                  - closed
+                  - open
+                  - blocked
+                  - waived
+      judge.child.failed:
+        required:
+        - fanout_id
+        - child_id
+        - status
+        - reason
+      lane.stage.completed:
+        required:
+        - pipeline_id
+        - trace_id
+        - task_id
+        - lane_id
+        - stage_slot
+        - next_stage_slot
+        - attempt_id
+        - fanout_id
+        - child_id
+        - run_id
+        - role_instance
+        - task_map_ref
+        - handoff_ref
+        - source_commit
+        - evidence_refs
+      lane.stage.failed:
+        required:
+        - pipeline_id
+        - task_id
+        - lane_id
+        - stage_slot
+        - attempt_id
+        - failure_target
+        - status
+        - reason
+      workflow.call.result.reported:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - result_digest
+        - mode
+        - adapter_id
+        - adapter_version
+        - envelope_ref
+        - control_result_ref
+        - source_event_id
+      workflow.call.result.repair.requested:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - envelope_ref
+        - control_result_ref
+        - correction_ref
+        - issues
+        - repair_round
+        - repair_cap
+        - semantic_attempt_incremented
+      workflow.call.result.admitted:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - admission_status
+        - mode
+        - envelope_ref
+        - control_result_ref
+        - control_result_schema
+        - source_event_id
+      workflow.call.result.invalid:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - envelope_ref
+        - control_result_ref
+        - issues
+        - repair_round
+        - repair_cap
+        - reason
+        - semantic_attempt_incremented
+      workflow.operation.requested:
+        required:
+        - schema_version
+        - canonicalization_version
+        - workflow_run_id
+        - operation_id
+        - operation_type
+        - request_hash
+        - request_ref
+      workflow.operation.reserved:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - reservation_id
+        - reservation_expires_at
+        - continuation_key
+        - expected_generation
+        - expected_package_ref
+        - expected_package_digest
+        - pending_action_digest
+        - budget_snapshot
+        - idempotency_key
+        - semantic_attempt_consumed
+      workflow.operation.started:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+      workflow.operation.retry_started:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - retry_attempt
+        - recovery_class
+        - reason
+      workflow.operation.settled:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - admitted_call_result_ref
+        - reason
+      workflow.operation.failed:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - reason
+      workflow.operation.blocked:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - reason
+      workflow.operation.superseded:
+        required:
+        - schema_version
+        - workflow_run_id
+        - operation_id
+        - request_hash
+        - reason
+        - reservation_id
+        - semantic_attempt_consumed
+      workflow.fragment.proposed:
+        required:
+        - schema_version
+        - workflow_run_id
+        - fragment_id
+        - fragment_digest
+        - mode
+        - parent_operation_id
+        - task_map_generation
+        - current_plan_artifact_package
+        - trigger_checkpoint
+        - nodes
+      workflow.fragment.admitted:
+        required:
+        - schema_version
+        - workflow_run_id
+        - fragment_id
+        - fragment_digest
+        - mode
+        - task_map_generation
+        - continuation_key
+        - parent_operation_id
+        - reason
+        - semantic_attempt_consumed
+      workflow.fragment.rejected:
+        required:
+        - schema_version
+        - workflow_run_id
+        - fragment_id
+        - fragment_digest
+        - mode
+        - task_map_generation
+        - continuation_key
+        - parent_operation_id
+        - reason
+        - semantic_attempt_consumed
+      workflow.fragment.superseded:
+        required:
+        - schema_version
+        - workflow_run_id
+        - fragment_id
+        - fragment_digest
+        - mode
+        - task_map_generation
+        - continuation_key
+        - parent_operation_id
+        - reason
+        - semantic_attempt_consumed
+      workflow.fragment.cancelled:
+        required:
+        - schema_version
+        - workflow_run_id
+        - fragment_id
+        - fragment_digest
+        - mode
+        - task_map_generation
+        - continuation_key
+        - parent_operation_id
+        - reason
+        - semantic_attempt_consumed
+      goal.claim_set.pinned:
+        required:
+        - workflow_run_id
+        - goal_id
+        - task_map_generation
+        - task_map_ref
+        - goal_claim_set_ref
+        - goal_claim_set_digest
+      flow.goal.closed:
+        required:
+        - workflow_run_id
+        - goal_id
+        - task_map_generation
+        - candidate_head_commit
+        - closure_fact_ref
+        - closure_fact_digest
+        - closure_identity
+      module.parity.closed:
+        required:
+        - workflow_run_id
+        - goal_id
+        - task_map_generation
+        - candidate_head_commit
+        - closure_fact_ref
+        - closure_fact_digest
+        - closure_identity
+      goal.closure.synthesized:
+        required:
+        - fanout_id
+        - stage_id
+        - status
+        - workflow_run_id
+        - goal_id
+        - task_map_generation
+        - candidate_head_commit
+        - closure_identity
+        - closure_fact_ref
+        - closure_fact_digest
+        - goal_claim_set_ref
+        - goal_claim_set_digest
+        - operation_id
+        - request_hash
+        - contract_snapshot_ref
+        - contract_snapshot_digest
+        - target_snapshot_ref
+        - target_snapshot_digest
+        - admitted_call_result_ref
+        - control_result_ref
+        - goal_closure_result
+        nested:
+          goal_closure_result:
+            required:
+            - schema_version
+            - workflow_run_id
+            - goal_id
+            - flow_kind
+            - task_map_generation
+            - target_commit
+            - objective_ref
+            - goal_claim_set_ref
+            - goal_claim_set_digest
+            - planning_result_ref
+            - candidate_ref
+            - closure_fact_ref
+            - closure_fact_digest
+            - input_result_refs
+            - goal_coverage
+            - open_gap_refs
+            - verdict
+            - recommended_action
+            - summary
+            non_empty:
+            - schema_version
+            - workflow_run_id
+            - goal_id
+            - flow_kind
+            - task_map_generation
+            - target_commit
+            - objective_ref
+            - goal_claim_set_ref
+            - goal_claim_set_digest
+            - planning_result_ref
+            - candidate_ref
+            - closure_fact_ref
+            - closure_fact_digest
+            - input_result_refs
+            - goal_coverage
+            - verdict
+            - recommended_action
+            - summary
+            enum:
+              flow_kind:
+              - issue
+              - prd
+              - refactor
+              verdict:
+              - passed
+              - rejected
+              - blocked
+              recommended_action:
+              - complete
+              - gap_plan
+              - replan
+              - candidate_verify
+              - human
+              - hold
+            list_item:
+              goal_coverage:
+                required:
+                - goal_claim_id
+                - status
+                - supporting_result_refs
+                non_empty:
+                - goal_claim_id
+                - status
+                enum:
+                  status:
+                  - closed
+                  - open
+                  - blocked
+                  - waived
+      goal.closure.synthesis.failed:
+        required:
+        - fanout_id
+        - stage_id
+        - status
+      run.goal.completion.claimed:
+        required:
+        - run_id
+        - goal_id
+        - claim_id
+        - task_map_generation
+        - target_commit
+        - goal_claim_set_ref
+        - goal_claim_set_digest
+        - admitted_call_result_ref
+      run.goal.completion.blocked:
+        required:
+        - run_id
+        - claim_id
+        - blockers
+        - blocker_fingerprint
+      run.goal.completion.rejected:
+        required:
+        - run_id
+        - claim_id
+        - invalid_reasons
+      run.goal.completed:
+        required:
+        - run_id
+        - goal_id
+        - claim_id
+        - task_map_generation
+        - target_commit
+        - verified_target_commit
+        - verification_event_id
+        - verification_admitted_call_result_ref
+        - candidate_event_id
+        - candidate_ref
+        - goal_claim_set_ref
+        - goal_claim_set_digest
+        - admitted_call_result_ref
+        - delivery_policy
+        - delivery_status
+        - delivery_event_id
+        non_empty:
+        - run_id
+        - goal_id
+        - claim_id
+        - task_map_generation
+        - target_commit
+        - verified_target_commit
+        - verification_event_id
+        - verification_admitted_call_result_ref
+        - candidate_event_id
+        - candidate_ref
+        - goal_claim_set_ref
+        - goal_claim_set_digest
+        - admitted_call_result_ref
+        - delivery_policy
+        - delivery_status
+        enum:
+          delivery_status:
+          - not_required
+          - settled
+        nested:
+          verification_admitted_call_result_ref:
+            required:
+            - ref
+            - sha256
+            non_empty:
+            - ref
+            - sha256
+          admitted_call_result_ref:
+            required:
+            - ref
+            - sha256
+            non_empty:
+            - ref
+            - sha256
+        when:
+          if:
+            delivery_status: settled
+          then:
+            non_empty:
+            - delivery_event_id
+      run.delivery.requested:
+        required:
+        - run_id
+        - claim_id
+        - delivery_operation_id
+        - candidate_ref
+      run.delivery.settled:
+        required:
+        - run_id
+        - claim_id
+        - delivery_operation_id
+        - candidate_ref
+      run.delivery.failed:
+        required:
+        - run_id
+        - claim_id
+        - delivery_operation_id
+        - candidate_ref
+        - reason
+      run.delivery.blocked:
+        required:
+        - run_id
+        - claim_id
+        - delivery_operation_id
+        - candidate_ref
+        - reason
+      goal.closure.rejected:
+        required:
+        - workflow_run_id
+        - goal_id
+        - task_map_generation
+        - target_commit
+        - admitted_call_result_ref
+        - recommended_action
+        - open_gap_refs
+      goal.closure.blocked:
+        required:
+        - workflow_run_id
+        - goal_id
+        - task_map_generation
+        - target_commit
+        - admitted_call_result_ref
+        - recommended_action
+        - reason
+      goal.closure.compat.projected:
+        required:
+        - workflow_run_id
+        - goal_id
+        - source_event_id
+        - compat_event_id
+        - compat_event_type
+        - admitted_call_result_ref
+      plan.artifact_package.admitted:
+        required:
+        - status
+        - workflow_run_id
+        - flow_kind
+        - package_slot
+        - producer_stage_id
+        - plan_revision
+        - task_map_generation
+        - package_id
+        - package_ref
+        - package_digest
+        - run_contract_ref
+        - run_contract_digest
+        - mode
+      plan.artifact_package.rejected:
+        required:
+        - status
+        - workflow_run_id
+        - flow_kind
+        - package_slot
+        - producer_stage_id
+        - mode
+        - reason
+      plan.artifact_package.superseded:
+        required:
+        - status
+        - workflow_run_id
+        - package_slot
+        - package_ref
+        - package_digest
+        - superseded_by_package_ref
+        - superseded_by_package_digest
+      task_map.materialization.prepared:
+        required:
+        - status
+        - materialization_plan_ref
+        - materialization_plan_digest
+        - task_map_ref
+        - task_ids
+      task_map.materialization.committed:
+        required:
+        - status
+        - materialization_plan_ref
+        - materialization_plan_digest
+        - task_map_ref
+        - task_ids
+      task_map.materialization.failed:
+        required:
+        - status
+        - materialization_plan_ref
+        - materialization_plan_digest
+        - task_map_ref
+        - reason
+    event_schemas_by_kind: {}
+    schema_profile: canonical-dag/v8
+    external_triggers:
+    - prd.requested
+    - task_map.ready
+  inline_overrides:
+    enabled: false
+    patterns: {}
+    audit_event: workflow.inline_override
+  work_units:
+    enabled: true
+    split_quality:
+      mode: blocking
+      max_scope_files: 6
+      max_acceptance_criteria: 4
+      require_validation_surface: true
+  completion_audit:
+    enabled: false
+    provider_completed_state: completed_unverified
+    routes: {}
+  resume_packet:
+    enabled: false
+    max_tokens: 1200
+    generate_on: []
+  integration:
+    enabled: false
+    boundaries: []
+  strict_triggers:
+    rework_attempts_gte: 2
+    context_usage_gte: 0.0
+    file_globs: []
+    labels: []
+  fast_path:
+    enabled: false
+    max_scope_files: 2
+    skip_stages:
+    - design
+    - design_critique
+    - judge
+    allow_docs_only: true
+    blocked_file_globs: []
+    blocked_keywords: []
+    verification_required: true
+  replan_eval:
+    enabled: false
+    profile: baseline
+    require_source_coverage: true
+    strict_requires_independent_review: true
+    release_requires_e2e: true
+    release_requires_security: true
+    release_requires_human_approval: true
+  plan_approval:
+    enabled: false
+  _flow_metadata:
+    flow_kind: prd
+    quality_floor: product-demo
+    evidence_policy: strict_refs
+    environment_policy: ''
+    projection_policy: control_room
+    delivery_policy: ship_candidate
+    post_verify_discovery: product_completeness
+    result_protocol:
+      mode: blocking
+      semantic_submit_profiles:
+        workflow-read: blocking
+        plan-synth: blocking
+        implementation: blocking
+        task-verify: blocking
+        candidate-verify: blocking
+        thin-judge-goal-closure: blocking
+    artifact_package:
+      mode: blocking
+      package_slot: execution_plan
+      required_ports:
+      - requirement_spec
+      - goal_claim_set
+      - task_map
+      - planning_result
+      conditional_ports:
+      - accepted_plan
+      - plan_critique
+      - project_adapter
+    prd_ref: docs/prd/alpamayo-web-studio-prd.md
+    target_root: app
+    stack: ''
+    controller_profile: prd-flow-v4-task-pipeline
+    task_pipeline:
+      schema_version: task-pipeline-controller-profile.v1
+      profile_id: prd-flow-v4-task-pipeline
+      flow_kind: prd
+      mode: blocking
+      max_active_task_pipelines: 4
+      max_rework_attempts: 2
+      pools:
+        impl:
+          capacity: 2
+          role_instances:
+          - dev-lane-0
+          - dev-lane-1
+          skills: []
+          capabilities: []
+          worker_profiles: []
+        verify:
+          capacity: 2
+          role_instances:
+          - verify-lane-0
+          - verify-lane-1
+          skills: []
+          capabilities: []
+          worker_profiles: []
+      integration_admission:
+        default: verify_admitted
+        risk_review:
+          enabled: false
+          for_risks:
+          - high
+          - critical
+          timeout_seconds: 180
+          max_turns: 1
+          budget_usd: 1.0
+          fallback: fail_closed
+      backpressure:
+        max_unverified_tasks: 3
+        max_integration_queue: 2
+      worker_lifecycle:
+        mode: on_demand
+        idle_seconds: 120
+      affinity:
+        impl_rework: prefer_previous_session
+        verify_independence: different_role
+        session_binding: task_stage
+        cross_task_context: fresh
+      candidate:
+        integration: incremental_serial_cas
+        integration_capacity: 1
+        rolling_smoke: required
+        incremental_event: integration.queue.integrated
+        freeze_event: candidate.ready
+        delivery_event: run.delivery.completed
+        partial_candidate_auto_ship: forbidden
+        final_verify_target: frozen_exact_commit
+      profile_digest: 57e7d0fcf8ca76d0bd441626bbf22a3468351abb2240b92f8d6e13c23171111d
+    rendered_pipeline_stages: true
+roles:
+- name: orchestrator
+  backend: codex
+  role_kind: reader
+  flow_kind: ''
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: orchestrator
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: resident
+    idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages: []
+  triggers:
+  - dispatch.silent_stall
+  - orchestrator.rework.triage.requested
+  - orchestrator.semantic.checkpoint.requested
+  publishes:
+  - orchestrator.rework.triage.recorded
+  guardrails: []
+  plugins: []
+  skills:
+  - zf-yoke-orchestrator-role-context
+  - zf-harness-state-sync
+  agent: ''
+- name: product-scan
+  backend: codex
+  role_kind: reader
+  flow_kind: prd
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: product-scan
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: on_demand
+    idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages: []
+  triggers: []
+  publishes:
+  - prd.scan.child.completed
+  - prd.scan.child.failed
+  guardrails: []
+  plugins: []
+  skills:
+  - source-verification
+  - context-hygiene
+  - zf-workflow-adaptation-boundary
+  - zf-project-adapter-matrix-enrichment
+  - zf-prd-plan-synth
+  - zf-yoke-planner-role-context
+  agent: ''
+- name: tech-scan
+  backend: codex
+  role_kind: reader
+  flow_kind: prd
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: tech-scan
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: on_demand
+    idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages: []
+  triggers: []
+  publishes:
+  - prd.scan.child.completed
+  - prd.scan.child.failed
+  guardrails: []
+  plugins: []
+  skills:
+  - source-verification
+  - context-hygiene
+  - zf-workflow-adaptation-boundary
+  - zf-project-adapter-matrix-enrichment
+  - zf-prd-plan-synth
+  - zf-yoke-planner-role-context
+  agent: ''
+- name: planner
+  backend: codex
+  role_kind: reader
+  flow_kind: prd
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: planner
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: on_demand
+    idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages: []
+  triggers: []
+  publishes:
+  - prd.plan.child.completed
+  - prd.plan.child.failed
+  guardrails: []
+  plugins: []
+  skills:
+  - zf-workflow-adaptation-boundary
+  - zf-project-adapter-matrix-enrichment
+  - zf-prd-plan-synth
+  - zf-yoke-planner-role-context
+  agent: ''
+- name: plan-critic
+  backend: codex
+  role_kind: reader
+  flow_kind: prd
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: plan-critic
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: on_demand
+    idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages: []
+  triggers: []
+  publishes: []
+  guardrails: []
+  plugins: []
+  skills:
+  - zf-workflow-adaptation-boundary
+  - zf-yoke-critic-role-context
+  agent: ''
+- name: flow-discovery
+  backend: codex
+  role_kind: reader
+  flow_kind: prd
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: flow-discovery
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: on_demand
+    idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages: []
+  triggers: []
+  publishes:
+  - flow.discovery.child.completed
+  - flow.discovery.child.failed
+  guardrails: []
+  plugins: []
+  skills:
+  - zf-verify-rescan-replan
+  - zf-goal-closure-replan-contract
+  - zf-yoke-test-evaluator-role-context
+  agent: ''
+- name: judge-prd
+  backend: codex
+  role_kind: reader
+  flow_kind: prd
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: judge-prd
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: on_demand
+    idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages: []
+  triggers: []
+  publishes:
+  - judge.child.completed
+  - judge.child.failed
+  guardrails: []
+  plugins: []
+  skills:
+  - zf-goal-closure-judge-contract
+  agent: ''
+- name: dev-lane-0
+  backend: codex
+  role_kind: writer
+  flow_kind: prd
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: dev-lane-0
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: on_demand
+    idle_seconds: 120.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages:
+  - impl
+  triggers: []
+  publishes:
+  - dev.build.done
+  - dev.failed
+  guardrails: []
+  plugins: []
+  skills:
+  - zf-yoke-dev-worker-role-context
+  agent: ''
+- name: dev-lane-1
+  backend: codex
+  role_kind: writer
+  flow_kind: prd
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: dev-lane-1
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: on_demand
+    idle_seconds: 120.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages:
+  - impl
+  triggers: []
+  publishes:
+  - dev.build.done
+  - dev.failed
+  guardrails: []
+  plugins: []
+  skills:
+  - zf-yoke-dev-worker-role-context
+  agent: ''
+- name: verify-lane-0
+  backend: codex
+  role_kind: reader
+  flow_kind: prd
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: verify-lane-0
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: on_demand
+    idle_seconds: 120.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages:
+  - verify
+  triggers: []
+  publishes:
+  - verify.child.completed
+  - verify.child.failed
+  guardrails: []
+  plugins: []
+  skills:
+  - zf-workflow-adaptation-boundary
+  - zf-project-adapter-matrix-enrichment
+  - zf-yoke-test-evaluator-role-context
+  agent: ''
+- name: verify-lane-1
+  backend: codex
+  role_kind: reader
+  flow_kind: prd
+  model: ''
+  model_reasoning_effort: high
+  allowed_tools: []
+  permission_mode: bypass
+  transport: tmux
+  stuck_threshold_seconds: 900.0
+  spawn_ready_timeout_seconds: 240.0
+  instance_id: verify-lane-1
+  replicas: 1
+  context_window_tokens: 200000
+  context_warning_threshold: 0.6
+  context_compact_threshold: 0.7
+  context_hard_cap: 0.9
+  recycle_threshold: 0.6
+  recycle_hard_cap: 0.9
+  max_rework_attempts: 3
+  orphan_warning_seconds: 900.0
+  orphan_escalate_seconds: 1800.0
+  drain_hold_seconds: 180.0
+  budget_usd: null
+  provider_session: null
+  lifecycle:
+    mode: on_demand
+    idle_seconds: 120.0
+    cooldown_seconds: 180.0
+    preserve_session: true
+    preserve_workdir: true
+  autoscale:
+    enabled: false
+    min_replicas: 1
+    max_replicas: 1
+    target_ready_tasks_per_worker: 1
+    scale_up_pending_seconds: 0.0
+    scale_down_idle_seconds: 900.0
+    cooldown_seconds: 180.0
+    drain_before_stop: true
+  constraints:
+    allowed_paths: []
+    blocked_paths: []
+    max_steps: 0
+  execution:
+    command: ''
+    default_profile: bounded-direct-v1
+    profile_allowlist:
+    - bounded-direct-v1
+  stages:
+  - verify
+  triggers: []
+  publishes:
+  - verify.child.completed
+  - verify.child.failed
+  guardrails: []
+  plugins: []
+  skills:
+  - zf-workflow-adaptation-boundary
+  - zf-project-adapter-matrix-enrichment
+  - zf-yoke-test-evaluator-role-context
+  agent: ''
+stage_labels: {}
+quality_gates:
+  static:
+    required_checks:
+    - cd app && npm run typecheck
+    - cd app && npm test
+    - cd app && npm run build
+    - cd app && uv run pytest -q --no-cov
+    on_fail: Candidate verification failed; repair the owning small task before reintegration.
+security:
+  event_signing:
+    enabled: false
+    secret_env: <redacted>
+    allow_unsigned_fallback: false
+safety:
+  tool_closure:
+    enabled: true
+verification:
+  contract:
+    required: false
+    quality_required: false
+    rework_delta_required: false
+    dispatch_token_required: false
+  semantic:
+    enabled: false
+  scope:
+    fail_closed: false
+  architecture:
+    enabled: false
+  promoted:
+    enabled: false
+  event_schema:
+    mode: blocking
+  snapshot_gate: enforced
+  report_evidence_gate: fail_closed
+runtime:
+  workdirs:
+    enabled: true
+    root: .zf/workdirs
+    mode: worktree
+    provision_paths: []
+  git:
+    writer_branch_prefix: worker
+    task_ref_prefix: task
+    candidate_branch_prefix: candidate
+    candidate_base_ref: main
+    candidate_strategy: cherry-pick
+    remote_policy: local
+    ship_target_branch: main
+    ship_candidate_strategy: merge
+    ship_task_strategy: cherry-pick
+    ship_final_command: ''
+    auto_ship_on_candidate_complete: false
+    auto_ship_on_judge_passed: false
+  skills:
+    pool: .zf/skills
+    materialize: copy
+    lock_file: .zf/skills.lock.json
+    strict: true
+  run_manager:
+    backend: codex
+    reflect:
+      enabled: false
+      backend: ''
+      timeout_seconds: 180
+    resident_agent:
+      enabled: true
+      transport: tmux
+      instance_id: run-manager
+      model: ''
+      model_reasoning_effort: ''
+      prompt_on_start: true
+      session_mode: dedicated
+      tmux_session: ''
+    source_repair:
+      enabled: false
+      backend: ''
+      mode: isolated_worktree
+      branch_prefix: self-repair/run-manager
+      apply_policy: proposal_only
+      restart_policy: never_during_active_run
+      restart_boundary: terminal_or_operator_approved_checkpoint
+      replay_before_restart: true
+      allow_paths:
+      - src/zf/**
+      - tests/**
+      - docs/**
+      deny_paths:
+      - .env
+      - '**/events.jsonl'
+      - '**/kanban.json'
+      - '**/session.yaml'
+  autoresearch_resident:
+    enabled: true
+    interval_seconds: 10.0
+    max_actions_per_tick: 1
+    worktree_root: /tmp/zaofu-autoresearch-resident/worktrees
+    output_root: ''
+    self_repair_consumer: false
+    self_repair_spawn: false
+    self_repair_backend: ''
+  feishu_inbound:
+    enabled: false
+    mode: bridge
+    debounce_ms: 600
+    require_routing: true
+    allowed_senders: []
+  feishu_projection:
+    enabled: false
+    backend: lark-cli
+    auto_create_target: false
+    base_name: ''
+    table_name: Kanban
+    time_zone: Asia/Shanghai
+    poll_interval_seconds: 2.0
+    reconcile_interval_seconds: 3600.0
+    include_archive_days: 30
+    max_actions_per_tick: 20
+providers:
+  openclaw:
+    default_binding: ''
+    bindings: {}
+integrations:
+  openclaw_feishu_bridge:
+    enabled: false
+    default_binding: ''
+    bindings: {}
+  feishu_identity:
+    enabled: false
+    verification_token_env: <redacted>
+    replay_window_seconds: 300
+    users: {}
+    action_token_secret_env: <redacted>
+    action_token_ttl_seconds: 86400
+    require_signed_actions: false
+  feishu_project_group:
+    enabled: false
+    auto_provision: false
+    binding_id: project-collaboration
+    group_kind: collaboration
+    name_template: ZaoFu - {project_name}
+    owner_open_id_env: ZF_FEISHU_PROVISIONER_OWNER_OPEN_ID
+    provisioner_purpose: run_manager
+    bot_purposes:
+    - kanban_agent
+    - run_manager
+    primary_responder: kanban_agent
+    channel_id: zaofu
+  feishu_routing: {}
+channel:
+  agent_profiles: {}
+autopilot:
+  enabled: false
+  mode: proposal_only
+  stale_after_hours: 24.0
+  failed_event_window_hours: 72.0
+  schedules: []
+autoresearch:
+  trigger_policy:
+    enabled: true
+    mode: supervised
+    repair_mode: proposal_only
+    self_repair_backend: ''
+    eligible_failure_classes: []
+    severity_min: high
+    cooldown_minutes: 30
+    max_triggers_per_hour: 2
+    max_daily_runs: 5
+skill_sources:
+- name: zaofu-skills
+  path: skills
+  mode: readonly
+global_budget_usd: null
+budget_enforcement_enabled: true
+budget_fail_closed: false
+goal:
+  enabled: true
+  max_rescans: 5
+  idle_progress_ticks: 3
+  rework_fingerprint: true
+  quiescent_after_escalate: true
+  micro_loop: false

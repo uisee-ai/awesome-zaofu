@@ -1,0 +1,33 @@
+# ZaoFu runtime and machine-local agent integration
+/.zf-zaofu-can-lab/
+/.codex/
+
+# Dependencies, build output, and test caches
+/dist/
+/node_modules/
+/coverage/
+/.vite/
+/playwright-report/
+/blob-report/
+/test-results/
+/tests/e2e/.artifacts/
+
+# Repeated workflow intake and planning runs are local ZaoFu projections.
+# Keep the canonical plans and sealed P0 verification evidence instead.
+/artifacts/intake/
+/artifacts/workflow/
+/docs/intake/
+
+# Video production material and rendered media are publication outputs. The
+# product manual keeps the smaller screenshots required for GitHub readers.
+/artifacts/showcase/
+
+# Generated test reporter output may contain machine-local absolute paths.
+/artifacts/verification/p0/static/tests.json
+
+# Local environment and logs
+.env*
+!.env.example
+!.env.sample
+!.env.template
+*.log

@@ -1,0 +1,13 @@
+{
+  "schema_version": "scenarioforge.scenario-spec.v1",
+  "name": "following-emergency-brake",
+  "map": {"block_sequence": "S", "lane_count": 2, "lane_width": 3.5},
+  "actors": [
+    {"id": "ego", "role": "ego", "initial_state": {"lane": 0, "longitudinal": 5.0, "speed": 3.0}, "behavior": "yield"},
+    {"id": "lead", "role": "traffic", "initial_state": {"lane": 0, "longitudinal": 50.0, "speed": 10.0}, "behavior": "keep_lane"}
+  ],
+  "environment": {"traffic_density": 0.0},
+  "event_triggers": [{"id": "lead-emergency-brake", "kind": "at_time", "seconds": 1.0, "action": "yield", "target_actor_id": "lead"}],
+  "safety": {"max_speed": 20.0, "minimum_headway": 1.0, "collision_free": true},
+  "tags": ["following-emergency-brake", "metadrive-only", "regression-baseline"]
+}

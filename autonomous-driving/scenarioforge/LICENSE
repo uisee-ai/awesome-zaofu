@@ -1,0 +1,15 @@
+ScenarioForge Source License Notice
+
+Copyright (c) 2026 ScenarioForge contributors. All rights reserved.
+
+No permission is granted to use, copy, modify, merge, publish, distribute,
+sublicense, sell, or create derivative works from this software except under
+a separate written agreement with the copyright holders.
+
+Third-party components retain their own licenses. This notice does not grant
+rights to MetaDrive assets or to any third-party dependency. See NOTICE,
+sbom/scenarioforge.spdx.json, and sbom/license-matrix.json.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.

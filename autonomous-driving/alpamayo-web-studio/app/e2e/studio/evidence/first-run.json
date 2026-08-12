@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "first-run-evidence.v1",
+  "suiteId": "authorized-first-inference-v1",
+  "measurementPolicy": {
+    "timingStart": "immediately-before-first-user-submission",
+    "successRateDenominator": "all-eligible-samples",
+    "illegalInputHandling": "excluded-before-submission",
+    "maxFirstInferenceSeconds": 300,
+    "minimumSuccessRate": 0.95
+  },
+  "denominator": 1,
+  "successCount": 1,
+  "successRate": 1,
+  "results": [
+    {
+      "sampleId": "authorized-synthetic-intersection-001",
+      "startedAt": "2026-08-10T18:03:28.630Z",
+      "elapsedSeconds": 0.464,
+      "outcome": "success",
+      "responseStatus": "completed"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+schema_version: awesome-zaofu.case.v1
+id: autonomous-driving/canlab
+name: CAN Lab
+domain: autonomous-driving
+category: can-protocol-analysis
+maturity: verified-showcase
+source:
+  ref: main-working-tree
+  commit: e714968db5461ce0027f586aad5f73bf31f3ed89
+  packaging: source-only-working-tree-snapshot
+workflows:
+  - prd
+  - issue
+tags:
+  - frontend
+  - multi-agent
+  - can
+  - dbc
+  - deterministic-replay
+  - browser-e2e
+  - sealed-evidence
+verification:
+  tests: 66-passed
+  browser_e2e: true
+  passive_boundary: true
+generated_outputs_excluded:
+  - node_modules
+  - dist
+  - artifacts/intake
+  - artifacts/workflow
+  - artifacts/showcase
+  - .zf-*
+license: see-root-LICENSE-and-fixture-notices
+safety: offline-receive-only-research-and-evaluation

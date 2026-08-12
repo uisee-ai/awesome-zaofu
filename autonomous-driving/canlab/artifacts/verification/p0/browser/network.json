@@ -1,0 +1,96 @@
+{
+  "schema_version": "canlab.network-evidence.v1",
+  "status": "passed",
+  "policy": "loopback-only",
+  "requests": [
+    {
+      "method": "GET",
+      "resourceType": "document",
+      "url": "http://127.0.0.1:4197/"
+    },
+    {
+      "method": "GET",
+      "resourceType": "script",
+      "url": "http://127.0.0.1:4197/assets/index-Dr4cDsii.js"
+    },
+    {
+      "method": "GET",
+      "resourceType": "stylesheet",
+      "url": "http://127.0.0.1:4197/assets/index-CAnxRZ5h.css"
+    },
+    {
+      "method": "GET",
+      "resourceType": "fetch",
+      "url": "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.metadata.json"
+    },
+    {
+      "method": "GET",
+      "resourceType": "fetch",
+      "url": "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.dbc"
+    },
+    {
+      "method": "GET",
+      "resourceType": "fetch",
+      "url": "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.vectors.json"
+    },
+    {
+      "method": "GET",
+      "resourceType": "fetch",
+      "url": "http://127.0.0.1:4197/assets/drive-cycle-v1.ndjson"
+    },
+    {
+      "method": "GET",
+      "resourceType": "document",
+      "url": "http://127.0.0.1:4197/"
+    },
+    {
+      "method": "GET",
+      "resourceType": "script",
+      "url": "http://127.0.0.1:4197/assets/index-Dr4cDsii.js"
+    },
+    {
+      "method": "GET",
+      "resourceType": "stylesheet",
+      "url": "http://127.0.0.1:4197/assets/index-CAnxRZ5h.css"
+    },
+    {
+      "method": "GET",
+      "resourceType": "fetch",
+      "url": "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.metadata.json"
+    },
+    {
+      "method": "GET",
+      "resourceType": "fetch",
+      "url": "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.dbc"
+    },
+    {
+      "method": "GET",
+      "resourceType": "fetch",
+      "url": "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.vectors.json"
+    },
+    {
+      "method": "GET",
+      "resourceType": "fetch",
+      "url": "http://127.0.0.1:4197/assets/drive-cycle-v1.ndjson"
+    }
+  ],
+  "non_loopback_requests": [],
+  "route_observations": [
+    "http://127.0.0.1:4197/",
+    "http://127.0.0.1:4197/assets/index-Dr4cDsii.js",
+    "http://127.0.0.1:4197/assets/index-CAnxRZ5h.css",
+    "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.metadata.json",
+    "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.dbc",
+    "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.vectors.json",
+    "http://127.0.0.1:4197/assets/drive-cycle-v1.ndjson",
+    "http://127.0.0.1:4197/",
+    "http://127.0.0.1:4197/assets/index-Dr4cDsii.js",
+    "http://127.0.0.1:4197/assets/index-CAnxRZ5h.css",
+    "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.metadata.json",
+    "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.dbc",
+    "http://127.0.0.1:4197/assets/canlab-demo-v1.0.0.vectors.json",
+    "http://127.0.0.1:4197/assets/drive-cycle-v1.ndjson"
+  ],
+  "route_behavior": "observe-and-continue",
+  "forbidden_probe_sentinel_arrivals": 0
+}

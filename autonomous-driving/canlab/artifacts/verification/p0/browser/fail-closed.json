@@ -1,0 +1,8 @@
+{
+  "schema_version": "canlab.browser-fail-closed-evidence.v1",
+  "status": "passed",
+  "mutation": "DBC response bytes appended with one ASCII space",
+  "response_csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; frame-src 'none'; worker-src 'none'; form-action 'none'",
+  "observed_alert": "Unable to load the bundled CAN Lab assets\n\ncanlab-demo-v1.0.0.dbc SHA-256 mismatch: expected d5e6ab74ba4fccb17493cdfae79ae115e0b9b64c3153033531a3d3c74a1d23f7, received 07d91166311c644af8e24fd84016cb87e62aafda81a1231345b451b6efd1e255\n\nThis offline lab fails closed when its packaged fixtures disagree.",
+  "workspace_rendered": false
+}

@@ -1,0 +1,30 @@
+schema_version: awesome-zaofu.case.v1
+id: autonomous-driving/scenarioforge
+name: ScenarioForge
+domain: autonomous-driving
+category: scenario-simulation
+maturity: verified-showcase
+source:
+  ref: dev
+  commit: 38548682e4bb0d3b98e234a92c8482dda398b5b5
+  packaging: source-only-git-archive
+workflows:
+  - prd
+  - issue
+tags:
+  - full-stack
+  - multi-agent
+  - metadrive
+  - real-e2e
+  - sealed-evidence
+  - exact-replay
+verification:
+  unit_and_integration: 142-passed-at-source-merge
+  real_domain_runtime: metadrive-0.4.3
+  browser_e2e: true
+generated_outputs_excluded:
+  - web/dist
+  - reports/videos/*.mp4
+  - .zf-*
+license: see-LICENSE
+safety: research-and-evaluation-only

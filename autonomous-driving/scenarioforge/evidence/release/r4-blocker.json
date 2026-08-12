@@ -1,0 +1,50 @@
+{
+  "schema_version": "scenarioforge.r4-blocker-evidence.v1",
+  "status": "failed",
+  "task_id": "GAP-SFP0-004-RELEASE-PORTS-R4",
+  "run_id": "run-fanout-prd-lanes-impl-evt-56c46071-prd-dev-lane-1-GAP-SFP0-004-RELEASE-PORTS-R4",
+  "contract_revision": "contract-ra23564de205b",
+  "task_map_generation": "task-map-b7e427054c7d534a58d9",
+  "partial_work": {
+    "focused_command": "uv run --frozen --python 3.11 python -m pytest -q tests/scaffold/test_scaffold_contract.py tests/release/test_release_contract.py",
+    "focused_result": "26 passed, 1 warning",
+    "files_changed": [
+      ".github/workflows/ci.yml",
+      "scripts/release/publish_ci_run_manifest.py",
+      "scripts/release/run_clean_install_offline_e2e.py",
+      "scripts/release/run_production_browser_e2e.py",
+      "tests/release/test_release_contract.py",
+      "tests/scaffold/test_scaffold_contract.py"
+    ]
+  },
+  "environment_recovery": {
+    "exact_lock_command": "uv sync --frozen --all-groups --python 3.11",
+    "exact_lock_result": "passed: Checked 80 packages",
+    "initial_ruff_mode": "0600",
+    "repaired_ruff_mode": "0755",
+    "ruff_version": "0.16.1",
+    "ruff_environment_overrides": []
+  },
+  "blocking_gate": {
+    "command": "uv run --frozen --python 3.11 python -m ruff check .",
+    "exit_code": 1,
+    "summary": "Found 64 errors after the locked ruff executable was made runnable.",
+    "minimal_reproduction": {
+      "command": "uv run --frozen --python 3.11 python -m ruff check src/scenarioforge/api/app.py scripts/run_security_suite.py tests/api/test_local_api.py",
+      "exit_code": 1,
+      "summary": "Found 7 errors in paths outside the task contract.",
+      "out_of_scope_paths": [
+        "scripts/run_security_suite.py",
+        "src/scenarioforge/api/app.py",
+        "tests/api/test_local_api.py"
+      ],
+      "representative_rules": [
+        "I001",
+        "RUF100"
+      ]
+    },
+    "configuration_source": "pyproject.toml",
+    "configuration_path_allowed": false
+  },
+  "recommended_action": "Replan the root ruff gate with pyproject.toml and the reported lint-failing source/test paths in scope, or define an explicit repository lint policy before redispatching this release-port task."
+}

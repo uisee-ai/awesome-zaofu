@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "vector_version": "1.0.0",
+  "dbc": {
+    "file": "canlab-demo-v1.0.0.dbc",
+    "version": "1.0.0",
+    "sha256": "d5e6ab74ba4fccb17493cdfae79ae115e0b9b64c3153033531a3d3c74a1d23f7"
+  },
+  "vectors": [
+    {
+      "name": "powertrain-drive",
+      "frame": {
+        "can_id": "0x100",
+        "is_extended": false,
+        "dlc": 8,
+        "data": "803E881364320302"
+      },
+      "signals": [
+        { "signal": "EngineRpm", "raw": 16000, "physical": 4000, "display": "4000 rpm" },
+        { "signal": "VehicleSpeed", "raw": 5000, "physical": 50, "display": "50 km/h" },
+        { "signal": "ThrottlePosition", "raw": 100, "physical": 40, "display": "40 %" },
+        { "signal": "BrakePressure", "raw": 50, "physical": 25, "display": "25 bar" },
+        { "signal": "SelectedGear", "raw": 3, "physical": 3, "display": "Drive" },
+        { "signal": "TurnIndicator", "raw": 2, "physical": 2, "display": "Right" }
+      ]
+    },
+    {
+      "name": "chassis-left",
+      "frame": {
+        "can_id": "0x200",
+        "is_extended": false,
+        "dlc": 8,
+        "data": "FB1E000000000000"
+      },
+      "signals": [
+        { "signal": "SteeringAngle", "raw": -1250, "physical": -125, "display": "-125 deg" }
+      ]
+    },
+    {
+      "name": "environment-extended",
+      "frame": {
+        "can_id": "0x00000300",
+        "is_extended": true,
+        "dlc": 8,
+        "data": "3C7D000000000000"
+      },
+      "signals": [
+        { "signal": "AmbientTemperature", "raw": 60, "physical": 20, "display": "20 deg C" },
+        { "signal": "BatteryVoltage", "raw": 125, "physical": 12.5, "display": "12.5 V" }
+      ]
+    }
+  ]
+}

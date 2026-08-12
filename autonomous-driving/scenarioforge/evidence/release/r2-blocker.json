@@ -1,0 +1,45 @@
+{
+  "schema_version": "scenarioforge.r2-blocker-evidence.v1",
+  "status": "failed",
+  "task_id": "GAP-SFP0-004-RELEASE-PORTS-R2",
+  "attempt_id": "run-fanout-prd-lanes-impl-evt-5dabb34c-prd-dev-lane-1-GAP-SFP0-004-RELEASE-PORTS-R2",
+  "source_revision": "16e0cc80fa17e0b24f5a9f763b1ae4628c4c8cc9",
+  "reset_recovery": {
+    "dispatch_head": "6ac629107de1d0b408746ed8d531c794b8a2cc84",
+    "dispatch_status": "clean",
+    "accepted_r1_commit": "e39e4150e55c9d6960d52e2e24e34edf6aa1cd92",
+    "r1_cherry_pick_commit": "58a075f",
+    "r1_ancestry_merge_commit": "7a8c223",
+    "lost_uncommitted_delta": "The R2 reset removed the prior uncommitted browser/offline second slice; it was absent on disk and was reconstructed from the contract, tests, and accepted primitives.",
+    "reconstructed_commits": [
+      "ab9693b",
+      "1bce605",
+      "16e0cc8"
+    ]
+  },
+  "passed_slices": {
+    "production_browser": "evidence/release/browser-production/report.json",
+    "clean_install_offline": "evidence/release/clean-install-offline/report.json",
+    "metadrive_smoke": "evidence/release/metadrive-smoke/report.json",
+    "capacity": "evidence/release/capacity/report.json",
+    "tolerance": "evidence/release/tolerance/report.json"
+  },
+  "blocking_gate": {
+    "command": "python -m pytest -q",
+    "exit_code": 1,
+    "summary": "9 failed, 71 passed",
+    "environment_findings": {
+      "system_python_backend_failures": 8,
+      "locked_python_command": "LD_LIBRARY_PATH=/tmp/scenarioforge-sfp0-002-libs/root/usr/lib/x86_64-linux-gnu .venv/bin/python -m pytest -q tests/backend/test_runtime_lifecycle.py tests/backend/test_oracle_resimulation.py",
+      "locked_python_result": "12 passed"
+    },
+    "irreducible_failure": {
+      "path": "tests/scaffold/test_scaffold_contract.py",
+      "test": "test_scaffold_defines_conventions_without_later_slice_placeholders",
+      "reason": "The inherited scaffold test asserts that already integrated product and test directories do not exist.",
+      "locked_python_result": "1 failed, 3 passed",
+      "allowed_path": false
+    }
+  },
+  "recommended_action": "Replan with tests/scaffold/test_scaffold_contract.py in scope, replace the superseded absence assertion with an integrated-repository invariant, and make the verification runner invoke the locked Python 3.11 environment with libgl1 available."
+}

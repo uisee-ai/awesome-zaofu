@@ -1,0 +1,13 @@
+{
+  "schema_version": "canlab.passive-boundary-fixtures.v1",
+  "fixtures": [
+    { "file": "webhid.js", "expected_rule": "webhid" },
+    { "file": "webbluetooth.js", "expected_rule": "webbluetooth" },
+    { "file": "websocket.js", "expected_rule": "websocket" },
+    { "file": "eventsource.js", "expected_rule": "eventsource" },
+    { "file": "webrtc.js", "expected_rule": "webrtc" },
+    { "file": "serviceworker.js", "expected_rule": "serviceworker" },
+    { "file": "hardware-access.js", "expected_rule": "hardware_access" },
+    { "file": "can-send.js", "expected_rule": "can_transmit" }
+  ]
+}

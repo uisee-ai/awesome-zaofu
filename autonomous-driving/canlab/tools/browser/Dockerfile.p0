@@ -1,0 +1,32 @@
+FROM mcr.microsoft.com/playwright:v1.61.1-noble@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48
+
+ARG CHROME_ARCHIVE_SHA256
+ARG CHROME_VERSION
+ARG TARGET_COMMIT
+ARG TARGET_TREE
+
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=p0_browser_archive chrome-linux64.zip /tmp/chrome-linux64.zip
+RUN echo "${CHROME_ARCHIVE_SHA256}  /tmp/chrome-linux64.zip" | sha256sum --check --strict \
+    && mkdir -p /opt/chrome \
+    && unzip -q /tmp/chrome-linux64.zip -d /opt/chrome \
+    && rm /tmp/chrome-linux64.zip \
+    && test "$(/opt/chrome/chrome-linux64/chrome --version | grep -oE '[0-9]+(\.[0-9]+){3}')" = "${CHROME_VERSION}"
+
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+RUN npm run build \
+    && mkdir -p /opt/canlab \
+    && printf '%s\n' "${TARGET_COMMIT}" > /opt/canlab/target-commit \
+    && printf '%s\n' "${TARGET_TREE}" > /opt/canlab/target-tree
+
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
+    HOME=/tmp \
+    XDG_CONFIG_HOME=/tmp/canlab-xdg-config \
+    XDG_CACHE_HOME=/tmp/canlab-xdg-cache

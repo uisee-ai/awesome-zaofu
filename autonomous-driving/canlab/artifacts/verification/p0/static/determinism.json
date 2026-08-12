@@ -1,0 +1,31 @@
+{
+  "schema_version": "canlab.determinism-evidence.v1",
+  "status": "passed",
+  "asset_identity": {
+    "dbc_sha256": "d5e6ab74ba4fccb17493cdfae79ae115e0b9b64c3153033531a3d3c74a1d23f7",
+    "log_sha256": "31e49897877e494e147cac0564d2a4f9c09d25ecb5c1fc6cf3d3603e3edc1110",
+    "vectors_sha256": "9ca0fb7a52ed9307337b23b6bc7bf5556e50ad6cc83f637ffeffed3c8d3436b4"
+  },
+  "control_sequence": [
+    "step",
+    "seek:2600000",
+    "pause"
+  ],
+  "frame_count": 195,
+  "trace_identity_count": 807,
+  "first_run": {
+    "replay_order_sha256": "6dac8b35efdb52480831fbd2f1c25f5183defaaa5bc795c8ac92d396aedfc587",
+    "cursor_sha256": "daf694fdfc40265ad0d5fcb13ab91971e1d3c091229712a1e41795cb3ffa73a7",
+    "final_cursor_us": 12000000,
+    "decoded_results_sha256": "dd252c192b31b1343c0dfe1e0e4c7793a18c742a769572de86350b81b8219212",
+    "trace_identity_sha256": "5bcddf3eca77eca03ad5505dfc6442ad5087f6f1e00d35d9bf28e908a0a9f159"
+  },
+  "repeated_run": {
+    "replay_order_sha256": "6dac8b35efdb52480831fbd2f1c25f5183defaaa5bc795c8ac92d396aedfc587",
+    "cursor_sha256": "daf694fdfc40265ad0d5fcb13ab91971e1d3c091229712a1e41795cb3ffa73a7",
+    "final_cursor_us": 12000000,
+    "decoded_results_sha256": "dd252c192b31b1343c0dfe1e0e4c7793a18c742a769572de86350b81b8219212",
+    "trace_identity_sha256": "5bcddf3eca77eca03ad5505dfc6442ad5087f6f1e00d35d9bf28e908a0a9f159"
+  },
+  "identical": true
+}

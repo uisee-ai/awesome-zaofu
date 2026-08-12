@@ -1,0 +1,14 @@
+[project]
+name = "alpamayo-studio-backend"
+version = "0.1.0"
+description = "Alpamayo Studio backend service"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi==0.118.0",
+  "pydantic>=2.11,<3",
+  "python-multipart>=0.0.20,<1",
+  "uvicorn[standard]==0.37.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["../../tests"]

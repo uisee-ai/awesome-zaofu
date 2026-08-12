@@ -1,0 +1,6 @@
+.git
+.zf-zaofu-can-lab
+artifacts
+dist
+node_modules
+tests/e2e/.artifacts

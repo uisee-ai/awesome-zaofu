@@ -1,0 +1,36 @@
+schema_version: awesome-zaofu.case.v1
+id: autonomous-driving/alpamayo-web-studio
+name: Alpamayo Web Studio
+domain: autonomous-driving
+category: vision-language-driving-studio
+maturity: committed-product-snapshot
+source:
+  ref: wip/codex-20260811-alpamayo-product-hardening
+  commit: dab6f58b585688623eef89f726ab45678aa0bac5
+  packaging: source-only-git-archive
+workflows:
+  - prd
+tags:
+  - full-stack
+  - multi-agent
+  - nextjs
+  - fastapi
+  - vqa
+  - trajectory
+  - regression-evaluation
+verification:
+  mock_product_flow: true
+  provider_contracts: true
+  browser_assets: true
+  typescript_tests: 86-passed
+  python_backend_tests: 8-passed
+  python_test_extra: httpx
+  zero-intervention-proof: false
+generated_outputs_excluded:
+  - app/node_modules
+  - app/.next
+  - dist
+  - build
+  - .zf-*
+license: not-yet-declared
+safety: research-and-evaluation-only
