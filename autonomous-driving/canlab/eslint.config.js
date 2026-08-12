@@ -6,7 +6,15 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig([
-  globalIgnores(['coverage', 'dist', 'playwright-report', 'test-results']),
+  globalIgnores([
+    '.zf*',
+    '**/.zf*/**',
+    'artifacts/verification',
+    'coverage',
+    'dist',
+    'playwright-report',
+    'test-results',
+  ]),
   {
     files: ['**/*.{js,mjs,cjs,ts,tsx}'],
     extends: [

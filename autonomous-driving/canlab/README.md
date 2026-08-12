@@ -96,3 +96,10 @@ after verification, and reruns the static gates from a clean ephemeral export.
 Only the separately authorized Owner token-gated control-plane action may
 advance `main` and issue the immutable CAS receipt; repository verification
 scripts never update a ref.
+
+The public showcase intentionally excludes generated release evidence and the
+original private repository's Git objects. Five lineage tests that require
+those sealed inputs are therefore reported as skipped by `npm test`; they run
+automatically when both the pinned promotion commit and release evidence are
+available. Product, domain, UI, passive-boundary, and portable release-tool
+tests remain active in this repository.

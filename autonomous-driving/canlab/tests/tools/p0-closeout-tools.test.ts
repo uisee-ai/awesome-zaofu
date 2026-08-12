@@ -2,7 +2,7 @@
 
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 
@@ -13,6 +13,28 @@ const readProjectFile = (path: string) =>
   readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8')
 
 const PROMOTION_BASE = '2583d6e47ec4c890fa63b9f81b80f07e5c2586ef'
+const RELEASE_HISTORY_ARTIFACTS = [
+  'artifacts/verification/p0/manifest.json',
+  'artifacts/verification/p0/release-candidate.json',
+  'artifacts/verification/p0/release/cas-receipt.json',
+]
+
+const hasReleaseHistory = (() => {
+  if (!RELEASE_HISTORY_ARTIFACTS.every((path) => existsSync(resolve(process.cwd(), path)))) {
+    return false
+  }
+  try {
+    execFileSync('git', ['cat-file', '-e', `${PROMOTION_BASE}^{commit}`], {
+      cwd: process.cwd(),
+      stdio: 'ignore',
+    })
+    return true
+  } catch {
+    return false
+  }
+})()
+
+const releaseHistoryIt = hasReleaseHistory ? it : it.skip
 
 const createIsolatedPromotionRepository = (root: string, prefix: string) => {
   const directory = mkdtempSync(join(tmpdir(), prefix))
@@ -168,7 +190,7 @@ describe('P0 closeout tools', () => {
     expect(releaseVerifier).toContain("CANLAB_NESTED_RELEASE_VERIFY: '1'")
   })
 
-  it('rebinds an unissued release intent to the integrated candidate without dirtying evidence', () => {
+  releaseHistoryIt('rebinds an unissued release intent to the integrated candidate without dirtying evidence', () => {
     if (process.env.CANLAB_NESTED_RELEASE_VERIFY === '1') return
 
     const manifestPath = 'artifacts/verification/p0/manifest.json'
@@ -298,7 +320,7 @@ describe('P0 closeout tools', () => {
     ).toBe('')
   }, 60_000)
 
-  it('validates real product P and evidence carrier E histories', () => {
+  releaseHistoryIt('validates real product P and evidence carrier E histories', () => {
     if (process.env.CANLAB_NESTED_RELEASE_VERIFY === '1') return
     const root = process.cwd()
     const directory = createIsolatedPromotionRepository(root, 'canlab-p-e-')
@@ -431,7 +453,7 @@ describe('P0 closeout tools', () => {
     }
   }, 180_000)
 
-  it('rejects zero and multiple integrated lineage matches before evidence checks', () => {
+  releaseHistoryIt('rejects zero and multiple integrated lineage matches before evidence checks', () => {
     if (process.env.CANLAB_NESTED_RELEASE_VERIFY === '1') return
     const root = process.cwd()
     const directory = createIsolatedPromotionRepository(root, 'canlab-lineage-')
@@ -480,7 +502,7 @@ describe('P0 closeout tools', () => {
     }
   }, 120_000)
 
-  it('fails qualification identity before invoking curl', () => {
+  releaseHistoryIt('fails qualification identity before invoking curl', () => {
     if (process.env.CANLAB_NESTED_RELEASE_VERIFY === '1') return
     const root = process.cwd()
     const directory = mkdtempSync(join(tmpdir(), 'canlab-qualifier-'))
@@ -522,7 +544,7 @@ describe('P0 closeout tools', () => {
     expect(() => run({ ...process.env, P0_VERIFICATION_COMMIT: '0'.repeat(40), P0_VERIFICATION_TREE: tree })).toThrow()
   }, 60_000)
 
-  it('rejects cross-artifact semantic contradictions after recomputing manifest digests', () => {
+  releaseHistoryIt('rejects cross-artifact semantic contradictions after recomputing manifest digests', () => {
     if (process.env.CANLAB_NESTED_RELEASE_VERIFY === '1') return
     const root = process.cwd()
     const directory = createIsolatedPromotionRepository(root, 'canlab-semantic-')
