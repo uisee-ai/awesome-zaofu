@@ -50,17 +50,3 @@
 根目录 [Apache-2.0](LICENSE) 许可证仅适用于仓库发布者拥有或有权按该条款授权的内容。
 项目级 `LICENSE`、`NOTICE` 及第三方许可证优先适用于各自对应的源码、模型、数据、素材
 和配置。本仓库不额外授予任何第三方商标、模型权重、数据集或资产的使用权。
-
-## 目录约定
-
-```text
-<domain>/
-  README.md
-  <project>/
-    CASE.md
-    case.yaml
-    ...project source...
-```
-
-横向标签包括 `prd`、`issue`、`real-e2e`、`sealed-evidence`、
-`full-stack` 等，但不会为这些标签重复复制项目。
