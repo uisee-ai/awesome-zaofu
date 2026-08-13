@@ -7,6 +7,36 @@ no hardware transmit or live vehicle input path.
 - [中文使用教程](docs/manual/user-guide.md)
 - [ZaoFu 交付案例](CASE.md)
 
+## Why CAN Lab
+
+CAN Lab was developed to make raw CAN frames and DBC definitions inspectable
+without requiring a vehicle, CAN hardware, or proprietary logs. It combines
+deterministic replay, bit-level decode traces, message-health metrics, and a
+virtual vehicle view in one offline, receive-only browser workspace. It also
+demonstrates how ZaoFu turns a discussed requirement into an executable PRD,
+parallel implementation slices, browser verification, and release evidence.
+The product contract is recorded in
+[`docs/prd/can-lab-p0-mvp-prd.md`](docs/prd/can-lab-p0-mvp-prd.md) and
+[`docs/prd/can-lab-p0-delivery-prd.md`](docs/prd/can-lab-p0-delivery-prd.md);
+[`CASE.md`](CASE.md) summarizes the delivery path.
+
+## Upstream and provenance
+
+- The runtime demo DBC, validation vectors, and drive-cycle log are
+  project-authored synthetic fixtures. Their versions, digests, seed, and
+  license are declared in
+  [`public/assets/canlab-demo-v1.0.0.metadata.json`](public/assets/canlab-demo-v1.0.0.metadata.json).
+- [openDBC](https://github.com/commaai/opendbc) and
+  [cantools](https://github.com/cantools/cantools) provide license-vetted,
+  commit-pinned DBC files used only for parser compatibility tests. They are
+  not bundled as the product demo dataset.
+- Exact upstream commits, paths, SHA-256 values, measured parser results, and
+  retained MIT license texts are listed under
+  [`tests/fixtures/dbc-corpus/`](tests/fixtures/dbc-corpus/README.md).
+- CAN Lab's application code and synthetic runtime assets were implemented for
+  this project. The project is neither an openDBC nor a cantools fork, and it
+  does not claim complete DBC dialect compatibility.
+
 ## Requirements
 
 - Node.js `^20.19.0` or `>=22.12.0`

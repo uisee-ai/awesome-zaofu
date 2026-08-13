@@ -9,6 +9,35 @@ and generated Web bundles are installed or built locally and are not committed.
 - [ZaoFu 交付案例](CASE.md)
 - [支持的本地安装方式](docs/release/local-install.md)
 
+## Why ScenarioForge
+
+ScenarioForge was developed to turn repeatable autonomous-driving simulation
+into a product workflow rather than a one-off simulator script. It gives users
+a versioned scenario contract, bounded multi-seed execution, safety metrics,
+sealed replay bundles, and baseline/candidate comparison. It also serves as a
+ZaoFu delivery case: the product was built from the repository PRD through
+multi-agent planning, implementation, verification, and real browser/domain
+evidence. The normative product scope is recorded in
+[`docs/prd/scenarioforge-metadrive-p0-r1.json`](docs/prd/scenarioforge-metadrive-p0-r1.json),
+and the delivery history is summarized in [`CASE.md`](CASE.md).
+
+## Upstream and provenance
+
+- [MetaDrive](https://github.com/metadriverse/metadrive) is the locked
+  simulation backend, not the source of the ScenarioForge application. This
+  repository pins `metadrive-simulator==0.4.3` in `pyproject.toml` and
+  `uv.lock`.
+- The official MetaDrive 0.4.3 asset archive is an external runtime input. Its
+  URL, size, and SHA-256 are pinned in
+  [`config/metadrive-assets.lock.json`](config/metadrive-assets.lock.json) and
+  documented in
+  [`docs/release/asset-provenance.md`](docs/release/asset-provenance.md). The
+  archive is not redistributed here.
+- ScenarioForge's product code, scenario schema, orchestration, evidence
+  model, API, and Web replay experience were implemented for this project from
+  its PRD. Using MetaDrive as a backend does not make ScenarioForge a MetaDrive
+  fork.
+
 ## Locked toolchains
 
 - Python 3.11 (MetaDrive 0.4.3 declares Python `<3.12`)
