@@ -12,11 +12,11 @@
 
 ## 项目
 
-| 分类 | 项目 | 产品入口 | 用户指南 | 验证等级 |
+| 分类 | 项目 | 产品入口 | 用户指南 | 核心能力 |
 | --- | --- | --- | --- | --- |
-| [Autonomous Driving](autonomous-driving/) | [ScenarioForge](autonomous-driving/scenarioforge/) | [README](autonomous-driving/scenarioforge/README.md) | [User Guide](autonomous-driving/scenarioforge/docs/manual/user-guide.md) | 真实 MetaDrive、浏览器 E2E、密封证据 |
-| [Autonomous Driving](autonomous-driving/) | [Alpamayo Web Studio](autonomous-driving/alpamayo-web-studio/) | [README](autonomous-driving/alpamayo-web-studio/README.md) | [User Guide](autonomous-driving/alpamayo-web-studio/docs/manual/user-guide.md) | Mock 产品闭环、Provider 合同、前后端测试 |
-| [Autonomous Driving](autonomous-driving/) | [CAN Lab](autonomous-driving/canlab/) | [README](autonomous-driving/canlab/README.md) | [User Guide](autonomous-driving/canlab/docs/manual/user-guide.md) | 确定性回放、浏览器 E2E、发布证据 |
+| [Autonomous Driving](autonomous-driving/) | [ScenarioForge](autonomous-driving/scenarioforge/) | [README](autonomous-driving/scenarioforge/README.md) | [User Guide](autonomous-driving/scenarioforge/docs/manual/user-guide.md) | 版本化场景编排、MetaDrive 批量仿真、精确回放与回归对比 |
+| [Autonomous Driving](autonomous-driving/) | [Alpamayo Web Studio](autonomous-driving/alpamayo-web-studio/) | [README](autonomous-driving/alpamayo-web-studio/README.md) | [User Guide](autonomous-driving/alpamayo-web-studio/docs/manual/user-guide.md) | 道路场景管理、视觉推理、轨迹生成与回归评测 |
+| [Autonomous Driving](autonomous-driving/) | [CAN Lab](autonomous-driving/canlab/) | [README](autonomous-driving/canlab/README.md) | [User Guide](autonomous-driving/canlab/docs/manual/user-guide.md) | DBC 浏览、确定性 CAN 回放、可追溯解码与健康分析 |
 
 每个项目的文档职责固定为：
 
