@@ -21,3 +21,9 @@ bash deploy/scripts/run-local-studio.sh
 默认使用确定性 mock provider，打开 `http://localhost:3000` 即可验证完整产品流程。真实 LiteLLM 配置和测试命令见 [`app/README.md`](app/README.md)。
 
 本产品仅用于研究、评测与演示，模型输出不得直接用于真实车辆控制，也不构成安全认证。
+
+## 许可证
+
+本项目中由仓库发布者拥有或有权授权的原创代码采用
+[Apache License 2.0](LICENSE)。NVIDIA Alpamayo 模型、模型权重及其他第三方材料
+不包含在该授权中，继续适用其各自的许可证和使用条款。

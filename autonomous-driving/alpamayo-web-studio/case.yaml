@@ -32,5 +32,5 @@ generated_outputs_excluded:
   - dist
   - build
   - .zf-*
-license: not-yet-declared
+license: Apache-2.0
 safety: research-and-evaluation-only
