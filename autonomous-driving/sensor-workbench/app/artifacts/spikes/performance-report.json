@@ -1,0 +1,287 @@
+{
+  "schema_version": "performance-spike-report.v1",
+  "fixture_id": "sensor-workbench-browser-performance-001",
+  "fixture_sha256": "0c69e97a353f228442db1ec42d7381208be134a8a0b37f66f276aec9b775add7",
+  "capture_mode": "initial_capture",
+  "started_at": "2026-08-04T08:51:08.058Z",
+  "finished_at": "2026-08-04T08:51:14.885Z",
+  "method": {
+    "workload": {
+      "point_count": 120000,
+      "seed": 20260804,
+      "repeat_count": 3,
+      "warm_repetitions_per_session": 3,
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    "browser": {
+      "engine": "chromium",
+      "channel": "chrome",
+      "distribution": "Google Chrome",
+      "headless": false,
+      "tool": "@playwright/test",
+      "tool_version": "1.62.1"
+    },
+    "states": {
+      "cold": "new branded Chrome process, browser context, page, and empty workload state",
+      "warm": "same page after the cold workload with point buffer and JIT state retained"
+    },
+    "metrics": [
+      {
+        "name": "dataset_open_ms",
+        "method": "generate deterministic point buffer and compute its digest accumulator"
+      },
+      {
+        "name": "first_render_ms",
+        "method": "project deterministic points and render a bounded sample to a 2D canvas"
+      },
+      {
+        "name": "frame_switch_ms",
+        "method": "apply a fixed rigid transform and projection to the full point buffer"
+      },
+      {
+        "name": "interaction_ms",
+        "method": "scan the full projected buffer for the nearest point to a fixed cursor"
+      }
+    ],
+    "network_policy": {
+      "allowed_origins": [],
+      "page_source": "setContent about:blank",
+      "external_requests": "fail"
+    }
+  },
+  "environment": {
+    "cpu": {
+      "model": "Intel(R) Core(TM) i7-7567U CPU @ 3.50GHz",
+      "logical_processors": 4
+    },
+    "memory_bytes": {
+      "total": 16652414976,
+      "free_at_capture": 2191982592
+    },
+    "os": {
+      "type": "Linux",
+      "platform": "linux",
+      "release": "7.0.0-28-generic",
+      "architecture": "x64"
+    },
+    "chrome": {
+      "distribution": "Google Chrome",
+      "channel": "chrome",
+      "version": "150.0.7871.186",
+      "headless": false,
+      "executable_path": "/usr/bin/google-chrome"
+    },
+    "storage": [
+      {
+        "name": "sda",
+        "rota": false,
+        "type": "disk",
+        "size": "465.8G",
+        "model": "Samsung SSD 870 EVO 500GB"
+      }
+    ],
+    "fixture_sha256": "0c69e97a353f228442db1ec42d7381208be134a8a0b37f66f276aec9b775add7",
+    "cold_warm_state": {
+      "cold": "new branded Chrome process, browser context, page, and empty workload state",
+      "warm": "same page after the cold workload with point buffer and JIT state retained"
+    },
+    "repeat_count": 3,
+    "tool": {
+      "name": "@playwright/test",
+      "version": "1.62.1"
+    }
+  },
+  "raw_samples": [
+    {
+      "session": 1,
+      "state": {
+        "cold": "new branded Chrome process, browser context, page, and empty workload state",
+        "warm": "same page after the cold workload with point buffer and JIT state retained"
+      },
+      "started_at": "2026-08-04T08:51:08.058Z",
+      "browser_launch_ms": 1508.579,
+      "page_setup_ms": 58.659,
+      "cold": {
+        "dataset_open_ms": 19.3,
+        "first_render_ms": 63.8,
+        "frame_switch_ms": 2.8,
+        "interaction_ms": 3.3,
+        "checksum": 52394525.362418614,
+        "visible_points": 115049,
+        "nearest_index": 61178
+      },
+      "warm": [
+        {
+          "frame_switch_ms": 3.2,
+          "interaction_ms": 2.8,
+          "checksum": 52394525.362418614,
+          "visible_points": 115067,
+          "nearest_index": 61178
+        },
+        {
+          "frame_switch_ms": 1.7,
+          "interaction_ms": 0.8,
+          "checksum": 52394525.362418614,
+          "visible_points": 115065,
+          "nearest_index": 61178
+        },
+        {
+          "frame_switch_ms": 9.4,
+          "interaction_ms": 0.7,
+          "checksum": 52394525.362418614,
+          "visible_points": 115066,
+          "nearest_index": 61178
+        }
+      ]
+    },
+    {
+      "session": 2,
+      "state": {
+        "cold": "new branded Chrome process, browser context, page, and empty workload state",
+        "warm": "same page after the cold workload with point buffer and JIT state retained"
+      },
+      "started_at": "2026-08-04T08:51:10.807Z",
+      "browser_launch_ms": 551.091,
+      "page_setup_ms": 19.511,
+      "cold": {
+        "dataset_open_ms": 12.2,
+        "first_render_ms": 27,
+        "frame_switch_ms": 2.3,
+        "interaction_ms": 5.4,
+        "checksum": 52394525.362418614,
+        "visible_points": 115049,
+        "nearest_index": 61178
+      },
+      "warm": [
+        {
+          "frame_switch_ms": 2,
+          "interaction_ms": 2.2,
+          "checksum": 52394525.362418614,
+          "visible_points": 115067,
+          "nearest_index": 61178
+        },
+        {
+          "frame_switch_ms": 3.3,
+          "interaction_ms": 0.6,
+          "checksum": 52394525.362418614,
+          "visible_points": 115065,
+          "nearest_index": 61178
+        },
+        {
+          "frame_switch_ms": 3.6,
+          "interaction_ms": 0.6,
+          "checksum": 52394525.362418614,
+          "visible_points": 115066,
+          "nearest_index": 61178
+        }
+      ]
+    },
+    {
+      "session": 3,
+      "state": {
+        "cold": "new branded Chrome process, browser context, page, and empty workload state",
+        "warm": "same page after the cold workload with point buffer and JIT state retained"
+      },
+      "started_at": "2026-08-04T08:51:12.108Z",
+      "browser_launch_ms": 1093.055,
+      "page_setup_ms": 82.345,
+      "cold": {
+        "dataset_open_ms": 24.6,
+        "first_render_ms": 57.5,
+        "frame_switch_ms": 2.6,
+        "interaction_ms": 3.2,
+        "checksum": 52394525.362418614,
+        "visible_points": 115049,
+        "nearest_index": 61178
+      },
+      "warm": [
+        {
+          "frame_switch_ms": 8.6,
+          "interaction_ms": 0.4,
+          "checksum": 52394525.362418614,
+          "visible_points": 115067,
+          "nearest_index": 61178
+        },
+        {
+          "frame_switch_ms": 12.8,
+          "interaction_ms": 6.4,
+          "checksum": 52394525.362418614,
+          "visible_points": 115065,
+          "nearest_index": 61178
+        },
+        {
+          "frame_switch_ms": 4.9,
+          "interaction_ms": 0.7,
+          "checksum": 52394525.362418614,
+          "visible_points": 115066,
+          "nearest_index": 61178
+        }
+      ]
+    }
+  ],
+  "statistics": {
+    "cold": {
+      "dataset_open_ms": {
+        "minimum": 12.2,
+        "maximum": 24.6,
+        "mean": 18.7,
+        "median": 19.3,
+        "p95": 24.6
+      },
+      "first_render_ms": {
+        "minimum": 27,
+        "maximum": 63.8,
+        "mean": 49.43333333333334,
+        "median": 57.5,
+        "p95": 63.8
+      },
+      "frame_switch_ms": {
+        "minimum": 2.3,
+        "maximum": 2.8,
+        "mean": 2.566666666666667,
+        "median": 2.6,
+        "p95": 2.8
+      },
+      "interaction_ms": {
+        "minimum": 3.2,
+        "maximum": 5.4,
+        "mean": 3.966666666666667,
+        "median": 3.3,
+        "p95": 5.4
+      }
+    },
+    "warm": {
+      "frame_switch_ms": {
+        "minimum": 1.7,
+        "maximum": 12.8,
+        "mean": 5.5,
+        "median": 3.6,
+        "p95": 12.8
+      },
+      "interaction_ms": {
+        "minimum": 0.4,
+        "maximum": 6.4,
+        "mean": 1.688888888888889,
+        "median": 0.7,
+        "p95": 6.4
+      }
+    }
+  },
+  "candidate_evaluation": {
+    "policy": "record_only_not_a_pass_gate",
+    "candidates": {
+      "dataset_open_ms": 60000,
+      "first_render_ms": 3000,
+      "frame_switch_ms": 500,
+      "interaction_ms": 200,
+      "policy": "informational_only_unverified"
+    },
+    "verdict": "not_evaluated_as_gate"
+  },
+  "network": {
+    "external_requests": []
+  }
+}

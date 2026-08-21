@@ -1,0 +1,71 @@
+{
+  "schema_version": "performance-golden.v1",
+  "fixture_id": "sensor-workbench-browser-performance-001",
+  "workload": {
+    "point_count": 120000,
+    "seed": 20260804,
+    "repeat_count": 3,
+    "warm_repetitions_per_session": 3,
+    "viewport": {
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "browser": {
+    "engine": "chromium",
+    "channel": "chrome",
+    "distribution": "Google Chrome",
+    "headless": false,
+    "tool": "@playwright/test",
+    "tool_version": "1.62.1"
+  },
+  "states": {
+    "cold": "new branded Chrome process, browser context, page, and empty workload state",
+    "warm": "same page after the cold workload with point buffer and JIT state retained"
+  },
+  "metrics": [
+    {
+      "name": "dataset_open_ms",
+      "method": "generate deterministic point buffer and compute its digest accumulator"
+    },
+    {
+      "name": "first_render_ms",
+      "method": "project deterministic points and render a bounded sample to a 2D canvas"
+    },
+    {
+      "name": "frame_switch_ms",
+      "method": "apply a fixed rigid transform and projection to the full point buffer"
+    },
+    {
+      "name": "interaction_ms",
+      "method": "scan the full projected buffer for the nearest point to a fixed cursor"
+    }
+  ],
+  "candidate_thresholds": {
+    "dataset_open_ms": 60000,
+    "first_render_ms": 3000,
+    "frame_switch_ms": 500,
+    "interaction_ms": 200,
+    "policy": "informational_only_unverified"
+  },
+  "network_policy": {
+    "allowed_origins": [],
+    "page_source": "setContent about:blank",
+    "external_requests": "fail"
+  },
+  "output": {
+    "raw_samples": true,
+    "statistics": ["minimum", "maximum", "mean", "median", "p95"],
+    "environment_fields": [
+      "cpu",
+      "memory_bytes",
+      "os",
+      "chrome",
+      "storage",
+      "fixture_sha256",
+      "cold_warm_state",
+      "repeat_count",
+      "tool"
+    ]
+  }
+}

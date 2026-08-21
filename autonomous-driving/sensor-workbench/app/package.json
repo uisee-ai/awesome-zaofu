@@ -1,0 +1,57 @@
+{
+  "name": "@sensor-workbench/app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./contracts": "./src/contracts/index.ts"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run test:contracts",
+    "test:unit": "vitest run tests/contracts tests/data-boundary tests/nuscenes tests/openlane tests/review tests/spikes tests/assembly",
+    "test:contracts": "vitest run tests/contracts",
+    "verify:scaffold": "node scripts/scaffold/verify-scaffold.mjs",
+    "verify:downstream-contracts": "node scripts/scaffold/verify-downstream-contracts.mjs",
+    "test:coordinates": "vitest run tests/spikes/coordinates.test.ts",
+    "spike:coordinates": "node scripts/spikes/run-coordinate-spike.mjs",
+    "spike:performance": "node scripts/spikes/run-performance-spike.mjs",
+    "test:data-boundary": "vitest run tests/data-boundary",
+    "test:nuscenes:race": "vitest run tests/nuscenes/frame-context-race.test.ts",
+    "test:nuscenes": "vitest run tests/nuscenes",
+    "test:workbench-shell": "playwright test tests/e2e/specs/workbench-shell.spec.ts",
+    "verify:e2e-specs:nuscenes": "node scripts/scaffold/verify-e2e-spec.mjs nuscenes",
+    "test:openlane": "vitest run tests/openlane",
+    "verify:e2e-specs:openlane": "node scripts/scaffold/verify-e2e-spec.mjs openlane",
+    "test:review": "vitest run tests/review/review.test.ts",
+    "test:review:recovery": "vitest run tests/review/recovery.test.ts",
+    "test:review:replay": "vitest run tests/review/replay.test.ts",
+    "verify:e2e-specs:review": "node scripts/scaffold/verify-e2e-spec.mjs review",
+    "e2e:synthetic": "playwright test tests/e2e/specs/synthetic.spec.ts",
+    "e2e:nuscenes": "playwright test tests/e2e/specs/nuscenes.spec.ts",
+    "e2e:openlane": "playwright test tests/e2e/specs/openlane.spec.ts",
+    "e2e:openlane:real": "playwright test tests/e2e/specs/real-openlane.spec.ts",
+    "verify:license": "node scripts/release/verify-license.mjs",
+    "verify:evidence": "node scripts/release/verify-evidence.mjs"
+  },
+  "dependencies": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@types/node": "20.19.43",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@vitejs/plugin-react": "6.0.5",
+    "typescript": "7.0.2",
+    "vite": "8.2.0",
+    "vitest": "4.1.10"
+  }
+}

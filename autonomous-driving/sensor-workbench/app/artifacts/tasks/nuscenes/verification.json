@@ -1,0 +1,108 @@
+{
+  "schema_version": "sensor-workbench.task-verification.v1",
+  "task_id": "SWB-NUSCENES-002-R3",
+  "contract_revision": "contract-rdb3b9993d141",
+  "source_binding": "current branch HEAD at dev.build.done admission",
+  "tdd_evidence": {
+    "red": [
+      {
+        "command_id": "SWB-NUSCENES-002-R3-CMD-01",
+        "exit_code": 1,
+        "finding": "data-boundary security module did not exist"
+      },
+      {
+        "command_id": "SWB-NUSCENES-002-R3-CMD-02",
+        "exit_code": 1,
+        "finding": "FrameContext generation module did not exist"
+      },
+      {
+        "command_id": "SWB-NUSCENES-002-R3-CMD-03",
+        "exit_code": 1,
+        "finding": "nuScenes selection and search modules did not exist"
+      }
+    ],
+    "green": [
+      {
+        "command_id": "SWB-NUSCENES-002-R3-CMD-01",
+        "command": "npm --prefix app run test:data-boundary",
+        "exit_code": 0,
+        "test_files": 1,
+        "tests": 11
+      },
+      {
+        "command_id": "SWB-NUSCENES-002-R3-CMD-02",
+        "command": "npm --prefix app run test:nuscenes:race",
+        "exit_code": 0,
+        "test_files": 1,
+        "tests": 1
+      },
+      {
+        "command_id": "SWB-NUSCENES-002-R3-CMD-03",
+        "command": "npm --prefix app run test:nuscenes",
+        "exit_code": 0,
+        "test_files": 2,
+        "tests": 3
+      },
+      {
+        "command_id": "SWB-NUSCENES-002-R3-CMD-04",
+        "command": "npm --prefix app run verify:e2e-specs:nuscenes",
+        "exit_code": 0,
+        "verified_spec": "app/tests/e2e/specs/nuscenes.spec.ts"
+      }
+    ]
+  },
+  "acceptance_evidence": [
+    {
+      "acceptance_id": "AC-02",
+      "command_ids": ["SWB-NUSCENES-002-R3-CMD-01"],
+      "files": ["app/tests/data-boundary/data-boundary.test.ts"]
+    },
+    {
+      "acceptance_id": "AC-03",
+      "command_ids": ["SWB-NUSCENES-002-R3-CMD-02"],
+      "files": ["app/tests/nuscenes/frame-context-race.test.ts"]
+    },
+    {
+      "acceptance_id": "AC-05",
+      "command_ids": ["SWB-NUSCENES-002-R3-CMD-03"],
+      "files": ["app/tests/nuscenes/nuscenes.test.ts"]
+    },
+    {
+      "acceptance_id": "AC-06",
+      "command_ids": ["SWB-NUSCENES-002-R3-CMD-03"],
+      "files": ["app/tests/nuscenes/nuscenes.test.ts"]
+    },
+    {
+      "acceptance_id": "AC-10",
+      "command_ids": ["SWB-NUSCENES-002-R3-CMD-01"],
+      "files": ["app/tests/data-boundary/data-boundary.test.ts"]
+    },
+    {
+      "acceptance_id": "AC-14",
+      "command_ids": ["SWB-NUSCENES-002-R3-CMD-01", "SWB-NUSCENES-002-R3-CMD-03"],
+      "files": [
+        "app/tests/data-boundary/data-boundary.test.ts",
+        "app/tests/e2e/specs/nuscenes.spec.ts"
+      ]
+    },
+    {
+      "acceptance_id": "SWB-NUSCENES-002-R3-AC-READONLY-BOUNDS",
+      "command_ids": ["SWB-NUSCENES-002-R3-CMD-01", "SWB-NUSCENES-002-R3-CMD-03"],
+      "files": ["app/tests/data-boundary/data-boundary.test.ts"]
+    },
+    {
+      "acceptance_id": "SWB-NUSCENES-002-R3-AC-E2E-SPEC",
+      "command_ids": ["SWB-NUSCENES-002-R3-CMD-04"],
+      "files": ["app/tests/e2e/specs/nuscenes.spec.ts"]
+    }
+  ],
+  "candidate_checks": [
+    { "command": "npm --prefix app run typecheck", "exit_code": 0 },
+    { "command": "npm --prefix app test", "exit_code": 0, "tests": 16 },
+    { "command": "npm --prefix app run build", "exit_code": 0 },
+    { "command": "npm --prefix app run verify:scaffold", "exit_code": 0 }
+  ],
+  "residual_risks": [
+    "The task contract validates the Playwright spec statically; SWB-ASSEMBLY-005-R3 owns production-entry wiring and real-browser execution."
+  ]
+}

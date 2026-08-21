@@ -1,0 +1,20 @@
+{
+  "name": "sensorworkbench-new",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix app run dev --",
+    "preview": "npm --prefix app run preview --",
+    "pretypecheck": "npm ci --prefix app",
+    "typecheck": "npm --prefix app run typecheck",
+    "build": "npm --prefix app run build",
+    "test:contracts": "npm --prefix app run test:contracts",
+    "test:data-boundary": "npm --prefix app run test:data-boundary",
+    "test:nuscenes": "npm --prefix app run test:nuscenes",
+    "test:openlane": "npm --prefix app run test:openlane",
+    "test:review": "npm --prefix app run test:review",
+    "test:review:recovery": "npm --prefix app run test:review:recovery",
+    "test:review:replay": "npm --prefix app run test:review:replay",
+    "verify:evidence": "npm --prefix app run verify:evidence",
+    "verify:license": "npm --prefix app run verify:license"
+  }
+}

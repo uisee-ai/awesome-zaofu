@@ -1,0 +1,28 @@
+{
+  "schema_version": "task-command-evidence.v1",
+  "task_id": "SWB-REVIEW-004-R3",
+  "contract_revision": "contract-rc658486c0ac2",
+  "command_id": "SWB-REVIEW-004-R3-CMD-02",
+  "command_digest": "d8faf341d0029e8be616d50322af312b748b54c4eb4bc2edd4e13ef77ee7d59e",
+  "command": "npm --prefix app run test:review:recovery",
+  "expected_exit_code": 0,
+  "status": "passed",
+  "observed_exit_code": 0,
+  "target_commit_binding": "impl_self_check.target_commit",
+  "test_file": "app/tests/review/recovery.test.ts",
+  "test_count": 6,
+  "acceptance_ids": ["AC-08", "SWB-REVIEW-004-R3-AC-FAILURE-ATOMICITY"],
+  "fault_schedule": [
+    "append.after_prepare -> old committed state -> roll forward -> retry duplicate",
+    "append.after_prepare -> reset journal -> exact retry appended",
+    "append.after_commit -> complete event visible -> clear committed journal",
+    "export.after_prepare -> archive invisible -> roll forward complete archive",
+    "import.after_prepare -> no event visible -> roll forward -> retry package duplicate",
+    "two expected revision 1 updates -> one revision 2 append plus one exact conflict"
+  ],
+  "evidence_refs": [
+    "file:app/tests/review/recovery.test.ts",
+    "file:app/src/features/review/persistence.ts",
+    "file:app/src/features/review/store.ts"
+  ]
+}

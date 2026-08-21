@@ -1,0 +1,17 @@
+{
+  "schema_version": "openlane-synthetic-fixture.v1",
+  "fixture_id": "openlane-v1.2-synthetic-001",
+  "dataset_version": "v1.2",
+  "annotation_ref": "lane3d_1000/validation/synthetic-segment/frame-0001.json",
+  "source_refs": [
+    "https://github.com/OpenDriveLab/OpenLane/blob/ec98fda7cb21ecf51ffdf70c37c411076985dbd6/README.md",
+    "https://github.com/OpenDriveLab/OpenLane/blob/ec98fda7cb21ecf51ffdf70c37c411076985dbd6/anno_criterion/Lane/README.md",
+    "https://github.com/OpenDriveLab/OpenLane/blob/ec98fda7cb21ecf51ffdf70c37c411076985dbd6/data/Coordinate_Sys.md"
+  ],
+  "license": {
+    "data_terms": "CC BY-NC-SA and Waymo Dataset License Agreement for Non-Commercial Use (August 2019)",
+    "commercial_use": "prohibited",
+    "code_license": "Apache-2.0",
+    "acquisition": "Register with Waymo Open Dataset, accept its terms, then use the OpenLane download request form."
+  }
+}

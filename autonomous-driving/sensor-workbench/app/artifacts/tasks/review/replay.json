@@ -1,0 +1,26 @@
+{
+  "schema_version": "task-command-evidence.v1",
+  "task_id": "SWB-REVIEW-004-R3",
+  "contract_revision": "contract-rc658486c0ac2",
+  "command_id": "SWB-REVIEW-004-R3-CMD-03",
+  "command_digest": "f1d3ede1324753951f63417629cc56aa53cb740415afd3749d3bd2c8cac5eb5f",
+  "command": "npm --prefix app run test:review:replay",
+  "expected_exit_code": 0,
+  "status": "passed",
+  "observed_exit_code": 0,
+  "target_commit_binding": "impl_self_check.target_commit",
+  "test_file": "app/tests/review/replay.test.ts",
+  "test_count": 3,
+  "acceptance_ids": ["AC-09", "SWB-REVIEW-004-R3-AC-DETERMINISTIC-REPLAY"],
+  "assertions": [
+    "相同 workspace、初态和事件序列产生完全相同 results、snapshot 与 SHA-256 stateDigest",
+    "相同 export 请求产生完全相同 envelope、event identity 与 content digest",
+    "重复 import 保持 stateDigest 不变且返回确定的 imported/duplicate 计数",
+    "相同错误 expectedRevision 在 reset 后复演相同 conflict 和 snapshot"
+  ],
+  "evidence_refs": [
+    "file:app/tests/review/replay.test.ts",
+    "file:app/src/features/review/digest.ts",
+    "file:app/src/features/review/store.ts"
+  ]
+}

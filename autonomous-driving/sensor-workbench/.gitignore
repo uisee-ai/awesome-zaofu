@@ -1,0 +1,22 @@
+# ZaoFu runtime state and local orchestration data
+/.zf-sensorworkbench-new/
+/.codex/
+
+# Generated verification and workflow outputs
+/artifacts/
+/test-results/
+/issue_record.md
+/docs/intake/
+/docs/design/
+
+# Local presentation/video exports (not source-only showcase content)
+/sensorworkbench-demo-video/
+/sensorworkbench-demo-video-*/
+/sensorworkbench-web-ppt/
+/sensorworkbench-web-ppt-*/
+/*.wps
+
+# Local environment files
+.env
+.env.*
+!.env.example

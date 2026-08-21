@@ -1,0 +1,44 @@
+schema_version: awesome-zaofu.case.v1
+id: autonomous-driving/sensor-workbench
+name: Sensor Workbench
+domain: autonomous-driving
+category: multimodal-data-review
+maturity: product-snapshot
+source:
+  ref: main-working-tree
+  commit: 4570511
+  packaging: source-only-working-tree-snapshot
+workflows:
+  - prd
+  - issue
+tags:
+  - frontend
+  - multi-agent
+  - nuscenes
+  - openlane
+  - multimodal-review
+  - coordinate-projection
+  - browser-e2e
+  - synthetic-fixtures
+verification:
+  typecheck: true
+  production_build: true
+  unit_tests: 63-passed
+  browser_e2e: synthetic-flow-passed
+  license_boundary: true
+  network_boundary: loopback-only-in-synthetic-flow
+generated_outputs_excluded:
+  - node_modules
+  - dist
+  - app/artifacts/e2e
+  - artifacts/intake
+  - artifacts/workflow
+  - artifacts/showcase
+  - docs/intake
+  - test-results
+  - .zf-*
+  - .codex
+  - issue_record.md
+  - demo-video-and-ppt-directories
+license: Apache-2.0-for-original-content; upstream-data-terms-retained
+safety: local-read-only-research-and-evaluation; no-vehicle-control

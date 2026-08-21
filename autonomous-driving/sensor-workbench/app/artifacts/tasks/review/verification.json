@@ -1,0 +1,24 @@
+{
+  "schema_version": "task-verification-index.v1",
+  "task_id": "SWB-REVIEW-004-R3",
+  "workflow_run_id": "wfint-prd-202608041437-recovery3",
+  "attempt_id": "run-fanout-prd-lanes-impl-evt-a72d61d0-queued-SWB-REVIEW-004-R3-4",
+  "contract_revision": "contract-rc658486c0ac2",
+  "contract_snapshot_digest": "045b616956a4d0da214a91cebe60a4ce447b0fd3572716147da8bcd82a4dc5ff",
+  "status": "passed",
+  "target_commit_binding": "impl_self_check.target_commit",
+  "commands": [
+    { "command_id": "SWB-REVIEW-004-R3-CMD-01", "status": "passed", "exit_code": 0, "evidence_ref": "file:app/artifacts/tasks/review/base.json" },
+    { "command_id": "SWB-REVIEW-004-R3-CMD-02", "status": "passed", "exit_code": 0, "evidence_ref": "file:app/artifacts/tasks/review/recovery.json" },
+    { "command_id": "SWB-REVIEW-004-R3-CMD-03", "status": "passed", "exit_code": 0, "evidence_ref": "file:app/artifacts/tasks/review/replay.json" },
+    { "command_id": "SWB-REVIEW-004-R3-CMD-04", "status": "passed", "exit_code": 0, "evidence_ref": "file:app/tests/e2e/specs/review.spec.ts" }
+  ],
+  "scope": {
+    "implementation": "app/src/features/review/**",
+    "tests": "app/tests/review/**",
+    "fixture": "app/tests/fixtures/synthetic/review/**",
+    "browser_spec": "app/tests/e2e/specs/review.spec.ts"
+  },
+  "browser_execution_owner": "assembly",
+  "residual_risks": []
+}

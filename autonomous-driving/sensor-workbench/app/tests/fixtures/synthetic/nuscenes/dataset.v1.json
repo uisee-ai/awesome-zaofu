@@ -1,0 +1,97 @@
+{
+  "schema_version": "sensor-workbench.synthetic-nuscenes.v1",
+  "dataset_version": "v1.0-mini",
+  "required_assets": [
+    {
+      "asset_id": "asset:cam-front-0001",
+      "relative_path": "samples/CAM_FRONT/front-0001.jpg",
+      "affected_scopes": ["camera", "frame:sample-0001"]
+    },
+    {
+      "asset_id": "asset:lidar-top-0001",
+      "relative_path": "samples/LIDAR_TOP/top-0001.pcd.bin",
+      "affected_scopes": ["lidar", "bev", "frame:sample-0001"]
+    },
+    {
+      "asset_id": "asset:cam-back-0001",
+      "relative_path": "samples/CAM_BACK/back-0001.jpg",
+      "affected_scopes": ["camera", "frame:sample-0001"]
+    }
+  ],
+  "scenes": [
+    {
+      "scene_ref": "scene-0061",
+      "description": "Night rain near depot",
+      "frames": [
+        {
+          "frame_ref": "sample-0001",
+          "keyframe": true,
+          "timestamp_us": 1535099000000000,
+          "sensors": [
+            {
+              "sensor_id": "CAM_FRONT",
+              "modality": "camera",
+              "timestamp_us": 1535099000012000,
+              "asset_ref": "asset:cam-front-0001"
+            },
+            {
+              "sensor_id": "LIDAR_TOP",
+              "modality": "lidar",
+              "timestamp_us": 1535099000000000,
+              "asset_ref": "asset:lidar-top-0001"
+            },
+            {
+              "sensor_id": "CAM_BACK",
+              "modality": "camera",
+              "timestamp_us": 1535098999984000,
+              "asset_ref": null
+            }
+          ],
+          "annotations": [
+            {
+              "annotation_ref": "annotation-0001",
+              "instance_ref": "instance-vehicle-01",
+              "category": "vehicle.car",
+              "camera_ref": "camera-box-0001",
+              "lidar_ref": "lidar-box-0001",
+              "bev_ref": "bev-box-0001",
+              "previous_annotation_ref": null,
+              "next_annotation_ref": "annotation-0002"
+            }
+          ]
+        },
+        {
+          "frame_ref": "sample-0002",
+          "keyframe": true,
+          "timestamp_us": 1535099000500000,
+          "sensors": [
+            {
+              "sensor_id": "CAM_FRONT",
+              "modality": "camera",
+              "timestamp_us": 1535099000510000,
+              "asset_ref": "asset:cam-front-0002"
+            },
+            {
+              "sensor_id": "LIDAR_TOP",
+              "modality": "lidar",
+              "timestamp_us": 1535099000500000,
+              "asset_ref": "asset:lidar-top-0002"
+            }
+          ],
+          "annotations": [
+            {
+              "annotation_ref": "annotation-0002",
+              "instance_ref": "instance-vehicle-01",
+              "category": "vehicle.car",
+              "camera_ref": "camera-box-0002",
+              "lidar_ref": "lidar-box-0002",
+              "bev_ref": "bev-box-0002",
+              "previous_annotation_ref": "annotation-0001",
+              "next_annotation_ref": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

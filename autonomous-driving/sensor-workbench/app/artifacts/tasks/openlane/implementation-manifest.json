@@ -1,0 +1,45 @@
+{
+  "schema_version": "openlane-implementation-manifest.v1",
+  "task_id": "SWB-OPENLANE-003-R3",
+  "dataset_version": "v1.2",
+  "fixture": {
+    "kind": "synthetic",
+    "root_sha256": "f63d05a3772587bc3cbc80091d62ed538bb5f885025eebc127677c512dc302f6",
+    "annotation_sha256": "2062fabc301f1c1268d9b9cfeb7542fe04f14150166728913d2ba1b0c578eb43",
+    "raw_media_included": false
+  },
+  "data_boundary": {
+    "data_root_mode": "read-only",
+    "mutable_root_mode": "workspace-only",
+    "receipt_media_included": false,
+    "receipt_absolute_paths_included": false,
+    "commercial_use": "prohibited"
+  },
+  "source_refs": [
+    "https://github.com/OpenDriveLab/OpenLane/blob/ec98fda7cb21ecf51ffdf70c37c411076985dbd6/README.md",
+    "https://github.com/OpenDriveLab/OpenLane/blob/ec98fda7cb21ecf51ffdf70c37c411076985dbd6/anno_criterion/Lane/README.md",
+    "https://github.com/OpenDriveLab/OpenLane/blob/ec98fda7cb21ecf51ffdf70c37c411076985dbd6/data/Coordinate_Sys.md"
+  ],
+  "acceptance_coverage": {
+    "AC-07": [
+      "app/tests/openlane/openlane.test.ts",
+      "app/tests/e2e/specs/openlane.spec.ts"
+    ],
+    "SWB-OPENLANE-003-R3-AC-READONLY-LICENSE": [
+      "app/tests/openlane/openlane.test.ts",
+      "app/docs/openlane/README.md"
+    ],
+    "SWB-OPENLANE-003-R3-AC-E2E-SPEC": [
+      "app/tests/e2e/specs/openlane.spec.ts"
+    ]
+  },
+  "verification_commands": [
+    "npm --prefix app run test:openlane",
+    "npm --prefix app run verify:e2e-specs:openlane"
+  ],
+  "rework_evidence": {
+    "task_map_schema_version": "task-map.v1",
+    "task_map_status": "ready",
+    "task_map_sha256": "219e595ef6b6869d552f752e7ff13a081e48cdae6a8992b68a3e0da5186d3149"
+  }
+}

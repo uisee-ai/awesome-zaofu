@@ -1,0 +1,88 @@
+{
+  "schema_version": "coordinate-spike-report.v1",
+  "fixture_id": "sensor-workbench-coordinate-golden-001",
+  "fixture_sha256": "a5c402cce5e679e1bcc90f895032fb993d9a97702c5533dc78b76a393d37aa93",
+  "deterministic": true,
+  "method": {
+    "matrix_layout": "row_major",
+    "point_convention": "homogeneous_column_xyz1",
+    "projection": "u=fx*x/z+cx; v=fy*y/z+cy; depth=z",
+    "translation_residual": "euclidean_distance_m",
+    "projection_residual": "euclidean_distance_px",
+    "behind_camera_fallback": "not_projected",
+    "unknown_fixture_fields": "ignored"
+  },
+  "candidate_thresholds": {
+    "translation_m": 0.00001,
+    "projection_px": 0.5,
+    "policy": "informational_only_unverified"
+  },
+  "measurements": {
+    "nuscenes": {
+      "input_lidar_m": [
+        4,
+        1,
+        1
+      ],
+      "expected_camera_m": [
+        -2,
+        -1,
+        5
+      ],
+      "actual_camera_m": [
+        -2,
+        -1,
+        5
+      ],
+      "translation_residual_m": 0,
+      "expected_pixel": [
+        320,
+        196
+      ],
+      "actual_pixel": [
+        320,
+        196
+      ],
+      "projection_residual_px": 0,
+      "depth_m": 5
+    },
+    "openlane": {
+      "input_waymo_camera_m": [
+        20,
+        -2,
+        1
+      ],
+      "expected_standard_camera_m": [
+        2,
+        -1,
+        20
+      ],
+      "actual_standard_camera_m": [
+        2,
+        -1,
+        20
+      ],
+      "translation_residual_m": 0,
+      "expected_pixel": [
+        1060,
+        491
+      ],
+      "actual_pixel": [
+        1060,
+        491
+      ],
+      "projection_residual_px": 0,
+      "depth_m": 20
+    }
+  },
+  "candidate_evaluation": {
+    "policy": "record_only_not_a_pass_gate",
+    "translation_candidate_m": 0.00001,
+    "projection_candidate_px": 0.5
+  },
+  "source_refs": [
+    "https://github.com/nutonomy/nuscenes-devkit/blob/d9de17a73bdc06ce97a02f77ae7edb9b0406e851/python-sdk/nuscenes/utils/geometry_utils.py",
+    "https://github.com/nutonomy/nuscenes-devkit/blob/d9de17a73bdc06ce97a02f77ae7edb9b0406e851/python-sdk/nuscenes/nuscenes.py",
+    "https://github.com/OpenDriveLab/OpenLane/blob/ec98fda7cb21ecf51ffdf70c37c411076985dbd6/data/Coordinate_Sys.md"
+  ]
+}

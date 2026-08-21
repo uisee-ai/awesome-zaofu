@@ -1,0 +1,36 @@
+{
+  "workspaceId": "workspace-review-fixture",
+  "datasetDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "frameContextId": "frame-context-0001",
+  "actorId": "reviewer-01",
+  "target": {
+    "kind": "annotation",
+    "stableId": "sample-annotation-0001"
+  },
+  "events": [
+    {
+      "eventId": "review-event-0001",
+      "expectedRevision": 0,
+      "eventType": "issue_created",
+      "occurredAt": "2026-08-04T08:00:00.000Z",
+      "payload": {
+        "issueCode": "MISALIGNED_BOX",
+        "comment": null,
+        "status": "open",
+        "suggestion": null
+      }
+    },
+    {
+      "eventId": "review-event-0002",
+      "expectedRevision": 1,
+      "eventType": "comment_added",
+      "occurredAt": "2026-08-04T08:01:00.000Z",
+      "payload": {
+        "issueCode": null,
+        "comment": "向车头方向平移 0.3m",
+        "status": null,
+        "suggestion": null
+      }
+    }
+  ]
+}

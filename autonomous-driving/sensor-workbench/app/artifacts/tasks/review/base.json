@@ -1,0 +1,27 @@
+{
+  "schema_version": "task-command-evidence.v1",
+  "task_id": "SWB-REVIEW-004-R3",
+  "contract_revision": "contract-rc658486c0ac2",
+  "command_id": "SWB-REVIEW-004-R3-CMD-01",
+  "command_digest": "f5d525bca31ce9e52d0701c4f1b1cd1b4e417698da45834a8ac26f345c8f59dc",
+  "command": "npm --prefix app run test:review",
+  "expected_exit_code": 0,
+  "status": "passed",
+  "observed_exit_code": 0,
+  "target_commit_binding": "impl_self_check.target_commit",
+  "test_file": "app/tests/review/review.test.ts",
+  "test_count": 4,
+  "acceptance_ids": ["AC-08", "AC-09"],
+  "assertions": [
+    "问题与评论形成 immutable revision 1/2 链，previousEventId 只指向旧记录",
+    "空评论在 CAS 前被拒绝且 committed snapshot 不变",
+    "diff export 使用稳定事件 identity，目标 workspace 恢复同一审核语义",
+    "同一包再次导入返回 duplicate，null 与损坏 digest 输入原子失败"
+  ],
+  "red_evidence": "首跑因 src/features/review 尚不存在而失败，0 tests collected",
+  "evidence_refs": [
+    "file:app/tests/review/review.test.ts",
+    "file:app/tests/fixtures/synthetic/review/review-fixture.json",
+    "file:app/src/features/review/store.ts"
+  ]
+}

@@ -23,6 +23,7 @@
 | [ScenarioForge](autonomous-driving/scenarioforge/) | 版本化场景编排、MetaDrive 批量仿真、精确回放与回归对比 | Verified showcase | [README](autonomous-driving/scenarioforge/README.md) | [CASE](autonomous-driving/scenarioforge/CASE.md) | [Project license](autonomous-driving/scenarioforge/LICENSE) |
 | [Alpamayo Web Studio](autonomous-driving/alpamayo-web-studio/) | 道路场景管理、视觉推理、轨迹生成与回归评测 | Product snapshot | [README](autonomous-driving/alpamayo-web-studio/README.md) | [CASE](autonomous-driving/alpamayo-web-studio/CASE.md) | [Apache-2.0](autonomous-driving/alpamayo-web-studio/LICENSE) |
 | [CAN Lab](autonomous-driving/canlab/) | DBC 浏览、确定性 CAN 回放、可追溯解码与健康分析 | Verified showcase | [README](autonomous-driving/canlab/README.md) | [CASE](autonomous-driving/canlab/CASE.md) | [Apache-2.0](LICENSE) + fixture notices |
+| [Sensor Workbench](autonomous-driving/sensor-workbench/) | nuScenes/OpenLane 多模态浏览、坐标投影与标注审核 | Product snapshot | [README](autonomous-driving/sensor-workbench/README.md) | [CASE](autonomous-driving/sensor-workbench/CASE.md) | [Apache-2.0](autonomous-driving/sensor-workbench/LICENSE) |
 
 每个项目的文档职责固定为：
 

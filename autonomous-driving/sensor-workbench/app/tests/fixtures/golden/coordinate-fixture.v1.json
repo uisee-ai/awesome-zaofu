@@ -1,0 +1,86 @@
+{
+  "schema_version": "coordinate-golden.v1",
+  "fixture_id": "sensor-workbench-coordinate-golden-001",
+  "dataset_versions": {
+    "nuscenes": "v1.0-mini",
+    "openlane": "v1.2"
+  },
+  "source_refs": [
+    "https://github.com/nutonomy/nuscenes-devkit/blob/d9de17a73bdc06ce97a02f77ae7edb9b0406e851/python-sdk/nuscenes/utils/geometry_utils.py",
+    "https://github.com/nutonomy/nuscenes-devkit/blob/d9de17a73bdc06ce97a02f77ae7edb9b0406e851/python-sdk/nuscenes/nuscenes.py",
+    "https://github.com/OpenDriveLab/OpenLane/blob/ec98fda7cb21ecf51ffdf70c37c411076985dbd6/data/Coordinate_Sys.md"
+  ],
+  "method": {
+    "matrix_layout": "row_major",
+    "point_convention": "homogeneous_column_xyz1",
+    "projection": "u=fx*x/z+cx; v=fy*y/z+cy; depth=z",
+    "translation_residual": "euclidean_distance_m",
+    "projection_residual": "euclidean_distance_px",
+    "behind_camera_fallback": "not_projected",
+    "unknown_fixture_fields": "ignored"
+  },
+  "candidate_thresholds": {
+    "translation_m": 0.00001,
+    "projection_px": 0.5,
+    "policy": "informational_only_unverified"
+  },
+  "nuscenes": {
+    "point_lidar_m": [4, 1, 1],
+    "transforms": {
+      "lidar_to_ego": [
+        [0, -1, 0, 1],
+        [1, 0, 0, 2],
+        [0, 0, 1, 0.5],
+        [0, 0, 0, 1]
+      ],
+      "ego_to_global_at_lidar": [
+        [1, 0, 0, 10],
+        [0, 1, 0, -3],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+      ],
+      "global_to_ego_at_camera": [
+        [1, 0, 0, -5],
+        [0, 1, 0, -1],
+        [0, 0, 1, -0.5],
+        [0, 0, 0, 1]
+      ],
+      "ego_to_camera": [
+        [0, -1, 0, 0],
+        [0, 0, -1, 0],
+        [1, 0, 0, 0],
+        [0, 0, 0, 1]
+      ]
+    },
+    "camera_intrinsic": [
+      [800, 0, 640],
+      [0, 820, 360],
+      [0, 0, 1]
+    ],
+    "expected": {
+      "point_camera_m": [-2, -1, 5],
+      "pixel": [320, 196],
+      "depth_m": 5
+    },
+    "ignored_modalities": ["radar", "lidarseg", "panoptic", "can_bus", "non_keyframe_sweeps"]
+  },
+  "openlane": {
+    "point_waymo_camera_m": [20, -2, 1],
+    "waymo_to_standard_camera": [
+      [0, -1, 0],
+      [0, 0, -1],
+      [1, 0, 0]
+    ],
+    "camera_intrinsic": [
+      [1000, 0, 960],
+      [0, 980, 540],
+      [0, 0, 1]
+    ],
+    "expected": {
+      "point_standard_camera_m": [2, -1, 20],
+      "pixel": [1060, 491],
+      "depth_m": 20
+    },
+    "ignored_annotation_fields": ["future_optional_attributes"]
+  }
+}
