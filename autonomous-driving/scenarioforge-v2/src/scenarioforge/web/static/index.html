@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>ScenarioForge · Scenario Studio</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">ScenarioForge / Scenario Studio</p>
+        <h1>Create, run, and understand one scenario.</h1>
+      </div>
+      <p id="app-status" class="status-pill" role="status" aria-live="polite">Connecting…</p>
+    </header>
+
+    <main class="workspace">
+      <section data-authoring-id="authoring-panel" class="panel authoring-card studio-card" aria-labelledby="authoring-title">
+        <div class="panel-heading">
+          <div>
+            <p class="section-index">Scenario Studio</p>
+            <h2 data-authoring-id="authoring-title">Choose how to create your scenario</h2>
+          </div>
+          <span class="metadata-chip">Local · immutable evidence</span>
+        </div>
+        <p class="lede">Natural language, JSON, and built-in templates all use the same validation, execution, and replay flow.</p>
+
+        <div class="studio-source-tabs" role="tablist" aria-label="Scenario source">
+          <button type="button" role="tab" data-studio-source="natural" aria-selected="false">Natural language</button>
+          <button type="button" role="tab" data-studio-source="json" aria-selected="false">JSON</button>
+          <button type="button" role="tab" data-studio-source="template" aria-selected="true">Built-in templates</button>
+        </div>
+
+        <section id="studio-natural-panel" class="studio-source-panel" data-studio-panel="natural" hidden>
+          <div class="panel-heading compact-heading">
+            <div>
+              <p class="section-index">Describe</p>
+              <h3>Turn a supported driving intent into a runnable draft</h3>
+            </div>
+            <span class="metadata-chip">Offline generator</span>
+          </div>
+          <div class="p1-intent-row">
+            <label class="p1-intent-field">
+              <span>What should happen?</span>
+              <textarea id="p1-intent" rows="3" placeholder="Create a highway merge with an ego vehicle joining two social vehicles."></textarea>
+            </label>
+            <button id="p1-generate-draft" type="button" class="secondary-action">Preview generated JSON</button>
+          </div>
+          <p id="p1-provider-status" class="quiet" role="status" aria-live="polite">No Provider draft generated.</p>
+        </section>
+
+        <section id="studio-json-panel" class="studio-source-panel" data-studio-panel="json" hidden>
+          <div class="panel-heading compact-heading">
+            <div>
+              <p class="section-index">Define</p>
+              <h3>Paste or edit one strict ScenarioSpec JSON document</h3>
+            </div>
+            <span class="metadata-chip">Strict JSON</span>
+          </div>
+          <p class="quiet">The document is validated before an immutable revision is created. Filesystem paths, URLs, archives, duplicate keys, and non-finite numbers are rejected.</p>
+        </section>
+
+        <section id="studio-template-panel" class="studio-source-panel" data-studio-panel="template">
+          <div class="studio-template-grid">
+            <label class="scenario-selector">
+              <span>Choose a ready-to-run scenario</span>
+              <select id="studio-template-select" aria-label="Built-in scenario template" disabled></select>
+            </label>
+            <article class="studio-template-summary" aria-live="polite">
+              <div>
+                <span id="studio-template-backend" class="metadata-chip">Loading backend…</span>
+                <h3 id="studio-template-name">Loading scenario library…</h3>
+              </div>
+              <p id="studio-template-description" class="lede">Preparing local scenario metadata.</p>
+              <ul id="studio-template-participants" class="comprehension-list"></ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="studio-document-panel" class="studio-document-panel" hidden>
+          <div class="p1-form-grid" aria-label="Scenario fields">
+            <label><span>Title</span><input id="p1-form-title" type="text" maxlength="120"></label>
+            <label><span>Seed</span><input id="p1-form-seed" type="number" min="0" max="2147483647" value="42"></label>
+            <label><span>Duration (s)</span><input id="p1-form-duration" type="number" min="0.01" max="86400" step="0.01" value="12"></label>
+            <label>
+              <span>Execution backend</span>
+              <select id="p1-backend">
+                <option value="scenarioforge.metadrive">MetaDrive · local</option>
+              </select>
+            </label>
+          </div>
+          <div class="authoring-actions p1-actions">
+            <button id="p1-apply-form" type="button" class="secondary-action">Apply fields to JSON</button>
+          </div>
+
+          <label class="authoring-editor">
+            <span>ScenarioSpec JSON</span>
+            <textarea data-authoring-id="authoring-content" rows="18" spellcheck="false" aria-describedby="authoring-editor-help"></textarea>
+          </label>
+          <p data-authoring-id="authoring-editor-help" class="quiet">This JSON is the exact document that will be validated and bound to the run.</p>
+        </section>
+
+        <div class="studio-run-bar">
+          <div>
+            <strong id="studio-run-title">Ready to run a built-in scenario</strong>
+            <p id="studio-run-summary" class="quiet">The selected backend will publish immutable evidence and a trajectory replay.</p>
+          </div>
+          <button id="studio-run" type="button" disabled>Run selected scenario</button>
+        </div>
+
+        <details class="studio-advanced">
+          <summary>Advanced authoring and audit tools</summary>
+          <p class="quiet">Inspect field sources, manage drafts, import/export documents, or run each controlled step manually.</p>
+
+          <div class="p1-source-panel">
+            <h4>Value sources and missing fields</h4>
+            <ol id="p1-source-annotations" class="diagnostic-list" aria-live="polite"></ol>
+          </div>
+
+          <div class="authoring-toolbar">
+            <label><span>Saved draft</span><select data-authoring-id="authoring-draft" aria-label="Saved authoring draft"></select></label>
+            <span data-authoring-id="clone-draft" data-authoring-button hidden>Clone draft</span>
+            <span data-authoring-id="archive-draft" data-authoring-button hidden>Archive draft</span>
+            <label><span>Read-only preset</span><select data-authoring-id="authoring-preset" aria-label="Read-only scenario preset"></select></label>
+            <span data-authoring-id="fork-preset" data-authoring-button hidden>Fork preset</span>
+          </div>
+
+          <div class="authoring-toolbar">
+            <label><span>Import</span><select data-authoring-id="import-format" aria-label="Authoring import format"><option value="json">Strict JSON</option><option value="yaml">Safe YAML</option></select></label>
+            <span data-authoring-id="import-draft" data-authoring-button hidden>Import inline</span>
+            <label><span>Export</span><select data-authoring-id="export-format" aria-label="Authoring export format"><option value="json">Strict JSON</option><option value="yaml">Safe YAML</option></select></label>
+            <span data-authoring-id="export-draft" data-authoring-button hidden>Export inline</span>
+          </div>
+
+          <div class="authoring-actions">
+            <span data-authoring-id="create-draft" data-authoring-button hidden>Create draft</span>
+            <span data-authoring-id="update-draft" data-authoring-button hidden>Update draft</span>
+            <span data-authoring-id="validate-draft" data-authoring-button hidden>Validate fields</span>
+            <span data-authoring-id="save-revision" data-authoring-button hidden>Save immutable revision</span>
+            <span data-authoring-id="preflight-revision" data-authoring-button hidden>Preflight revision</span>
+            <span data-authoring-id="save-and-run-revision" data-authoring-button hidden>Save and run revision</span>
+            <button id="p1-preflight" type="button">Adapter preflight</button>
+            <button id="p1-confirm-run" type="button" disabled>Confirm one run</button>
+          </div>
+
+          <dl class="authoring-state">
+            <div><dt>Draft</dt><dd data-authoring-id="authoring-draft-id" class="mono">—</dd></div>
+            <div><dt>Generation</dt><dd data-authoring-id="draft-generation">—</dd></div>
+            <div><dt>Immutable revision</dt><dd data-authoring-id="active-revision-id" class="mono">—</dd></div>
+            <div><dt>Preflight</dt><dd data-authoring-id="preflight-status">Not run</dd></div>
+          </dl>
+          <div class="authoring-results">
+            <div><h3>Field diagnostics</h3><ol data-authoring-id="authoring-diagnostics" class="diagnostic-list" aria-live="polite"></ol></div>
+            <div><h3>Revision history</h3><ol data-authoring-id="revision-history" class="revision-list"></ol></div>
+          </div>
+        </details>
+      </section>
+
+      <div id="internal-catalogs" hidden>
+        <section id="p1-canonical-panel" aria-labelledby="p1-scenario-name">
+          <h2 id="p1-scenario-name">Loading SMARTS catalog…</h2>
+          <p id="p1-scenario-description">Loading scenario metadata.</p>
+          <select id="p1-scenario-select" aria-label="SMARTS scenario" disabled></select>
+          <button id="run-p1-scenario" type="button" disabled>Run SMARTS scenario</button>
+        </section>
+        <section id="catalog-panel" aria-labelledby="scenario-name">
+          <h2 id="scenario-name">Loading MetaDrive catalog…</h2>
+          <p id="scenario-description">Loading scenario metadata.</p>
+          <div class="catalog-footer"><button id="run-scenario" type="button" disabled>Run MetaDrive scenario</button></div>
+        </section>
+      </div>
+
+      <section id="live-panel" class="panel live-card" aria-label="Live execution status" hidden>
+        <div>
+          <p class="section-index">02 · Live execution</p>
+          <h2>Worker is <strong id="live-state">starting</strong></h2>
+        </div>
+        <p class="mono">Run <span id="live-run-id">—</span></p>
+        <p class="quiet">Execution continues independently of this browser. This surface has no run-control operations.</p>
+      </section>
+
+      <section id="terminal-panel" class="panel terminal-card" aria-label="Immutable terminal evidence" hidden>
+        <div class="panel-heading">
+          <div>
+            <p class="section-index">03 · Immutable terminal</p>
+            <h2>Run evidence</h2>
+          </div>
+          <p class="metadata-chip">RunResult + ArtifactIndex</p>
+        </div>
+
+        <dl class="evidence-grid">
+          <div><dt>Scenario</dt><dd id="scenario-id">—</dd></div>
+          <div><dt>Run</dt><dd id="run-id">—</dd></div>
+          <div><dt>Status</dt><dd id="terminal-status">—</dd></div>
+          <div><dt>Reason</dt><dd id="terminal-reason">—</dd></div>
+          <div><dt>Failure stage</dt><dd id="failure-stage">—</dd></div>
+          <div><dt>Seed</dt><dd id="seed">—</dd></div>
+          <div><dt>Policy</dt><dd id="policy-id">—</dd></div>
+          <div><dt>Manifest digest</dt><dd id="manifest-digest" class="digest">—</dd></div>
+          <div><dt>ArtifactIndex digest</dt><dd id="artifact-index-digest" class="digest">—</dd></div>
+          <div><dt>Evidence reference</dt><dd id="evidence-ref" class="mono">—</dd></div>
+          <div><dt>Collision</dt><dd id="collision">—</dd></div>
+          <div><dt>Collision participants</dt><dd id="collision-participants">—</dd></div>
+          <div><dt>Minimum TTC</dt><dd id="min-ttc">—</dd></div>
+          <div><dt>Completion time</dt><dd id="completion-time">—</dd></div>
+          <div><dt>Terminal tick</dt><dd id="terminal-tick">—</dd></div>
+        </dl>
+
+        <div class="terminal-columns">
+          <details class="audit-evidence">
+            <summary>Audit hashes and indexed evidence</summary>
+            <ul id="evidence-list" class="artifact-list"></ul>
+          </details>
+          <div>
+            <h3>Ordered key events</h3>
+            <ol id="terminal-events" class="event-list"></ol>
+          </div>
+        </div>
+        <p id="non-playable" class="non-playable" role="note" hidden></p>
+      </section>
+
+      <section id="playback-panel" class="panel playback-card" aria-label="Immutable trajectory replay" hidden>
+        <div class="panel-heading">
+          <div>
+            <p class="section-index">04 · Recorded outcome replay</p>
+            <h2>Trajectory player</h2>
+          </div>
+          <p class="metadata-chip">Fully verified immutable run</p>
+        </div>
+
+        <div class="viewport-shell">
+          <div id="replay-canvas" aria-label="Three-dimensional trajectory view"></div>
+          <ul id="participant-legend" class="participant-legend" aria-label="Stable participants"></ul>
+          <div id="road-legend" class="road-legend" aria-label="Road and conflict legend"></div>
+          <div class="replay-status" aria-live="polite">
+            <strong id="replay-outcome">Recorded result</strong>
+            <span id="active-events">No active key event</span>
+          </div>
+        </div>
+
+        <div class="replay-controls">
+          <button id="replay-toggle" type="button" data-scope="immutable-replay" disabled>Play replay</button>
+          <label class="timeline-control">
+            <span>Timeline</span>
+            <input id="replay-timeline" type="range" min="0" max="0" step="1" value="0" disabled aria-label="Replay timeline">
+          </label>
+          <label>
+            <span>Speed</span>
+            <select id="replay-speed" disabled>
+              <option value="0.5">0.5×</option>
+              <option value="1" selected>1×</option>
+              <option value="2">2×</option>
+              <option value="4">4×</option>
+            </select>
+          </label>
+          <p>Tick <output id="current-tick" for="replay-timeline">0</output></p>
+        </div>
+
+        <div class="event-track">
+          <h3>Event positions</h3>
+          <ol id="event-positions" class="event-markers"></ol>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Logical references and digests only. No host paths, staging data, raw logs, or remote assets.</p>
+      <p>Create from one source, validate once, and keep every result traceable to its exact scenario and backend.</p>
+    </footer>
+    <script type="module" src="/static/app.js"></script>
+    <script type="module" src="/static/p1_authoring.js"></script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+<nodes>
+  <node id="center" x="0" y="0" type="traffic_light"/>
+  <node id="west" x="-100" y="0" type="dead_end"/>
+  <node id="east" x="100" y="0" type="dead_end"/>
+  <node id="north" x="0" y="100" type="dead_end"/>
+  <node id="south" x="0" y="-100" type="dead_end"/>
+  <node id="ped-west" x="-12" y="-8" type="dead_end"/>
+  <node id="ped-east" x="12" y="-8" type="dead_end"/>
+</nodes>

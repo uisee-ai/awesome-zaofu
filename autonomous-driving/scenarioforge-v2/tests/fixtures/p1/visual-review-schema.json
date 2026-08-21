@@ -1,0 +1,347 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://scenarioforge.local/schemas/visual-review-receipt-v3.json",
+  "title": "ScenarioForge P1 visual review receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "status",
+    "source_candidate_commit",
+    "evidence_package",
+    "review",
+    "scenarios",
+    "redaction_evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "scenarioforge.visual-review-receipt/v3"
+    },
+    "status": {
+      "const": "approved"
+    },
+    "source_candidate_commit": {
+      "$ref": "#/$defs/commit"
+    },
+    "evidence_package": {
+      "$ref": "#/$defs/evidencePackage"
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer_id",
+        "reviewer_role",
+        "producer",
+        "independent",
+        "reviewed_at",
+        "decision",
+        "review_task_id",
+        "prerequisite_gate_ids"
+      ],
+      "properties": {
+        "reviewer_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,63}$",
+          "not": {
+            "enum": [
+              "dev-lane-1",
+              "browser-media-producer",
+              "synthetic-fixture"
+            ]
+          }
+        },
+        "reviewer_role": {
+          "const": "independent-quality-reviewer"
+        },
+        "producer": {
+          "const": "human"
+        },
+        "independent": {
+          "const": true
+        },
+        "reviewed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "decision": {
+          "const": "approved"
+        },
+        "review_task_id": {
+          "const": "SF-P1-INDEPENDENT-VISUAL-REVIEW-023"
+        },
+        "prerequisite_gate_ids": {
+          "const": [
+            "V-P1-RIGHT-HAND-TRAFFIC",
+            "V-P1-DOCKER-CHROMIUM"
+          ]
+        }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "$ref": "#/$defs/scenario"
+      }
+    },
+    "redaction_evidence": {
+      "$ref": "#/$defs/redactionEvidence"
+    }
+  },
+  "$defs": {
+    "commit": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "evidencePackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "report_ref",
+        "report_digest",
+        "media_digest",
+        "content_digest",
+        "content_ref"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "scenarioforge.candidate-evidence-package/v1"
+        },
+        "report_ref": {
+          "const": "p1-release-browser-report.json"
+        },
+        "report_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "media_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "content_ref": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "relativeRef": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$"
+    },
+    "media": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content_ref",
+        "content_digest",
+        "capture_allowlist_digest"
+      ],
+      "properties": {
+        "content_ref": {
+          "$ref": "#/$defs/relativeRef"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "capture_allowlist_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "sceneCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verdict",
+        "observation"
+      ],
+      "properties": {
+        "verdict": {
+          "const": "passed"
+        },
+        "observation": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 1000,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "scenarioReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenario_understandable",
+        "non_box_vehicle_model",
+        "vehicle_proportions",
+        "right_hand_lane_placement",
+        "trajectory_heading",
+        "ego_follow_camera",
+        "non_empty_replay",
+        "identity_consistency"
+      ],
+      "properties": {
+        "scenario_understandable": {
+          "$ref": "#/$defs/sceneCheck"
+        },
+        "non_box_vehicle_model": {
+          "$ref": "#/$defs/sceneCheck"
+        },
+        "vehicle_proportions": {
+          "$ref": "#/$defs/sceneCheck"
+        },
+        "right_hand_lane_placement": {
+          "$ref": "#/$defs/sceneCheck"
+        },
+        "trajectory_heading": {
+          "$ref": "#/$defs/sceneCheck"
+        },
+        "ego_follow_camera": {
+          "$ref": "#/$defs/sceneCheck"
+        },
+        "non_empty_replay": {
+          "$ref": "#/$defs/sceneCheck"
+        },
+        "identity_consistency": {
+          "$ref": "#/$defs/sceneCheck"
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scenario_id",
+        "run_id",
+        "attempt_id",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "media",
+        "review"
+      ],
+      "properties": {
+        "scenario_id": {
+          "enum": [
+            "highway_merge",
+            "competitive_lane_change",
+            "cross_traffic_red_light_violation",
+            "unprotected_left_turn",
+            "pedestrian_red_light_crossing"
+          ]
+        },
+        "run_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$"
+        },
+        "attempt_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$"
+        },
+        "execution_snapshot_id": {
+          "type": "string",
+          "pattern": "^(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]{2,127}$"
+        },
+        "execution_snapshot_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "media": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "screenshot",
+            "video",
+            "trace"
+          ],
+          "properties": {
+            "screenshot": {
+              "$ref": "#/$defs/media"
+            },
+            "video": {
+              "$ref": "#/$defs/media"
+            },
+            "trace": {
+              "$ref": "#/$defs/media"
+            }
+          }
+        },
+        "review": {
+          "$ref": "#/$defs/scenarioReview"
+        }
+      }
+    },
+    "redactionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "status",
+        "source_candidate_commit",
+        "allowlist_schema_version",
+        "allowlist_digest",
+        "scanned_encodings",
+        "scanned_artifact_refs",
+        "capture_layers",
+        "absolute_path_policy",
+        "findings"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "scenarioforge.candidate-redaction-evidence/v1"
+        },
+        "status": {
+          "const": "passed"
+        },
+        "source_candidate_commit": {
+          "$ref": "#/$defs/commit"
+        },
+        "allowlist_schema_version": {
+          "const": "scenarioforge.artifact-allowlist/v1"
+        },
+        "allowlist_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "scanned_encodings": {
+          "const": [
+            "raw",
+            "url",
+            "base64",
+            "hex",
+            "zip"
+          ]
+        },
+        "scanned_artifact_refs": {
+          "type": "array",
+          "minItems": 15,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/relativeRef"
+          }
+        },
+        "capture_layers": {
+          "const": [
+            "replay_canvas",
+            "legend",
+            "controls",
+            "replay_dom",
+            "console_sanitized"
+          ]
+        },
+        "absolute_path_policy": {
+          "const": "project-relative-or-content-addressed"
+        },
+        "findings": {
+          "const": []
+        }
+      }
+    }
+  }
+}

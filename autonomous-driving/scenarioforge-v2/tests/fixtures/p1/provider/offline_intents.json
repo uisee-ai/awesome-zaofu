@@ -1,0 +1,32 @@
+[
+  {
+    "intent_id": "brake_lead",
+    "prompt": "高速公路上前车突然急刹，自车需要及时制动。",
+    "topology_kind": "corridor"
+  },
+  {
+    "intent_id": "highway_merge",
+    "prompt": "Create a highway merge with an ego vehicle joining two social vehicles.",
+    "topology_kind": "corridor"
+  },
+  {
+    "intent_id": "competitive_lane_change",
+    "prompt": "Build a competitive lane change between ego and another controlled car.",
+    "topology_kind": "corridor"
+  },
+  {
+    "intent_id": "cross_traffic_red_light",
+    "prompt": "Create cross traffic running a red light at an intersection.",
+    "topology_kind": "intersection"
+  },
+  {
+    "intent_id": "unprotected_left_turn",
+    "prompt": "Create an unprotected left turn with an oncoming social vehicle.",
+    "topology_kind": "intersection"
+  },
+  {
+    "intent_id": "pedestrian_red_light_crossing",
+    "prompt": "Create a pedestrian crossing against a red light in front of ego.",
+    "topology_kind": "intersection"
+  }
+]

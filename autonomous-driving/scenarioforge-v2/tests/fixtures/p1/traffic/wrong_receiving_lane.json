@@ -1,0 +1,14 @@
+{
+  "schema_version": "scenarioforge.right-hand-traffic/v1",
+  "traffic_side": "right",
+  "coordinate_system": "right-handed-x-forward-y-left",
+  "yellow_line": {"footprint_epsilon_m": 0.0},
+  "model_instances": [{"participant_id": "ego", "role": "ego", "declared_dimensions_m": {"length": 4.8, "width": 1.9, "height": 1.6}, "render_dimensions_m": {"length": 4.8, "width": 1.9, "height": 1.6}}],
+  "lanes": [
+    {"lane_id": "eastbound-in", "kind": "travel", "carriageway_id": "eastbound", "travel_direction_deg": 0.0, "center_offset_m": -1.75, "width_m": 3.5, "centerline_m": [[-40.0, -1.75], [-4.0, -1.75]], "predecessor_lane_ids": [], "successor_lane_ids": ["east-to-north-connector"]},
+    {"lane_id": "east-to-north-connector", "kind": "intersection_connector", "carriageway_id": "intersection", "travel_direction_deg": 45.0, "center_offset_m": 0.0, "width_m": 3.5, "centerline_m": [[-4.0, -1.75], [1.75, 4.0]], "predecessor_lane_ids": ["eastbound-in"], "successor_lane_ids": ["northbound-out"]},
+    {"lane_id": "northbound-out", "kind": "travel", "carriageway_id": "northbound", "travel_direction_deg": 90.0, "center_offset_m": -1.75, "width_m": 3.5, "centerline_m": [[1.75, 4.0], [1.75, 40.0]], "predecessor_lane_ids": ["east-to-north-connector"], "successor_lane_ids": []}
+  ],
+  "routes": [{"participant_id": "ego", "role": "ego", "lane_ids": ["eastbound-in", "east-to-north-connector", "eastbound-in"]}],
+  "samples": [{"tick": 0, "participant_id": "ego", "lane_id": "eastbound-in", "position_m": [-10.0, -1.75], "heading_deg": 0.0, "speed_mps": 8.0, "brake": 0.0}]
+}

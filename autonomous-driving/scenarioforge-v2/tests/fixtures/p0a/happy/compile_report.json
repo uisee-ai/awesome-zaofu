@@ -1,0 +1,74 @@
+{
+  "schema_version": "scenarioforge.compile-report/v1",
+  "compiler_version": "1.0.0",
+  "capability_descriptor_digest": "5092ab83e644703b27b0d7dd724d9d2f9fe2c9fb4a28afd8f05507e963952d1d",
+  "scenario_instance_digest": "463a1a6f9e48df7c81ba7bbc11844d76906744accc437e8852c5735fb165783e",
+  "overall_status": "exact",
+  "executable": true,
+  "mappings": [
+    {
+      "path": "$.required_capabilities[0]",
+      "capability": "coordinate.right-handed-x-forward-y-left",
+      "status": "exact",
+      "reason": "supported without semantic loss",
+      "alternative": null
+    },
+    {
+      "path": "$.required_capabilities[1]",
+      "capability": "units.si-tick",
+      "status": "exact",
+      "reason": "supported without semantic loss",
+      "alternative": null
+    },
+    {
+      "path": "$.required_capabilities[2]",
+      "capability": "road.straight",
+      "status": "exact",
+      "reason": "supported without semantic loss",
+      "alternative": null
+    },
+    {
+      "path": "$.required_capabilities[3]",
+      "capability": "road.lanes.2",
+      "status": "exact",
+      "reason": "supported without semantic loss",
+      "alternative": null
+    },
+    {
+      "path": "$.required_capabilities[4]",
+      "capability": "participant.ego",
+      "status": "exact",
+      "reason": "supported without semantic loss",
+      "alternative": null
+    },
+    {
+      "path": "$.required_capabilities[5]",
+      "capability": "participant.social-vehicle",
+      "status": "exact",
+      "reason": "supported without semantic loss",
+      "alternative": null
+    },
+    {
+      "path": "$.required_capabilities[6]",
+      "capability": "event.tick-brake",
+      "status": "exact",
+      "reason": "supported without semantic loss",
+      "alternative": null
+    },
+    {
+      "path": "$.required_capabilities[7]",
+      "capability": "policy.constant-lane.v1",
+      "status": "exact",
+      "reason": "supported without semantic loss",
+      "alternative": null
+    },
+    {
+      "path": "$.required_capabilities[8]",
+      "capability": "constraints.horizon-collision",
+      "status": "exact",
+      "reason": "supported without semantic loss",
+      "alternative": null
+    }
+  ],
+  "diagnostics": []
+}

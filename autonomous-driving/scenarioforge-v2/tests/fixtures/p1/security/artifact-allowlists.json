@@ -1,0 +1,277 @@
+{
+  "schema_version": "scenarioforge.artifact-allowlist-registry/v1",
+  "policies": [
+    {
+      "schema_version": "scenarioforge.artifact-allowlist/v1",
+      "artifact_kind": "run_manifest",
+      "allowed_fields": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "compile_report_digest",
+        "execution_snapshot",
+        "execution_snapshot.schema_version",
+        "execution_snapshot.execution_snapshot_id",
+        "execution_snapshot.normalized_scenario_spec.*",
+        "execution_snapshot.normalized_scenario_spec_digest",
+        "execution_snapshot.resolved_defaults.*",
+        "execution_snapshot.resolved_defaults_digest",
+        "execution_snapshot.code.commit",
+        "execution_snapshot.code.digest",
+        "execution_snapshot.adapter.id",
+        "execution_snapshot.adapter.version",
+        "execution_snapshot.adapter.digest",
+        "execution_snapshot.simulator.distribution",
+        "execution_snapshot.simulator.version",
+        "execution_snapshot.simulator.digest",
+        "execution_snapshot.assets[].id",
+        "execution_snapshot.assets[].version",
+        "execution_snapshot.assets[].digest",
+        "execution_snapshot.policy.id",
+        "execution_snapshot.policy.version",
+        "execution_snapshot.policy.digest",
+        "execution_snapshot.seed",
+        "execution_snapshot.run_parameters.*",
+        "execution_snapshot.run_parameters_digest",
+        "execution_snapshot.environment.*",
+        "execution_snapshot.environment_digest"
+      ],
+      "required_fields": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "compile_report_digest",
+        "execution_snapshot"
+      ],
+      "approved_capture_layers": []
+    },
+    {
+      "schema_version": "scenarioforge.artifact-allowlist/v1",
+      "artifact_kind": "compile_report",
+      "allowed_fields": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "status",
+        "adapter",
+        "adapter.id",
+        "adapter.version",
+        "adapter.digest",
+        "simulator",
+        "simulator.distribution",
+        "simulator.version",
+        "simulator.digest",
+        "diagnostics",
+        "diagnostics[].path",
+        "diagnostics[].status",
+        "diagnostics[].reason"
+      ],
+      "required_fields": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "status",
+        "adapter",
+        "simulator"
+      ],
+      "approved_capture_layers": []
+    },
+    {
+      "schema_version": "scenarioforge.artifact-allowlist/v1",
+      "artifact_kind": "worker_receipt",
+      "allowed_fields": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "execution_status",
+        "run_manifest_digest",
+        "compile_report_digest",
+        "adapter",
+        "adapter.id",
+        "adapter.version",
+        "adapter.digest",
+        "simulator",
+        "simulator.distribution",
+        "simulator.version",
+        "simulator.digest"
+      ],
+      "required_fields": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "execution_status",
+        "run_manifest_digest",
+        "compile_report_digest",
+        "adapter",
+        "simulator"
+      ],
+      "approved_capture_layers": []
+    },
+    {
+      "schema_version": "scenarioforge.artifact-allowlist/v1",
+      "artifact_kind": "artifact_index",
+      "allowed_fields": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "execution_status",
+        "run_manifest_digest",
+        "compile_report_digest",
+        "worker_receipt_digest",
+        "artifacts",
+        "artifacts[].path",
+        "artifacts[].status",
+        "artifacts[].digest",
+        "artifacts[].validation"
+      ],
+      "required_fields": [
+        "schema_version",
+        "run_id",
+        "attempt_id",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "execution_status",
+        "run_manifest_digest",
+        "compile_report_digest",
+        "worker_receipt_digest",
+        "artifacts"
+      ],
+      "approved_capture_layers": []
+    },
+    {
+      "schema_version": "scenarioforge.artifact-allowlist/v1",
+      "artifact_kind": "structured_log",
+      "allowed_fields": [
+        "schema_version",
+        "timestamp",
+        "level",
+        "event",
+        "message",
+        "execution_snapshot_id",
+        "execution_snapshot_digest"
+      ],
+      "required_fields": ["schema_version", "level", "event", "message"],
+      "approved_capture_layers": []
+    },
+    {
+      "schema_version": "scenarioforge.artifact-allowlist/v1",
+      "artifact_kind": "audit_record",
+      "allowed_fields": [
+        "schema_version",
+        "timestamp",
+        "action",
+        "decision",
+        "actor",
+        "execution_snapshot_id",
+        "execution_snapshot_digest"
+      ],
+      "required_fields": ["schema_version", "action", "decision", "actor"],
+      "approved_capture_layers": []
+    },
+    {
+      "schema_version": "scenarioforge.artifact-allowlist/v1",
+      "artifact_kind": "screenshot",
+      "allowed_fields": [
+        "schema_version",
+        "capture_id",
+        "content_digest",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "capture_layers",
+        "capture_layers[]"
+      ],
+      "required_fields": [
+        "schema_version",
+        "capture_id",
+        "content_digest",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "capture_layers"
+      ],
+      "approved_capture_layers": ["replay_canvas", "legend", "controls"]
+    },
+    {
+      "schema_version": "scenarioforge.artifact-allowlist/v1",
+      "artifact_kind": "video",
+      "allowed_fields": [
+        "schema_version",
+        "capture_id",
+        "content_digest",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "capture_layers",
+        "capture_layers[]",
+        "frame_count"
+      ],
+      "required_fields": [
+        "schema_version",
+        "capture_id",
+        "content_digest",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "capture_layers",
+        "frame_count"
+      ],
+      "approved_capture_layers": ["replay_canvas", "legend", "controls"]
+    },
+    {
+      "schema_version": "scenarioforge.artifact-allowlist/v1",
+      "artifact_kind": "trace",
+      "allowed_fields": [
+        "schema_version",
+        "capture_id",
+        "content_digest",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "capture_layers",
+        "capture_layers[]"
+      ],
+      "required_fields": [
+        "schema_version",
+        "capture_id",
+        "content_digest",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "capture_layers"
+      ],
+      "approved_capture_layers": ["replay_dom", "replay_canvas", "console_sanitized"]
+    },
+    {
+      "schema_version": "scenarioforge.artifact-allowlist/v1",
+      "artifact_kind": "media_sidecar",
+      "allowed_fields": [
+        "schema_version",
+        "media_kind",
+        "content_ref",
+        "content_digest",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "capture_allowlist_digest"
+      ],
+      "required_fields": [
+        "schema_version",
+        "media_kind",
+        "content_ref",
+        "content_digest",
+        "execution_snapshot_id",
+        "execution_snapshot_digest",
+        "capture_allowlist_digest"
+      ],
+      "approved_capture_layers": []
+    }
+  ]
+}

@@ -1,0 +1,540 @@
+{
+  "schema_version": "scenarioforge.calibration-freeze/v1",
+  "prototype_ref": "tests/fixtures/p0c/contracts/prototype_v2.json",
+  "prototype_digest": "cfe6d56cb561deccb6183c3edef7843a53a96a704d6fbc8c85bad6b809df3cb8",
+  "environment": {
+    "os": "Linux",
+    "architecture": "x86_64",
+    "python": "3.11.15",
+    "simulator_distribution": "metadrive-simulator",
+    "simulator_version": "0.4.3",
+    "asset_version": "0.4.3",
+    "headless": true,
+    "gpu_required": false
+  },
+  "candidate_limit": 5,
+  "reproduction_runs": 3,
+  "trajectory_tolerance": {
+    "position_abs_m": 0.001,
+    "speed_abs_mps": 0.001,
+    "heading_abs_deg": 1.0
+  },
+  "presets": [
+    {
+      "preset_id": "construction_merge",
+      "candidate_id": "construction-merge-c2",
+      "candidate_count": 2,
+      "fixture_digest": "f9f744d475bb8b311301ca52f62f586dd5d0a2949cea52e43b6e8af2da9549e1",
+      "metric_contract": {
+        "collision": {"participant_ids": "all", "threshold": null},
+        "hard_braking": {"participant_ids": ["ego"], "threshold": null},
+        "minimum_ttc": {"participant_ids": "all", "threshold": null},
+        "completion_time": {"participant_ids": ["ego"], "threshold": null},
+        "termination_reason": {"participant_ids": [], "threshold": null}
+      },
+      "scenario_patch": {
+        "scenario_id": "construction_merge",
+        "seed": 31,
+        "road": {
+          "topology_kind": "lane_closure",
+          "map_block_sequence": "S",
+          "lanes": [
+            {
+              "id": "closing-lane",
+              "road_id": "construction-corridor",
+              "engine_lane_index": {"start_node": ">>", "end_node": ">>>", "lane_index": 0},
+              "kind": "closing",
+              "length_m": 180.0,
+              "predecessor_lane_ids": [],
+              "successor_lane_ids": ["open-lane"]
+            },
+            {
+              "id": "open-lane",
+              "road_id": "construction-corridor",
+              "engine_lane_index": {"start_node": ">>", "end_node": ">>>", "lane_index": 1},
+              "kind": "travel",
+              "length_m": 180.0,
+              "predecessor_lane_ids": ["closing-lane"],
+              "successor_lane_ids": []
+            }
+          ],
+          "conflict_zones": [
+            {"id": "closure-taper", "lane_ids": ["closing-lane", "open-lane"], "start_m": 60.0, "end_m": 90.0}
+          ]
+        },
+        "participants": [
+          {
+            "id": "ego",
+            "role": "ego",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "closing-lane", "longitudinal_m": 15.0, "lateral_m": 0.0, "speed_mps": 14.0, "heading_deg": 0.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "ego-construction-merge", "lane_ids": ["closing-lane", "open-lane"], "goal": {"lane_id": "open-lane", "longitudinal_m": 60.0}}
+          },
+          {
+            "id": "social",
+            "role": "social",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "open-lane", "longitudinal_m": 100.0, "lateral_m": 0.0, "speed_mps": 16.0, "heading_deg": 0.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "social-open-lane", "lane_ids": ["open-lane"], "goal": {"lane_id": "open-lane", "longitudinal_m": 150.0}}
+          }
+        ],
+        "events": [
+          {"id": "closure-merge-started", "sequence": 0, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 20}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "closure-merge-control-2", "sequence": 1, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 21}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "closure-merge-control-3", "sequence": 2, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 22}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "closure-merge-control-4", "sequence": 3, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 23}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "closure-merge-control-5", "sequence": 4, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 24}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "closure-merge-control-6", "sequence": 5, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 25}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}}
+        ],
+        "constraints": {
+          "max_steps": 120,
+          "duration_s": 12.0,
+          "target_outcome": "safe_pass",
+          "success_predicates": [
+            {"id": "merge-completed", "kind": "merge_completed", "participant_ids": ["ego"], "lane_ids": ["open-lane"]}
+          ],
+          "failure_predicates": [
+            {"id": "collision-observed", "kind": "collision", "participant_ids": ["ego", "social"], "lane_ids": []},
+            {"id": "ego-boundary-violation", "kind": "boundary_violation", "participant_ids": ["ego"], "lane_ids": []},
+            {"id": "merge-timeout", "kind": "timeout", "participant_ids": ["ego"], "lane_ids": []}
+          ],
+          "expected_events": ["closure-merge-started", "closure-merge-control-2", "closure-merge-control-3", "closure-merge-control-4", "closure-merge-control-5", "closure-merge-control-6"]
+        },
+        "policy": {
+          "config": {
+            "participant_actions": [
+              {"participant_id": "ego", "steering": 0.0, "throttle_brake": 0.2},
+              {"participant_id": "social", "steering": 0.0, "throttle_brake": 0.1}
+            ]
+          }
+        }
+      },
+      "expected": {
+        "scenario_outcome": "safe_pass",
+        "termination_reason": "success_predicates_satisfied",
+        "predicate_results": {
+          "success": [{"predicate_id": "merge-completed", "kind": "merge_completed", "satisfied": true}],
+          "failure": [
+            {"predicate_id": "collision-observed", "kind": "collision", "satisfied": false},
+            {"predicate_id": "ego-boundary-violation", "kind": "boundary_violation", "satisfied": false},
+            {"predicate_id": "merge-timeout", "kind": "timeout", "satisfied": false}
+          ]
+        },
+        "metric_ranges": {
+          "hard_braking": {"minimum": -3.287, "maximum": -3.286},
+          "minimum_ttc": null,
+          "completion_time": {"minimum": 3.499, "maximum": 3.501}
+        }
+      }
+    },
+    {
+      "preset_id": "highway_merge",
+      "candidate_id": "highway-merge-c5",
+      "candidate_count": 5,
+      "fixture_digest": "3a64e16ae53191e69a3e6e24af64bd43689976b7a55ff1e2f04abb20117e3975",
+      "metric_contract": {
+        "collision": {"participant_ids": "all", "threshold": null},
+        "hard_braking": {"participant_ids": ["ego"], "threshold": null},
+        "minimum_ttc": {"participant_ids": "all", "threshold": null},
+        "completion_time": {"participant_ids": ["ego"], "threshold": null},
+        "termination_reason": {"participant_ids": [], "threshold": null}
+      },
+      "scenario_patch": {
+        "scenario_id": "highway_merge",
+        "seed": 37,
+        "road": {
+          "topology_kind": "ramp_merge",
+          "map_block_sequence": "S",
+          "lanes": [
+            {
+              "id": "ramp-merge",
+              "road_id": "entrance-ramp",
+              "engine_lane_index": {"start_node": ">>", "end_node": ">>>", "lane_index": 0},
+              "kind": "ramp",
+              "length_m": 180.0,
+              "predecessor_lane_ids": [],
+              "successor_lane_ids": ["merged-lane"]
+            },
+            {
+              "id": "merged-lane",
+              "road_id": "mainline",
+              "engine_lane_index": {"start_node": ">>", "end_node": ">>>", "lane_index": 1},
+              "kind": "merge",
+              "length_m": 180.0,
+              "predecessor_lane_ids": ["ramp-merge"],
+              "successor_lane_ids": []
+            }
+          ],
+          "conflict_zones": [
+            {"id": "ramp-conflict", "lane_ids": ["ramp-merge", "merged-lane"], "start_m": 35.0, "end_m": 80.0}
+          ]
+        },
+        "participants": [
+          {
+            "id": "ego",
+            "role": "ego",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "ramp-merge", "longitudinal_m": 15.0, "lateral_m": 0.0, "speed_mps": 20.0, "heading_deg": 0.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "ego-ramp-merge", "lane_ids": ["ramp-merge", "merged-lane"], "goal": {"lane_id": "merged-lane", "longitudinal_m": 60.0}}
+          },
+          {
+            "id": "front",
+            "role": "social",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "merged-lane", "longitudinal_m": 100.0, "lateral_m": 0.0, "speed_mps": 23.0, "heading_deg": 0.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "front-mainline", "lane_ids": ["merged-lane"], "goal": {"lane_id": "merged-lane", "longitudinal_m": 160.0}}
+          },
+          {
+            "id": "rear",
+            "role": "social",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "merged-lane", "longitudinal_m": 0.0, "lateral_m": 0.0, "speed_mps": 18.0, "heading_deg": 0.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "rear-mainline", "lane_ids": ["merged-lane"], "goal": {"lane_id": "merged-lane", "longitudinal_m": 160.0}}
+          }
+        ],
+        "events": [
+          {"id": "gap-selected", "sequence": 0, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 5}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "gap-merge-control-2", "sequence": 1, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 6}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "gap-merge-control-3", "sequence": 2, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 7}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "gap-merge-control-4", "sequence": 3, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 8}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "gap-merge-control-5", "sequence": 4, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 9}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "gap-merge-control-6", "sequence": 5, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 10}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}},
+          {"id": "gap-merge-control-7", "sequence": 6, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 11}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.1}}
+        ],
+        "constraints": {
+          "max_steps": 120,
+          "duration_s": 12.0,
+          "target_outcome": "safe_pass",
+          "success_predicates": [
+            {"id": "merge-completed", "kind": "merge_completed", "participant_ids": ["ego"], "lane_ids": ["merged-lane"]}
+          ],
+          "failure_predicates": [
+            {"id": "collision-observed", "kind": "collision", "participant_ids": ["ego", "front", "rear"], "lane_ids": []},
+            {"id": "ego-boundary-violation", "kind": "boundary_violation", "participant_ids": ["ego"], "lane_ids": []},
+            {"id": "merge-timeout", "kind": "timeout", "participant_ids": ["ego"], "lane_ids": []}
+          ],
+          "expected_events": ["gap-selected", "gap-merge-control-2", "gap-merge-control-3", "gap-merge-control-4", "gap-merge-control-5", "gap-merge-control-6", "gap-merge-control-7"]
+        },
+        "policy": {
+          "config": {
+            "participant_actions": [
+              {"participant_id": "ego", "steering": 0.0, "throttle_brake": 0.1},
+              {"participant_id": "front", "steering": 0.0, "throttle_brake": 0.05},
+              {"participant_id": "rear", "steering": 0.0, "throttle_brake": 0.05}
+            ]
+          }
+        }
+      },
+      "expected": {
+        "scenario_outcome": "safe_pass",
+        "termination_reason": "success_predicates_satisfied",
+        "predicate_results": {
+          "success": [{"predicate_id": "merge-completed", "kind": "merge_completed", "satisfied": true}],
+          "failure": [
+            {"predicate_id": "collision-observed", "kind": "collision", "satisfied": false},
+            {"predicate_id": "ego-boundary-violation", "kind": "boundary_violation", "satisfied": false},
+            {"predicate_id": "merge-timeout", "kind": "timeout", "satisfied": false}
+          ]
+        },
+        "metric_ranges": {
+          "hard_braking": {"minimum": -3.374, "maximum": -3.372},
+          "minimum_ttc": {"minimum": 11.522, "maximum": 11.524},
+          "completion_time": {"minimum": 2.499, "maximum": 2.501}
+        }
+      }
+    },
+    {
+      "preset_id": "brake_lead",
+      "candidate_id": "brake-lead-c1",
+      "candidate_count": 1,
+      "fixture_digest": "776f0ae0d9d43bbda156811bdc55b26538fb7d1527db3fc2790ac6d0229f195a",
+      "metric_contract": {
+        "collision": {"participant_ids": "all", "threshold": null},
+        "hard_braking": {"participant_ids": "all", "threshold": {"operator": "lte", "value": -1.0}},
+        "minimum_ttc": {"participant_ids": "all", "threshold": {"operator": "lte", "value": 4.0}},
+        "completion_time": {"participant_ids": "all", "threshold": null},
+        "termination_reason": {"participant_ids": [], "threshold": null}
+      },
+      "scenario_patch": {
+        "scenario_id": "brake_lead",
+        "seed": 41,
+        "road": {
+          "topology_kind": "straight",
+          "map_block_sequence": "S",
+          "lanes": [
+            {
+              "id": "following-lane",
+              "road_id": "test-corridor",
+              "engine_lane_index": {"start_node": ">>", "end_node": ">>>", "lane_index": 0},
+              "kind": "travel",
+              "length_m": 240.0,
+              "predecessor_lane_ids": [],
+              "successor_lane_ids": []
+            }
+          ],
+          "conflict_zones": []
+        },
+        "participants": [
+          {
+            "id": "ego",
+            "role": "ego",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "following-lane", "longitudinal_m": 10.0, "lateral_m": 0.0, "speed_mps": 22.0, "heading_deg": 0.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "ego-follow", "lane_ids": ["following-lane"], "goal": {"lane_id": "following-lane", "longitudinal_m": 160.0}}
+          },
+          {
+            "id": "lead",
+            "role": "social",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "following-lane", "longitudinal_m": 38.0, "lateral_m": 0.0, "speed_mps": 22.0, "heading_deg": 0.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "lead-route", "lane_ids": ["following-lane"], "goal": {"lane_id": "following-lane", "longitudinal_m": 180.0}}
+          }
+        ],
+        "events": [
+          {"id": "lead-hard-brake", "sequence": 0, "type": "control_override", "participant_id": "lead", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 35}, "duration_ticks": 6, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": 0.0, "throttle_brake": -1.0}},
+          {"id": "ego-avoidance-brake", "sequence": 1, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 40}, "duration_ticks": 6, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": 0.0, "throttle_brake": -0.7}}
+        ],
+        "constraints": {
+          "max_steps": 120,
+          "duration_s": 12.0,
+          "target_outcome": "near_miss",
+          "success_predicates": [
+            {"id": "routes-completed", "kind": "route_completed", "participant_ids": ["ego", "lead"], "lane_ids": ["following-lane"]}
+          ],
+          "failure_predicates": [
+            {"id": "collision-observed", "kind": "collision", "participant_ids": ["ego", "lead"], "lane_ids": []},
+            {"id": "ego-boundary-violation", "kind": "boundary_violation", "participant_ids": ["ego"], "lane_ids": []},
+            {"id": "route-timeout", "kind": "timeout", "participant_ids": ["ego", "lead"], "lane_ids": []}
+          ],
+          "expected_events": ["lead-hard-brake", "ego-avoidance-brake"]
+        },
+        "policy": {
+          "config": {
+            "participant_actions": [
+              {"participant_id": "ego", "steering": 0.0, "throttle_brake": 0.0},
+              {"participant_id": "lead", "steering": 0.0, "throttle_brake": 0.0}
+            ]
+          }
+        }
+      },
+      "expected": {
+        "scenario_outcome": "near_miss",
+        "termination_reason": "success_predicates_satisfied",
+        "predicate_results": {
+          "success": [{"predicate_id": "routes-completed", "kind": "route_completed", "satisfied": true}],
+          "failure": [
+            {"predicate_id": "collision-observed", "kind": "collision", "satisfied": false},
+            {"predicate_id": "ego-boundary-violation", "kind": "boundary_violation", "satisfied": false},
+            {"predicate_id": "route-timeout", "kind": "timeout", "satisfied": false}
+          ]
+        },
+        "metric_ranges": {
+          "hard_braking": {"minimum": -15.503, "maximum": -15.501},
+          "minimum_ttc": {"minimum": 3.35, "maximum": 3.352},
+          "completion_time": {"minimum": 8.599, "maximum": 8.601}
+        }
+      }
+    },
+    {
+      "preset_id": "dangerous_cut_in",
+      "candidate_id": "dangerous-cut-in-c2",
+      "candidate_count": 2,
+      "fixture_digest": "c68e393488498d4eb4e64afb5900dbd9a204ec2df7b44d974ce4299237146afd",
+      "metric_contract": {
+        "collision": {"participant_ids": "all", "threshold": null},
+        "hard_braking": {"participant_ids": "all", "threshold": null},
+        "minimum_ttc": {"participant_ids": "all", "threshold": null},
+        "completion_time": {"participant_ids": "all", "threshold": null},
+        "termination_reason": {"participant_ids": [], "threshold": null}
+      },
+      "scenario_patch": {
+        "scenario_id": "dangerous_cut_in",
+        "seed": 47,
+        "road": {
+          "topology_kind": "corridor_merge",
+          "map_block_sequence": "S",
+          "lanes": [
+            {
+              "id": "adjacent-lane",
+              "road_id": "mainline",
+              "engine_lane_index": {"start_node": ">>", "end_node": ">>>", "lane_index": 0},
+              "kind": "travel",
+              "length_m": 220.0,
+              "predecessor_lane_ids": [],
+              "successor_lane_ids": ["ego-lane"]
+            },
+            {
+              "id": "ego-lane",
+              "road_id": "mainline",
+              "engine_lane_index": {"start_node": ">>", "end_node": ">>>", "lane_index": 1},
+              "kind": "merge",
+              "length_m": 220.0,
+              "predecessor_lane_ids": ["adjacent-lane"],
+              "successor_lane_ids": []
+            }
+          ],
+          "conflict_zones": [
+            {"id": "cut-in-conflict", "lane_ids": ["adjacent-lane", "ego-lane"], "start_m": 35.0, "end_m": 80.0}
+          ]
+        },
+        "participants": [
+          {
+            "id": "ego",
+            "role": "ego",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "ego-lane", "longitudinal_m": 20.0, "lateral_m": 0.0, "speed_mps": 21.0, "heading_deg": 0.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "ego-mainline", "lane_ids": ["ego-lane"], "goal": {"lane_id": "ego-lane", "longitudinal_m": 190.0}}
+          },
+          {
+            "id": "cutter",
+            "role": "social",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "adjacent-lane", "longitudinal_m": 30.0, "lateral_m": 0.0, "speed_mps": 24.0, "heading_deg": 0.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "cutter-cut-in", "lane_ids": ["adjacent-lane", "ego-lane"], "goal": {"lane_id": "ego-lane", "longitudinal_m": 190.0}}
+          }
+        ],
+        "events": [
+          {"id": "dangerous-cut-in-started", "sequence": 0, "type": "control_override", "participant_id": "cutter", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 5}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.0}},
+          {"id": "dangerous-cut-in-control-2", "sequence": 1, "type": "control_override", "participant_id": "cutter", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 6}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.0}},
+          {"id": "dangerous-cut-in-control-3", "sequence": 2, "type": "control_override", "participant_id": "cutter", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 7}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.0}},
+          {"id": "dangerous-cut-in-control-4", "sequence": 3, "type": "control_override", "participant_id": "cutter", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 8}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.0}},
+          {"id": "dangerous-cut-in-control-5", "sequence": 4, "type": "control_override", "participant_id": "cutter", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 9}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.0}},
+          {"id": "dangerous-cut-in-control-6", "sequence": 5, "type": "control_override", "participant_id": "cutter", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 10}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.0}},
+          {"id": "dangerous-cut-in-control-7", "sequence": 6, "type": "control_override", "participant_id": "cutter", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 11}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": -1.0, "throttle_brake": 0.0}}
+        ],
+        "constraints": {
+          "max_steps": 120,
+          "duration_s": 12.0,
+          "target_outcome": "collision_failure",
+          "success_predicates": [
+            {"id": "routes-completed", "kind": "route_completed", "participant_ids": ["ego", "cutter"], "lane_ids": ["ego-lane"]}
+          ],
+          "failure_predicates": [
+            {"id": "collision-observed", "kind": "collision", "participant_ids": ["ego", "cutter"], "lane_ids": []},
+            {"id": "cutter-boundary-violation", "kind": "boundary_violation", "participant_ids": ["cutter"], "lane_ids": []},
+            {"id": "route-timeout", "kind": "timeout", "participant_ids": ["ego", "cutter"], "lane_ids": []}
+          ],
+          "expected_events": ["dangerous-cut-in-started", "dangerous-cut-in-control-2", "dangerous-cut-in-control-3", "dangerous-cut-in-control-4", "dangerous-cut-in-control-5", "dangerous-cut-in-control-6", "dangerous-cut-in-control-7"]
+        },
+        "policy": {
+          "config": {
+            "participant_actions": [
+              {"participant_id": "ego", "steering": 0.0, "throttle_brake": 0.2},
+              {"participant_id": "cutter", "steering": -0.1, "throttle_brake": -0.5}
+            ]
+          }
+        }
+      },
+      "expected": {
+        "scenario_outcome": "collision_failure",
+        "termination_reason": "collision",
+        "predicate_results": {
+          "success": [{"predicate_id": "routes-completed", "kind": "route_completed", "satisfied": false}],
+          "failure": [
+            {"predicate_id": "collision-observed", "kind": "collision", "satisfied": true},
+            {"predicate_id": "cutter-boundary-violation", "kind": "boundary_violation", "satisfied": false},
+            {"predicate_id": "route-timeout", "kind": "timeout", "satisfied": false}
+          ]
+        },
+        "metric_ranges": {
+          "hard_braking": {"minimum": -11.871, "maximum": -11.869},
+          "minimum_ttc": {"minimum": 0.497, "maximum": 0.5},
+          "completion_time": null
+        }
+      }
+    },
+    {
+      "preset_id": "unprotected_left_turn",
+      "candidate_id": "unprotected-left-turn-c5",
+      "candidate_count": 5,
+      "fixture_digest": "a59adabbfe77306eab858dd38c83e774435e268c15e8f5c779d8c569bc3d0841",
+      "metric_contract": {
+        "collision": {"participant_ids": "all", "threshold": null},
+        "hard_braking": {"participant_ids": ["ego"], "threshold": {"operator": "lte", "value": -1.0}},
+        "minimum_ttc": {"participant_ids": "all", "threshold": {"operator": "lte", "value": 3.0}},
+        "completion_time": {"participant_ids": ["ego"], "threshold": null},
+        "termination_reason": {"participant_ids": [], "threshold": null}
+      },
+      "scenario_patch": {
+        "scenario_id": "unprotected_left_turn",
+        "seed": 43,
+        "road": {
+          "topology_kind": "intersection",
+          "map_block_sequence": "X",
+          "lanes": [
+            {"id": "ego-inbound", "road_id": "west-approach", "engine_lane_index": {"start_node": ">>", "end_node": ">>>", "lane_index": 0}, "kind": "travel", "length_m": 70.0, "predecessor_lane_ids": [], "successor_lane_ids": ["ego-left-turn"]},
+            {"id": "ego-left-turn", "road_id": "intersection", "engine_lane_index": {"start_node": ">>>", "end_node": "1X2_0_", "lane_index": 0}, "kind": "turn", "length_m": 22.0, "predecessor_lane_ids": ["ego-inbound"], "successor_lane_ids": ["ego-exit"]},
+            {"id": "ego-exit", "road_id": "north-exit", "engine_lane_index": {"start_node": "1X2_0_", "end_node": "1X2_1_", "lane_index": 0}, "kind": "travel", "length_m": 35.0, "predecessor_lane_ids": ["ego-left-turn"], "successor_lane_ids": []},
+            {"id": "oncoming-inbound", "road_id": "east-approach", "engine_lane_index": {"start_node": "-1X1_1_", "end_node": "-1X1_0_", "lane_index": 0}, "kind": "travel", "length_m": 35.0, "predecessor_lane_ids": [], "successor_lane_ids": ["oncoming-through"]},
+            {"id": "oncoming-through", "road_id": "intersection", "engine_lane_index": {"start_node": "-1X1_0_", "end_node": "->>>", "lane_index": 0}, "kind": "travel", "length_m": 24.0, "predecessor_lane_ids": ["oncoming-inbound"], "successor_lane_ids": ["oncoming-exit"]},
+            {"id": "oncoming-exit", "road_id": "west-exit", "engine_lane_index": {"start_node": "->>>", "end_node": "->>", "lane_index": 0}, "kind": "travel", "length_m": 70.0, "predecessor_lane_ids": ["oncoming-through"], "successor_lane_ids": []}
+          ],
+          "conflict_zones": [
+            {"id": "left-turn-conflict", "lane_ids": ["ego-left-turn", "oncoming-through"], "start_m": 0.0, "end_m": 20.0}
+          ]
+        },
+        "participants": [
+          {
+            "id": "ego",
+            "role": "ego",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "ego-inbound", "longitudinal_m": 10.0, "lateral_m": 0.0, "speed_mps": 8.0, "heading_deg": 0.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "ego-left-turn-route", "lane_ids": ["ego-inbound", "ego-left-turn", "ego-exit"], "goal": {"lane_id": "ego-exit", "longitudinal_m": 20.0}}
+          },
+          {
+            "id": "oncoming",
+            "role": "social",
+            "actor_type": "vehicle",
+            "spawn": {"schema_version": "scenarioforge.actor-spawn/v2", "lane_id": "oncoming-inbound", "longitudinal_m": 5.0, "lateral_m": 0.0, "speed_mps": 14.0, "heading_deg": 180.0},
+            "route": {"schema_version": "scenarioforge.route/v2", "id": "oncoming-through-route", "lane_ids": ["oncoming-inbound", "oncoming-through", "oncoming-exit"], "goal": {"lane_id": "oncoming-exit", "longitudinal_m": 20.0}}
+          }
+        ],
+        "events": [
+          {"id": "yield-started", "sequence": 0, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 20}, "duration_ticks": 19, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": 0.0, "throttle_brake": -1.0}},
+          {"id": "left-turn-committed", "sequence": 1, "type": "control_override", "participant_id": "ego", "trigger": {"schema_version": "scenarioforge.trigger/v2", "kind": "tick", "tick": 39}, "action": {"schema_version": "scenarioforge.control-action/v2", "steering": 0.0, "throttle_brake": 0.5}}
+        ],
+        "constraints": {
+          "max_steps": 180,
+          "duration_s": 18.0,
+          "target_outcome": "near_miss",
+          "success_predicates": [
+            {"id": "yield-completed", "kind": "yield_completed", "participant_ids": ["ego"], "lane_ids": ["ego-exit"]}
+          ],
+          "failure_predicates": [
+            {"id": "collision-observed", "kind": "collision", "participant_ids": ["ego", "oncoming"], "lane_ids": []},
+            {"id": "ego-boundary-violation", "kind": "boundary_violation", "participant_ids": ["ego"], "lane_ids": []},
+            {"id": "wrong-route", "kind": "wrong_lane", "participant_ids": ["ego"], "lane_ids": ["oncoming-through"]},
+            {"id": "turn-timeout", "kind": "timeout", "participant_ids": ["ego"], "lane_ids": []}
+          ],
+          "expected_events": ["yield-started", "left-turn-committed"]
+        },
+        "policy": {
+          "config": {
+            "participant_actions": [
+              {"participant_id": "ego", "steering": 0.0, "throttle_brake": 0.5},
+              {"participant_id": "oncoming", "steering": 0.0, "throttle_brake": 0.15}
+            ]
+          }
+        }
+      },
+      "expected": {
+        "scenario_outcome": "near_miss",
+        "termination_reason": "success_predicates_satisfied",
+        "predicate_results": {
+          "success": [{"predicate_id": "yield-completed", "kind": "yield_completed", "satisfied": true}],
+          "failure": [
+            {"predicate_id": "collision-observed", "kind": "collision", "satisfied": false},
+            {"predicate_id": "ego-boundary-violation", "kind": "boundary_violation", "satisfied": false},
+            {"predicate_id": "wrong-route", "kind": "wrong_lane", "satisfied": false},
+            {"predicate_id": "turn-timeout", "kind": "timeout", "satisfied": false}
+          ]
+        },
+        "metric_ranges": {
+          "hard_braking": {"minimum": -15.503, "maximum": -15.501},
+          "minimum_ttc": {"minimum": 0.408, "maximum": 0.41},
+          "completion_time": {"minimum": 17.199, "maximum": 17.201}
+        }
+      }
+    }
+  ]
+}

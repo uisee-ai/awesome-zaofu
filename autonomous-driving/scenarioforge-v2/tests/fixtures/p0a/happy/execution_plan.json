@@ -1,0 +1,115 @@
+{
+  "schema_version": "scenarioforge.execution-plan/v1",
+  "scenario_instance_digest": "463a1a6f9e48df7c81ba7bbc11844d76906744accc437e8852c5735fb165783e",
+  "backend": {
+    "id": "metadrive",
+    "version": "0.4.3",
+    "adapter": {
+      "id": "scenarioforge.metadrive",
+      "version": "1.0.0"
+    }
+  },
+  "seed": 7,
+  "simulation": {
+    "map_block_sequence": "S",
+    "lane_count": 2,
+    "lane_width_m": 3.5,
+    "length_m": 120.0,
+    "physics_world_step_size_s": 0.02,
+    "decision_repeat": 5,
+    "max_steps": 6,
+    "headless": true,
+    "gpu_required": false
+  },
+  "participants": [
+    {
+      "id": "ego",
+      "role": "ego",
+      "initial": {
+        "lane": 0,
+        "longitudinal_m": 5.0,
+        "speed_mps": 8.0,
+        "heading_deg": 0.0
+      },
+      "target": {
+        "lane": 0,
+        "longitudinal_m": 100.0
+      }
+    },
+    {
+      "id": "lead",
+      "role": "social",
+      "initial": {
+        "lane": 0,
+        "longitudinal_m": 25.0,
+        "speed_mps": 8.0,
+        "heading_deg": 0.0
+      },
+      "target": {
+        "lane": 0,
+        "longitudinal_m": 100.0
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "lead-brake",
+      "type": "vehicle_brake",
+      "participant_id": "lead",
+      "trigger": {
+        "kind": "tick",
+        "tick": 2
+      },
+      "action": {
+        "brake": 1.0
+      }
+    }
+  ],
+  "constraints": {
+    "max_steps": 6,
+    "collision_is_failure": true,
+    "success": {
+      "kind": "horizon_completed"
+    }
+  },
+  "policy": {
+    "id": "scenarioforge.constant-lane",
+    "version": "1.0.0",
+    "config": {
+      "steering": 0.0,
+      "throttle_brake": 0.0
+    }
+  },
+  "tick_contract": {
+    "schema_version": "scenarioforge.tick-contract/v1",
+    "state_indexing": "S_N_at_tick_start",
+    "trigger_evaluation": "S_N_and_tick_N",
+    "action_application": "S_N_to_S_N_plus_1",
+    "event_effect_offset": 1,
+    "priority_order": [
+      "scenario_override",
+      "policy"
+    ],
+    "same_tick_events": "preserve_input_order"
+  },
+  "artifact_contract": {
+    "schema_version": "scenarioforge.artifact-contract/v1",
+    "required": [
+      "actions.json",
+      "events.json",
+      "metrics.json",
+      "trajectory.json",
+      "worker_result.json"
+    ],
+    "max_file_bytes": 10485760
+  },
+  "resource_config": {
+    "schema_version": "scenarioforge.resource-config/v1",
+    "wall_clock_timeout_s": 120,
+    "memory_limit_mb": 4096,
+    "pid_limit": 32,
+    "log_limit_bytes": 1048576,
+    "artifact_limit_bytes": 10485760
+  },
+  "tolerances_version": "scenarioforge.p0a-tolerances/v1"
+}

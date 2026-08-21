@@ -1,0 +1,99 @@
+{
+  "schema_version": "scenarioforge.p0-policy-contract/v1",
+  "binding_schema_version": "scenarioforge.policy-binding/v1",
+  "execution_schema_version": "scenarioforge.bound-policy-execution/v1",
+  "provider": "scenarioforge.builtin-policy/v1",
+  "ordered_policy_identities": [
+    "scenarioforge.deterministic-control@2.0.0",
+    "scenarioforge.defensive-control@1.0.0"
+  ],
+  "baseline_config_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "default_action",
+      "participant_actions"
+    ],
+    "properties": {
+      "default_action": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "steering",
+          "throttle_brake"
+        ],
+        "properties": {
+          "steering": {
+            "type": "number",
+            "minimum": -1.0,
+            "maximum": 1.0
+          },
+          "throttle_brake": {
+            "type": "number",
+            "minimum": -1.0,
+            "maximum": 1.0
+          }
+        }
+      },
+      "participant_actions": {
+        "type": "array",
+        "maxItems": 16,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "participant_id",
+            "steering",
+            "throttle_brake"
+          ],
+          "properties": {
+            "participant_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "steering": {
+              "type": "number",
+              "minimum": -1.0,
+              "maximum": 1.0
+            },
+            "throttle_brake": {
+              "type": "number",
+              "minimum": -1.0,
+              "maximum": 1.0
+            }
+          }
+        }
+      }
+    }
+  },
+  "candidate_config_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "profile"
+    ],
+    "properties": {
+      "profile": {
+        "const": "defensive-v1"
+      }
+    }
+  },
+  "candidate_config": {
+    "profile": "defensive-v1"
+  },
+  "candidate_constants": {
+    "nominal_target_speed_scale": 1.0,
+    "desired_time_headway_s": 2.0,
+    "minimum_gap_m": 5.0,
+    "ttc_brake_threshold_s": 3.0,
+    "maximum_brake_command": 1.0,
+    "release_hysteresis_s": 0.5
+  },
+  "security": {
+    "dynamic_code": false,
+    "network_access": false,
+    "runtime_override": false
+  }
+}

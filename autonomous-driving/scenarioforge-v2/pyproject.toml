@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scenarioforge"
+version = "0.1.0"
+description = "Strict scenario compilation and isolated MetaDrive execution"
+requires-python = "==3.11.15"
+dependencies = [
+  "jsonschema==4.25.1",
+  "metadrive-simulator==0.4.3",
+  "PyYAML==6.0.3",
+]
+
+[project.scripts]
+scenarioforge = "scenarioforge.__main__:main"
+
+[dependency-groups]
+browser = ["playwright==1.61.0"]
+dev = ["pytest==9.0.3"]
+simulation = [
+  "eclipse-sumo==1.19.0",
+  "smarts[sumo]==2.0.1",
+]
+web = [
+  "starlette==1.3.1",
+  "uvicorn==0.52.1",
+]
+
+[tool.uv]
+default-groups = ["dev", "web", "browser", "simulation"]
+dev-dependencies = ["httpx2==2.9.1"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers"
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+scenarioforge = [
+  "orchestration/*.js",
+  "replay/*.js",
+  "web/static/*",
+  "web/static/vendor/*",
+]
+
+[tool.scenarioforge.web]
+threejs_version = "0.185.1"

@@ -1,0 +1,49 @@
+{
+  "schema_version": "scenarioforge.backend-capability-matrix/v1",
+  "backends": [
+    {"backend_id": "scenarioforge.smarts", "version": "2.0.1"},
+    {"backend_id": "scenarioforge.metadrive", "version": "0.4.3"}
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "competitive_lane_change",
+      "scenario_digest": "e33d515395eefc042104ee2e86dd1659fdb377eb0ee873136e6ff595ead7c42f",
+      "backends": {
+        "scenarioforge.smarts": {"status": "exact", "executable": true, "reason": "canonical semantics are implemented by the locked SMARTS adapter"},
+        "scenarioforge.metadrive": {"status": "lossy", "executable": false, "reason": "the P0-C adapter can reproduce lane motion but not the P1 multi-controllable competition contract"}
+      }
+    },
+    {
+      "scenario_id": "cross_traffic_red_light_violation",
+      "scenario_digest": "a1ea654e135f6830bd9912d57c9e96eb87ec2e24c29ccf1f3b70aff23d196937",
+      "backends": {
+        "scenarioforge.smarts": {"status": "exact", "executable": true, "reason": "canonical semantics are implemented by the locked SMARTS adapter"},
+        "scenarioforge.metadrive": {"status": "unsupported", "executable": false, "reason": "the frozen P0-C adapter does not implement traffic-signal phase or violation semantics"}
+      }
+    },
+    {
+      "scenario_id": "highway_merge",
+      "scenario_digest": "e04b6c2b399368ceab9960e998ae0e865f55317d893209e1338b7a73b37a49d5",
+      "backends": {
+        "scenarioforge.smarts": {"status": "exact", "executable": true, "reason": "canonical semantics are implemented by the locked SMARTS adapter"},
+        "scenarioforge.metadrive": {"status": "exact", "executable": true, "reason": "the frozen P0-C adapter has an exact highway-merge execution plan"}
+      }
+    },
+    {
+      "scenario_id": "pedestrian_red_light_crossing",
+      "scenario_digest": "b98d8946da45290ad7d4ceb259c1cc610e1cbb3f65aadd4d6ec3a3daf678776f",
+      "backends": {
+        "scenarioforge.smarts": {"status": "exact", "executable": true, "reason": "canonical semantics are implemented by the locked SMARTS adapter"},
+        "scenarioforge.metadrive": {"status": "unsupported", "executable": false, "reason": "the frozen P0-C adapter does not implement pedestrian actors or signal compliance"}
+      }
+    },
+    {
+      "scenario_id": "unprotected_left_turn",
+      "scenario_digest": "82f9f658f3d9d573b52ae71919b97aafe63fd82f8e7ab4e2a2156a7b0b6dab77",
+      "backends": {
+        "scenarioforge.smarts": {"status": "exact", "executable": true, "reason": "canonical semantics are implemented by the locked SMARTS adapter"},
+        "scenarioforge.metadrive": {"status": "exact", "executable": true, "reason": "the frozen P0-C adapter has an exact unprotected-left-turn execution plan"}
+      }
+    }
+  ]
+}

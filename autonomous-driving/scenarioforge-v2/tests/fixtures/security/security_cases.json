@@ -1,0 +1,83 @@
+{
+  "schema_version": "scenarioforge.security-negative-cases/v1",
+  "environment_cases": [
+    {
+      "case_id": "secret-canary",
+      "overrides": {
+        "SCENARIOFORGE_SECRET_CANARY": "CANARY-MUST-NOT-LEAK"
+      },
+      "expected_code": "unexpected_environment"
+    },
+    {
+      "case_id": "pythonpath-override",
+      "overrides": {
+        "PYTHONPATH": "/tmp/shadowed-runtime"
+      },
+      "expected_code": "unexpected_environment"
+    }
+  ],
+  "resource_policy": {
+    "wall_clock_timeout_s": 1,
+    "memory_limit_mb": 64,
+    "pid_limit": 2,
+    "log_limit_bytes": 16,
+    "artifact_limit_bytes": 32
+  },
+  "resource_cases": [
+    {
+      "case_id": "wall-clock",
+      "observation": {
+        "elapsed_seconds": 1.001,
+        "memory_bytes": 1,
+        "process_count": 1,
+        "log_bytes": 1,
+        "artifact_bytes": 1
+      },
+      "expected_code": "wall_clock_limit_exceeded"
+    },
+    {
+      "case_id": "memory",
+      "observation": {
+        "elapsed_seconds": 0.5,
+        "memory_bytes": 67108865,
+        "process_count": 1,
+        "log_bytes": 1,
+        "artifact_bytes": 1
+      },
+      "expected_code": "memory_limit_exceeded"
+    },
+    {
+      "case_id": "pid-count",
+      "observation": {
+        "elapsed_seconds": 0.5,
+        "memory_bytes": 1,
+        "process_count": 3,
+        "log_bytes": 1,
+        "artifact_bytes": 1
+      },
+      "expected_code": "pid_limit_exceeded"
+    },
+    {
+      "case_id": "log-size",
+      "observation": {
+        "elapsed_seconds": 0.5,
+        "memory_bytes": 1,
+        "process_count": 1,
+        "log_bytes": 17,
+        "artifact_bytes": 1
+      },
+      "expected_code": "log_limit_exceeded"
+    },
+    {
+      "case_id": "artifact-size",
+      "observation": {
+        "elapsed_seconds": 0.5,
+        "memory_bytes": 1,
+        "process_count": 1,
+        "log_bytes": 1,
+        "artifact_bytes": 33
+      },
+      "expected_code": "artifact_limit_exceeded"
+    }
+  ]
+}

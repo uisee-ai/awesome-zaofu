@@ -1,0 +1,81 @@
+{
+  "schema_version": "scenarioforge.provenance-tamper-matrix/v1",
+  "cases": [
+    {
+      "case_id": "missing-defaults",
+      "operation": "remove",
+      "path": "execution_snapshot.resolved_defaults",
+      "error": "required fields"
+    },
+    {
+      "case_id": "spec-digest-tamper",
+      "operation": "replace",
+      "path": "execution_snapshot.normalized_scenario_spec.traffic_side",
+      "value": "left",
+      "error": "normalized ScenarioSpec digest"
+    },
+    {
+      "case_id": "code-digest-invalid",
+      "operation": "replace",
+      "path": "execution_snapshot.code.digest",
+      "value": "invalid",
+      "error": "code digest"
+    },
+    {
+      "case_id": "backend-identity-spoof",
+      "operation": "replace",
+      "path": "compile_report.adapter.id",
+      "value": "scenarioforge.metadrive",
+      "error": "adapter identity"
+    },
+    {
+      "case_id": "simulator-version-drift",
+      "operation": "replace",
+      "path": "worker_receipt.simulator.version",
+      "value": "9.9.9",
+      "error": "simulator identity"
+    },
+    {
+      "case_id": "receipt-digest-tamper",
+      "operation": "replace",
+      "path": "artifact_index.worker_receipt_digest",
+      "value": "0000000000000000000000000000000000000000000000000000000000000000",
+      "error": "Worker receipt digest"
+    },
+    {
+      "case_id": "partial-artifact",
+      "operation": "replace",
+      "path": "artifact_index.artifacts.0.validation",
+      "value": "partial",
+      "error": "fully verified"
+    },
+    {
+      "case_id": "terminal-partial",
+      "operation": "replace",
+      "path": "terminal_state.execution_status",
+      "value": "partial",
+      "error": "partial"
+    },
+    {
+      "case_id": "terminal-snapshot-mismatch",
+      "operation": "replace",
+      "path": "terminal_state.execution_snapshot_digest",
+      "value": "1111111111111111111111111111111111111111111111111111111111111111",
+      "error": "terminal_state snapshot"
+    },
+    {
+      "case_id": "trajectory-snapshot-mismatch",
+      "operation": "replace",
+      "path": "trajectory.execution_snapshot_id",
+      "value": "snapshot-other",
+      "error": "trajectory snapshot"
+    },
+    {
+      "case_id": "replay-index-mismatch",
+      "operation": "replace",
+      "path": "replay.artifact_index_digest",
+      "value": "2222222222222222222222222222222222222222222222222222222222222222",
+      "error": "replay ArtifactIndex digest"
+    }
+  ]
+}

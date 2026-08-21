@@ -1,0 +1,416 @@
+{
+  "schema_version": "scenarioforge.scenario/v2",
+  "scenario_id": "dangerous_cut_in",
+  "seed": 47,
+  "road": {
+    "schema_version": "scenarioforge.topology/v2",
+    "topology_kind": "corridor_merge",
+    "map_block_sequence": "S",
+    "lane_width_m": 3.5,
+    "coordinate_system": "right-handed-x-forward-y-left",
+    "units": {
+      "distance": "m",
+      "speed": "m/s",
+      "heading": "deg",
+      "time": "tick"
+    },
+    "lanes": [
+      {
+        "id": "adjacent-lane",
+        "road_id": "mainline",
+        "engine_lane_index": {
+          "start_node": ">>",
+          "end_node": ">>>",
+          "lane_index": 0
+        },
+        "kind": "travel",
+        "length_m": 220.0,
+        "predecessor_lane_ids": [],
+        "successor_lane_ids": [
+          "ego-lane"
+        ]
+      },
+      {
+        "id": "ego-lane",
+        "road_id": "mainline",
+        "engine_lane_index": {
+          "start_node": ">>",
+          "end_node": ">>>",
+          "lane_index": 1
+        },
+        "kind": "merge",
+        "length_m": 220.0,
+        "predecessor_lane_ids": [
+          "adjacent-lane"
+        ],
+        "successor_lane_ids": []
+      }
+    ],
+    "conflict_zones": [
+      {
+        "id": "cut-in-conflict",
+        "lane_ids": [
+          "adjacent-lane",
+          "ego-lane"
+        ],
+        "start_m": 35.0,
+        "end_m": 80.0
+      }
+    ]
+  },
+  "participants": [
+    {
+      "id": "ego",
+      "role": "ego",
+      "actor_type": "vehicle",
+      "spawn": {
+        "schema_version": "scenarioforge.actor-spawn/v2",
+        "lane_id": "ego-lane",
+        "longitudinal_m": 20.0,
+        "lateral_m": 0.0,
+        "speed_mps": 21.0,
+        "heading_deg": 0.0
+      },
+      "route": {
+        "schema_version": "scenarioforge.route/v2",
+        "id": "ego-mainline",
+        "lane_ids": [
+          "ego-lane"
+        ],
+        "goal": {
+          "lane_id": "ego-lane",
+          "longitudinal_m": 190.0
+        }
+      }
+    },
+    {
+      "id": "cutter",
+      "role": "social",
+      "actor_type": "vehicle",
+      "spawn": {
+        "schema_version": "scenarioforge.actor-spawn/v2",
+        "lane_id": "adjacent-lane",
+        "longitudinal_m": 30.0,
+        "lateral_m": 0.0,
+        "speed_mps": 24.0,
+        "heading_deg": 0.0
+      },
+      "route": {
+        "schema_version": "scenarioforge.route/v2",
+        "id": "cutter-cut-in",
+        "lane_ids": [
+          "adjacent-lane",
+          "ego-lane"
+        ],
+        "goal": {
+          "lane_id": "ego-lane",
+          "longitudinal_m": 190.0
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "initial_gap_m": 20.0,
+    "vehicle_speed_mps": 21.0,
+    "brake_tick": 4,
+    "brake_intensity": 0.7
+  },
+  "events": [
+    {
+      "id": "dangerous-cut-in-started",
+      "sequence": 0,
+      "type": "control_override",
+      "participant_id": "cutter",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 5
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.0
+      }
+    },
+    {
+      "id": "dangerous-cut-in-control-2",
+      "sequence": 1,
+      "type": "control_override",
+      "participant_id": "cutter",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 6
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.0
+      }
+    },
+    {
+      "id": "dangerous-cut-in-control-3",
+      "sequence": 2,
+      "type": "control_override",
+      "participant_id": "cutter",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 7
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.0
+      }
+    },
+    {
+      "id": "dangerous-cut-in-control-4",
+      "sequence": 3,
+      "type": "control_override",
+      "participant_id": "cutter",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 8
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.0
+      }
+    },
+    {
+      "id": "dangerous-cut-in-control-5",
+      "sequence": 4,
+      "type": "control_override",
+      "participant_id": "cutter",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 9
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.0
+      }
+    },
+    {
+      "id": "dangerous-cut-in-control-6",
+      "sequence": 5,
+      "type": "control_override",
+      "participant_id": "cutter",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 10
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.0
+      }
+    },
+    {
+      "id": "dangerous-cut-in-control-7",
+      "sequence": 6,
+      "type": "control_override",
+      "participant_id": "cutter",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 11
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.0
+      }
+    }
+  ],
+  "constraints": {
+    "schema_version": "scenarioforge.outcome-contract/v2",
+    "max_steps": 120,
+    "duration_s": 12.0,
+    "collision_is_failure": true,
+    "target_outcome": "collision_failure",
+    "success_predicates": [
+      {
+        "id": "routes-completed",
+        "kind": "route_completed",
+        "participant_ids": [
+          "ego",
+          "cutter"
+        ],
+        "lane_ids": [
+          "ego-lane"
+        ]
+      }
+    ],
+    "failure_predicates": [
+      {
+        "id": "collision-observed",
+        "kind": "collision",
+        "participant_ids": [
+          "ego",
+          "cutter"
+        ],
+        "lane_ids": []
+      },
+      {
+        "id": "cutter-boundary-violation",
+        "kind": "boundary_violation",
+        "participant_ids": [
+          "cutter"
+        ],
+        "lane_ids": []
+      },
+      {
+        "id": "route-timeout",
+        "kind": "timeout",
+        "participant_ids": [
+          "ego",
+          "cutter"
+        ],
+        "lane_ids": []
+      }
+    ],
+    "expected_events": [
+      "dangerous-cut-in-started",
+      "dangerous-cut-in-control-2",
+      "dangerous-cut-in-control-3",
+      "dangerous-cut-in-control-4",
+      "dangerous-cut-in-control-5",
+      "dangerous-cut-in-control-6",
+      "dangerous-cut-in-control-7"
+    ],
+    "metric_definitions": [
+      {
+        "definition_id": "scenarioforge.metric.collision/v2",
+        "metric": "collision",
+        "unit": "boolean",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "cutter"
+          ],
+          "topology_kinds": [
+            "corridor_merge"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "not_applicable",
+        "evidence_field": "collision"
+      },
+      {
+        "definition_id": "scenarioforge.metric.hard-braking/v2",
+        "metric": "hard_braking",
+        "unit": "m/s^2",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "cutter"
+          ],
+          "topology_kinds": [
+            "corridor_merge"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "threshold_pending_calibration",
+        "evidence_field": "minimum_acceleration_mps2"
+      },
+      {
+        "definition_id": "scenarioforge.metric.minimum-ttc/v2",
+        "metric": "minimum_ttc",
+        "unit": "s",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "cutter"
+          ],
+          "topology_kinds": [
+            "corridor_merge"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "no_closing_pair",
+        "evidence_field": "min_ttc_s"
+      },
+      {
+        "definition_id": "scenarioforge.metric.completion-time/v2",
+        "metric": "completion_time",
+        "unit": "s",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "cutter"
+          ],
+          "topology_kinds": [
+            "corridor_merge"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "execution_incomplete",
+        "evidence_field": "completion_time_s"
+      },
+      {
+        "definition_id": "scenarioforge.metric.termination-reason/v2",
+        "metric": "termination_reason",
+        "unit": "category",
+        "applies_to": {
+          "participant_ids": [],
+          "topology_kinds": [
+            "corridor_merge"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "never_null_for_terminal_run",
+        "evidence_field": "termination_reason"
+      }
+    ]
+  },
+  "policy": {
+    "schema_version": "scenarioforge.deterministic-policy/v2",
+    "id": "scenarioforge.deterministic-control",
+    "version": "2.0.0",
+    "determinism": {
+      "fixed_seed_required": true,
+      "decision_order": "participant_order",
+      "floating_point_contract": "backend_bound"
+    },
+    "config": {
+      "default_action": {
+        "steering": 0.0,
+        "throttle_brake": 0.0
+      },
+      "participant_actions": [
+        {
+          "participant_id": "ego",
+          "steering": 0.0,
+          "throttle_brake": 0.2
+        },
+        {
+          "participant_id": "cutter",
+          "steering": -0.1,
+          "throttle_brake": -0.5
+        }
+      ]
+    }
+  },
+  "required_capabilities": [
+    "topology.versioned.v2",
+    "lane.stable-id.v2",
+    "route.stable-id.v2",
+    "actor.spawn.v2",
+    "trigger.tick.v2",
+    "policy.deterministic.v2",
+    "event.ordered.v2",
+    "metric.definition.v2",
+    "terminal.dual-axis.v2"
+  ],
+  "backend_extensions": {
+    "schema_version": "scenarioforge.backend-extensions/v2",
+    "extensions": {}
+  }
+}

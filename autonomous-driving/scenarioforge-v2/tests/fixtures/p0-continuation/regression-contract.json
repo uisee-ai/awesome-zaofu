@@ -1,0 +1,56 @@
+{
+  "schema_version": "scenarioforge.p0-regression-contract/v1",
+  "matrix": {
+    "schema_version": "scenarioforge.regression-matrix/v1",
+    "presets": [
+      "construction_merge",
+      "highway_merge",
+      "brake_lead",
+      "dangerous_cut_in",
+      "unprotected_left_turn"
+    ],
+    "policy_order": [
+      "scenarioforge.deterministic-control@2.0.0",
+      "scenarioforge.defensive-control@1.0.0"
+    ],
+    "seeds": [
+      7,
+      8,
+      9
+    ],
+    "pair_count": 15,
+    "real_child_runs": 30,
+    "statistical_significance_claimed": false
+  },
+  "thresholds": {
+    "schema_version": "scenarioforge.regression-thresholds/v1",
+    "minimum_ttc_drop_s": 0.05,
+    "completion_time_increase_s": 1.0,
+    "hard_braking_decrease_mps2": 0.05
+  },
+  "shared_pair_axes": [
+    "world_instance_digest",
+    "scenario_revision_digest",
+    "seed",
+    "assets_digest",
+    "environment_digest",
+    "resource_config_digest",
+    "metric_definitions_digest",
+    "tolerances_digest",
+    "route_digest",
+    "nominal_speed_digest"
+  ],
+  "blocking_conditions": [
+    "new_collision",
+    "success_to_failure",
+    "success_rate_decline",
+    "threshold_transition",
+    "minimum_ttc_regression",
+    "completion_time_regression",
+    "hard_braking_regression",
+    "route_changed",
+    "nominal_speed_changed",
+    "scenario_priority_changed",
+    "defensive_response_not_earlier"
+  ]
+}

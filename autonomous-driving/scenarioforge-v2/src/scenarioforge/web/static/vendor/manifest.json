@@ -1,0 +1,31 @@
+{
+  "schema_version": "scenarioforge.frontend-assets/v1",
+  "threejs": {
+    "package": "three",
+    "version": "0.185.1",
+    "revision": "185",
+    "source_tag": "three.js@r185",
+    "license": "MIT",
+    "module": "vendor/three.module.min.js",
+    "dependencies": [
+      "vendor/three.core.min.js"
+    ],
+    "files": [
+      {
+        "path": "vendor/three.module.min.js",
+        "size_bytes": 365552,
+        "sha256": "86bcee248b64f44bcfc23c331ae74619061957d59cab040171dcb6fb5900beb6"
+      },
+      {
+        "path": "vendor/three.core.min.js",
+        "size_bytes": 385386,
+        "sha256": "05b2609338c76cd65daf74f3ac515bc9a5045e1b3b33edc07d8c9bd55250fa90"
+      },
+      {
+        "path": "vendor/LICENSE.threejs.txt",
+        "size_bytes": 1081,
+        "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+      }
+    ]
+  }
+}

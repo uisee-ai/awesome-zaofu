@@ -1,0 +1,123 @@
+{
+  "schema_version": "scenarioforge.p0c-real-validation/v1",
+  "environment": {
+    "os": "Linux",
+    "architecture": "x86_64",
+    "python": "3.11.15",
+    "simulator_distribution": "metadrive-simulator",
+    "simulator_version": "0.4.3",
+    "headless": true
+  },
+  "reproduction_runs": 3,
+  "tolerance_profile": {
+    "version": "scenarioforge.p0c-metadrive-0.4.3/v1",
+    "position_abs_m": 0.001,
+    "speed_abs_mps": 0.001,
+    "heading_abs_deg": 1.0,
+    "min_ttc_abs_s": 0.001,
+    "completed_steps": 0
+  },
+  "required_artifacts": [
+    "input/assets.json",
+    "input/compile_report.json",
+    "input/execution_plan.json",
+    "input/policy.json",
+    "input/run_manifest.json",
+    "input/run_request.json",
+    "output/actions.json",
+    "output/events.json",
+    "output/metrics.json",
+    "output/trajectory.json",
+    "output/worker_result.json"
+  ],
+  "presets": [
+    {
+      "preset_id": "construction_merge",
+      "source_spec_digest": "1d273fd601a77dc6b6af2281d45f9a25955781181b8cf1405464bc05fc06623a",
+      "plan_tolerances": "scenarioforge.p0c-calibration-pending/v2",
+      "scenario_outcome": "safe_pass",
+      "termination_reason": "success_predicates_satisfied",
+      "event_ids": [
+        "closure-merge-started",
+        "closure-merge-control-2",
+        "closure-merge-control-3",
+        "closure-merge-control-4",
+        "closure-merge-control-5",
+        "closure-merge-control-6"
+      ],
+      "metric_ranges": {
+        "hard_braking": {"minimum": -3.287, "maximum": -3.286},
+        "minimum_ttc": null,
+        "completion_time": {"minimum": 7.499, "maximum": 7.501}
+      }
+    },
+    {
+      "preset_id": "highway_merge",
+      "source_spec_digest": "feb3f96934739fe5f8f3c5918c281387a07363bdaa036239ccd341a5a127ffd8",
+      "plan_tolerances": "scenarioforge.p0c-calibration-pending/v2",
+      "scenario_outcome": "safe_pass",
+      "termination_reason": "success_predicates_satisfied",
+      "event_ids": [
+        "gap-selected",
+        "gap-merge-control-2",
+        "gap-merge-control-3",
+        "gap-merge-control-4",
+        "gap-merge-control-5",
+        "gap-merge-control-6",
+        "gap-merge-control-7"
+      ],
+      "metric_ranges": {
+        "hard_braking": {"minimum": -3.374, "maximum": -3.372},
+        "minimum_ttc": {"minimum": 11.522, "maximum": 11.524},
+        "completion_time": {"minimum": 2.499, "maximum": 2.501}
+      }
+    },
+    {
+      "preset_id": "brake_lead",
+      "source_spec_digest": "776f0ae0d9d43bbda156811bdc55b26538fb7d1527db3fc2790ac6d0229f195a",
+      "plan_tolerances": "scenarioforge.p0c-calibration-pending/v2",
+      "scenario_outcome": "near_miss",
+      "termination_reason": "success_predicates_satisfied",
+      "event_ids": ["lead-hard-brake", "ego-avoidance-brake"],
+      "metric_ranges": {
+        "hard_braking": {"minimum": -15.503, "maximum": -15.501},
+        "minimum_ttc": {"minimum": 3.35, "maximum": 3.352},
+        "completion_time": {"minimum": 8.599, "maximum": 8.601}
+      }
+    },
+    {
+      "preset_id": "dangerous_cut_in",
+      "source_spec_digest": "c68e393488498d4eb4e64afb5900dbd9a204ec2df7b44d974ce4299237146afd",
+      "plan_tolerances": "scenarioforge.p0c-calibration-pending/v2",
+      "scenario_outcome": "collision_failure",
+      "termination_reason": "collision",
+      "event_ids": [
+        "dangerous-cut-in-started",
+        "dangerous-cut-in-control-2",
+        "dangerous-cut-in-control-3",
+        "dangerous-cut-in-control-4",
+        "dangerous-cut-in-control-5",
+        "dangerous-cut-in-control-6",
+        "dangerous-cut-in-control-7"
+      ],
+      "metric_ranges": {
+        "hard_braking": {"minimum": -11.871, "maximum": -11.869},
+        "minimum_ttc": {"minimum": 0.497, "maximum": 0.5},
+        "completion_time": null
+      }
+    },
+    {
+      "preset_id": "unprotected_left_turn",
+      "source_spec_digest": "a59adabbfe77306eab858dd38c83e774435e268c15e8f5c779d8c569bc3d0841",
+      "plan_tolerances": "scenarioforge.p0c-calibration-pending/v2",
+      "scenario_outcome": "near_miss",
+      "termination_reason": "success_predicates_satisfied",
+      "event_ids": ["yield-started", "left-turn-committed"],
+      "metric_ranges": {
+        "hard_braking": {"minimum": -15.503, "maximum": -15.501},
+        "minimum_ttc": {"minimum": 0.408, "maximum": 0.41},
+        "completion_time": {"minimum": 17.199, "maximum": 17.201}
+      }
+    }
+  ]
+}

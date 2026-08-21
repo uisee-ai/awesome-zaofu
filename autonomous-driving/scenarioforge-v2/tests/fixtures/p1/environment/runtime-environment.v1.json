@@ -1,0 +1,37 @@
+{
+  "schema_version": "scenarioforge.p1.runtime-environment/v1",
+  "python": {
+    "implementation": "CPython",
+    "version": "3.11.15"
+  },
+  "platform": {
+    "operating_system": "Linux",
+    "architecture": "x86_64"
+  },
+  "distributions": [
+    {
+      "name": "smarts",
+      "version": "2.0.1",
+      "role": "primary_backend"
+    },
+    {
+      "name": "eclipse-sumo",
+      "version": "1.19.0",
+      "role": "traffic_simulator"
+    },
+    {
+      "name": "metadrive-simulator",
+      "version": "0.4.3",
+      "role": "regression_backend"
+    },
+    {
+      "name": "playwright",
+      "version": "1.61.0",
+      "role": "browser_automation"
+    }
+  ],
+  "compatibility": {
+    "smarts_python": ">=3.8",
+    "smarts_sumo": "eclipse-sumo>=1.12.0"
+  }
+}

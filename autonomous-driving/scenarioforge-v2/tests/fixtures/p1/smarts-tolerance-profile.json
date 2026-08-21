@@ -1,0 +1,11 @@
+{
+  "schema_version": "scenarioforge.smarts-tolerance-profile/v1",
+  "profile_id": "scenarioforge.smarts-2.0.1-linux-x86_64/v1",
+  "run_count": 3,
+  "position_abs_m": 0.01,
+  "speed_abs_mps": 0.01,
+  "heading_abs_deg": 1.0,
+  "min_ttc_abs_s": 0.01,
+  "completed_steps": 1,
+  "metadrive_profile_ref": "scenarioforge.p0c-metadrive-0.4.3/v1"
+}

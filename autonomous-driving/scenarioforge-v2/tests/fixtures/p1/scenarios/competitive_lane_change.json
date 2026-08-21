@@ -1,0 +1,33 @@
+{
+  "schema_version": "scenarioforge.authoring/v1",
+  "title": "Competitive lane change",
+  "description": "Two controllable vehicles compete for one right-hand corridor gap while a social vehicle is observed.",
+  "seed": 37,
+  "road": {
+    "topology_kind": "corridor",
+    "coordinate_system": "right-handed-x-forward-y-left",
+    "units": {"distance": "m", "speed": "m/s", "heading": "deg", "time": "s"},
+    "lanes": [
+      {"id": "right-lane", "kind": "travel", "length_m": 220.0, "width_m": 3.5, "speed_limit_mps": 30.0, "centerline": [{"x_m": 0.0, "y_m": -1.75}, {"x_m": 220.0, "y_m": -1.75}], "predecessor_lane_ids": [], "successor_lane_ids": []},
+      {"id": "left-lane", "kind": "travel", "length_m": 220.0, "width_m": 3.5, "speed_limit_mps": 30.0, "centerline": [{"x_m": 0.0, "y_m": 1.75}, {"x_m": 220.0, "y_m": 1.75}], "predecessor_lane_ids": [], "successor_lane_ids": []}
+    ],
+    "conflict_zones": [{"id": "lane-change-conflict", "lane_ids": ["right-lane", "left-lane"], "polygon": [{"x_m": 45.0, "y_m": -3.5}, {"x_m": 90.0, "y_m": -3.5}, {"x_m": 90.0, "y_m": 3.5}, {"x_m": 45.0, "y_m": 3.5}]}]
+  },
+  "routes": [
+    {"id": "ego-route", "kind": "vehicle", "lane_ids": ["right-lane"], "goal": {"lane_id": "right-lane", "longitudinal_m": 200.0}},
+    {"id": "challenger-route", "kind": "vehicle", "lane_ids": ["left-lane"], "goal": {"lane_id": "left-lane", "longitudinal_m": 200.0}},
+    {"id": "traffic-route", "kind": "vehicle", "lane_ids": ["right-lane"], "goal": {"lane_id": "right-lane", "longitudinal_m": 210.0}}
+  ],
+  "actors": [
+    {"id": "ego", "kind": "vehicle", "role": "ego", "dimensions": {"length_m": 4.8, "width_m": 1.9, "height_m": 1.6}, "spawn": {"lane_id": "right-lane", "longitudinal_m": 20.0, "lateral_m": 0.0, "speed_mps": 20.0, "heading_deg": 0.0}, "route_id": "ego-route", "behavior": {"profile": "deterministic"}},
+    {"id": "challenger", "kind": "vehicle", "role": "social", "dimensions": {"length_m": 4.7, "width_m": 1.9, "height_m": 1.6}, "spawn": {"lane_id": "left-lane", "longitudinal_m": 15.0, "lateral_m": 0.0, "speed_mps": 22.0, "heading_deg": 0.0}, "route_id": "challenger-route", "behavior": {"profile": "aggressive"}},
+    {"id": "traffic", "kind": "vehicle", "role": "social", "dimensions": {"length_m": 4.5, "width_m": 1.8, "height_m": 1.5}, "spawn": {"lane_id": "right-lane", "longitudinal_m": 65.0, "lateral_m": 0.0, "speed_mps": 18.0, "heading_deg": 0.0}, "route_id": "traffic-route", "behavior": {"profile": "normal"}}
+  ],
+  "static_obstacles": [],
+  "environment": {"weather": "clear", "time_of_day": "day", "road_surface": "dry", "visibility_m": 1000.0},
+  "events": [{"id": "challenger-claims-gap", "sequence": 0, "actor_id": "challenger", "trigger": {"kind": "simulation_time", "time_s": 1.0}, "action": {"kind": "vehicle_control", "throttle_brake": 0.1, "steering": -0.4}}],
+  "constraints": {"duration_s": 18.0, "collision_is_failure": true, "success_conditions": [{"id": "ego-arrives", "kind": "route_completed", "actor_ids": ["ego"], "route_id": "ego-route", "threshold": null}], "failure_conditions": [{"id": "competitive-collision", "kind": "collision", "actor_ids": ["ego", "challenger"], "route_id": null, "threshold": null}], "safety": {"minimum_separation_m": 1.0, "max_deceleration_mps2": 10.0}},
+  "parameters": [],
+  "policy": {"id": "scenarioforge.deterministic-control", "version": "2.0.0", "config": {"target_speed_mps": 20.0}},
+  "required_capabilities": ["actor.vehicle", "event.time-trigger", "road.corridor", "route.stable-id"]
+}

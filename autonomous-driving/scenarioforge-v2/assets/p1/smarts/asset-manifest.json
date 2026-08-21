@@ -1,0 +1,195 @@
+{
+  "schema_version": "scenarioforge.smarts-assets/v1",
+  "scenarios": {
+    "competitive_lane_change": {
+      "asset_id": "p1-smarts-competitive-lane-change-v1",
+      "seed": 37,
+      "scenario_digest": "e33d515395eefc042104ee2e86dd1659fdb377eb0ee873136e6ff595ead7c42f",
+      "policy_digest": "87ac4aae73c94d43940c73f0bc813944f82c025ab7f87e262a0dd1e3bec83138",
+      "parameters_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "map_dir": "corridor",
+      "map_sha256": "2d49ccecba0b96151c3130d4e9b41f71c4740743fb5503a1702cb00b71a096fc",
+      "traffic_file": "traffic/competitive_lane_change.smarts.xml",
+      "traffic_sha256": "9a375fbbcc4292cc7103f1732caa72103d8af87ed4f9bfc727cb0e0f6a1eb350",
+      "participants": [
+        {"id": "ego", "role": "ego", "controllable": true},
+        {"id": "challenger", "role": "controlled", "controllable": true},
+        {"id": "traffic", "role": "social_vehicle", "controllable": false}
+      ],
+      "missions": {
+        "ego": {"begin": ["east-in", 0, 20.0], "end": ["east-out", 0, 170.0], "via": [], "start_speed_mps": 20.0},
+        "challenger": {"begin": ["east-in", 1, 15.0], "end": ["east-out", 1, 170.0], "via": [], "start_speed_mps": 22.0}
+      },
+      "lane_aliases": {
+        "east-in": "right-lane",
+        "east-in_0": "right-lane",
+        "east-in_1": "left-lane",
+        "east-out": "right-lane",
+        "east-out_0": "right-lane",
+        "east-out_1": "left-lane"
+      },
+      "events": [
+        {"event_id": "challenger-claims-gap", "agent_id": "challenger", "tick": 10, "duration_ticks": 35, "action": {"throttle_brake": 0.1, "steering": -0.4}, "controller_action": {"target_speed_mps": 18.0, "lane_change": -1}}
+      ],
+      "default_actions": {
+        "ego": {"target_speed_mps": 22.0, "lane_change": 0},
+        "challenger": {"target_speed_mps": 20.0, "lane_change": 0}
+      },
+      "external_actors": []
+    },
+    "cross_traffic_red_light_violation": {
+      "asset_id": "p1-smarts-cross-traffic-red-light-violation-v1",
+      "seed": 41,
+      "scenario_digest": "a1ea654e135f6830bd9912d57c9e96eb87ec2e24c29ccf1f3b70aff23d196937",
+      "policy_digest": "ffbc907260230735edbae599b6d5fc2e484b83695463d014b35d13db27bec407",
+      "parameters_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "map_dir": "intersection",
+      "map_sha256": "faa6ea73d0daed65380ae2cb4997830644b15d8afcdf536d57cf47d7c92d937b",
+      "traffic_file": "traffic/cross_traffic_red_light_violation.smarts.xml",
+      "traffic_sha256": "e6cf54900be232ce8347ec51ae24fdc23aaa33de0938640702ecc8a3adb84091",
+      "participants": [
+        {"id": "ego", "role": "ego", "controllable": true},
+        {"id": "violator", "role": "controlled", "controllable": true},
+        {"id": "traffic", "role": "social_vehicle", "controllable": false}
+      ],
+      "missions": {
+        "ego": {"begin": ["west-in", 0, 25.0], "end": ["east-out", 0, 70.0], "via": [], "start_speed_mps": 12.0},
+        "violator": {"begin": ["north-in", 0, 35.0], "end": ["south-out", 0, 70.0], "via": [], "start_speed_mps": 13.0}
+      },
+      "lane_aliases": {
+        "west-in": "eastbound",
+        "west-in_0": "eastbound",
+        "east-out": "eastbound",
+        "east-out_0": "eastbound",
+        "north-in": "southbound",
+        "north-in_0": "southbound",
+        "south-out": "southbound",
+        "south-out_0": "southbound"
+      },
+      "events": [
+        {"event_id": "cross-traffic-runs-red", "agent_id": "violator", "tick": 15, "duration_ticks": 85, "action": {"throttle_brake": 0.8, "steering": 0.0}, "controller_action": {"target_speed_mps": 16.0, "lane_change": 0}}
+      ],
+      "default_actions": {
+        "ego": {"target_speed_mps": 12.0, "lane_change": 0},
+        "violator": {"target_speed_mps": 13.0, "lane_change": 0}
+      },
+      "external_actors": []
+    },
+    "highway_merge": {
+      "asset_id": "p1-smarts-highway-merge-v1",
+      "seed": 31,
+      "scenario_digest": "e04b6c2b399368ceab9960e998ae0e865f55317d893209e1338b7a73b37a49d5",
+      "policy_digest": "87ac4aae73c94d43940c73f0bc813944f82c025ab7f87e262a0dd1e3bec83138",
+      "parameters_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "map_dir": "corridor",
+      "map_sha256": "2d49ccecba0b96151c3130d4e9b41f71c4740743fb5503a1702cb00b71a096fc",
+      "traffic_file": "traffic/highway_merge.smarts.xml",
+      "traffic_sha256": "f7e91ad856accd9510960841575b2bcf21ebb78e696344a6e0020f60889109a6",
+      "participants": [
+        {"id": "ego", "role": "ego", "controllable": true},
+        {"id": "front", "role": "controlled", "controllable": true},
+        {"id": "rear", "role": "social_vehicle", "controllable": false},
+        {"id": "traffic", "role": "social_vehicle", "controllable": false}
+      ],
+      "missions": {
+        "ego": {"begin": ["ramp", 0, 10.0], "end": ["east-out", 0, 150.0], "via": [], "start_speed_mps": 18.0},
+        "front": {"begin": ["east-in", 0, 70.0], "end": ["east-out", 0, 170.0], "via": [], "start_speed_mps": 22.0}
+      },
+      "lane_aliases": {
+        "ramp": "ramp",
+        "ramp_0": "ramp",
+        "east-in": "mainline",
+        "east-in_0": "mainline",
+        "east-out": "mainline",
+        "east-out_0": "mainline"
+      },
+      "events": [
+        {"event_id": "ego-selects-gap", "agent_id": "ego", "tick": 10, "duration_ticks": 90, "action": {"throttle_brake": 0.2, "steering": 0.35}, "controller_action": {"target_speed_mps": 20.0, "lane_change": 0}}
+      ],
+      "default_actions": {
+        "ego": {"target_speed_mps": 18.0, "lane_change": 0},
+        "front": {"target_speed_mps": 22.0, "lane_change": 0}
+      },
+      "external_actors": []
+    },
+    "pedestrian_red_light_crossing": {
+      "asset_id": "p1-smarts-pedestrian-red-light-crossing-v1",
+      "seed": 47,
+      "scenario_digest": "b98d8946da45290ad7d4ceb259c1cc610e1cbb3f65aadd4d6ec3a3daf678776f",
+      "policy_digest": "2a754424a9ceaf5ea400c19261e3b6113c7f60a2dbe3e3ea81c8843176ca37ca",
+      "parameters_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "map_dir": "intersection",
+      "map_sha256": "faa6ea73d0daed65380ae2cb4997830644b15d8afcdf536d57cf47d7c92d937b",
+      "traffic_file": "traffic/pedestrian_red_light_crossing.smarts.xml",
+      "traffic_sha256": "e1560fb555374d10798aa2f7994f44dec0bd69e9071932dfe3ba491b836472c1",
+      "participants": [
+        {"id": "ego", "role": "ego", "controllable": true},
+        {"id": "traffic", "role": "controlled", "controllable": true},
+        {"id": "pedestrian", "role": "pedestrian", "controllable": false}
+      ],
+      "missions": {
+        "ego": {"begin": ["west-in", 0, 25.0], "end": ["east-out", 0, 70.0], "via": [], "start_speed_mps": 10.0},
+        "traffic": {"begin": ["west-in", 0, 5.0], "end": ["east-out", 0, 75.0], "via": [], "start_speed_mps": 9.0}
+      },
+      "lane_aliases": {
+        "west-in": "eastbound",
+        "west-in_0": "eastbound",
+        "east-out": "eastbound",
+        "east-out_0": "eastbound",
+        "crosswalk-in": "crosswalk",
+        "crosswalk-in_0": "crosswalk",
+        "crosswalk-out": "crosswalk",
+        "crosswalk-out_0": "crosswalk"
+      },
+      "events": [
+        {"event_id": "pedestrian-crosses-red", "agent_id": "pedestrian", "tick": 10, "duration_ticks": 100, "action": {"speed_mps": 1.4}}
+      ],
+      "default_actions": {
+        "ego": {"target_speed_mps": 10.0, "lane_change": 0},
+        "traffic": {"target_speed_mps": 9.0, "lane_change": 0}
+      },
+      "external_actors": [
+        {"id": "pedestrian", "role": "pedestrian", "begin": ["crosswalk-in", 0, 1.0], "end": ["crosswalk-out", 0, 15.0], "start_tick": 10, "speed_mps": 1.4}
+      ]
+    },
+    "unprotected_left_turn": {
+      "asset_id": "p1-smarts-unprotected-left-turn-v1",
+      "seed": 43,
+      "scenario_digest": "82f9f658f3d9d573b52ae71919b97aafe63fd82f8e7ab4e2a2156a7b0b6dab77",
+      "policy_digest": "90e7a6461ab51747cdc71e4d334210d705fde9cc56f5344ba6d8dfa6efe871c6",
+      "parameters_digest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "map_dir": "intersection",
+      "map_sha256": "faa6ea73d0daed65380ae2cb4997830644b15d8afcdf536d57cf47d7c92d937b",
+      "traffic_file": "traffic/unprotected_left_turn.smarts.xml",
+      "traffic_sha256": "8b6265b4b0c2dc38f73f92ee68bcf60352fc442f3cb09124ed164e4adf7b5076",
+      "participants": [
+        {"id": "ego", "role": "ego", "controllable": true},
+        {"id": "oncoming", "role": "controlled", "controllable": true},
+        {"id": "traffic", "role": "social_vehicle", "controllable": false}
+      ],
+      "missions": {
+        "ego": {"begin": ["west-in", 0, 15.0], "end": ["north-out", 0, 50.0], "via": [], "start_speed_mps": 8.0},
+        "oncoming": {"begin": ["east-in", 0, 20.0], "end": ["west-out", 0, 70.0], "via": [], "start_speed_mps": 12.0}
+      },
+      "lane_aliases": {
+        "west-in": "west-approach",
+        "west-in_0": "west-approach",
+        "north-out": "north-exit",
+        "north-out_0": "north-exit",
+        "east-in": "east-oncoming",
+        "east-in_0": "east-oncoming",
+        "west-out": "east-oncoming",
+        "west-out_0": "east-oncoming"
+      },
+      "events": [
+        {"event_id": "ego-yields", "agent_id": "ego", "tick": 10, "duration_ticks": 20, "action": {"throttle_brake": -0.8, "steering": 0.0}, "controller_action": {"target_speed_mps": 0.0, "lane_change": 0}},
+        {"event_id": "ego-commits-left", "agent_id": "ego", "tick": 30, "duration_ticks": 90, "action": {"throttle_brake": 0.5, "steering": 0.45}, "controller_action": {"target_speed_mps": 8.0, "lane_change": 0}}
+      ],
+      "default_actions": {
+        "ego": {"target_speed_mps": 8.0, "lane_change": 0},
+        "oncoming": {"target_speed_mps": 12.0, "lane_change": 0}
+      },
+      "external_actors": []
+    }
+  }
+}

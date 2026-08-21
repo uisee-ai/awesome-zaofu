@@ -1,0 +1,112 @@
+FROM python:3.11.15-slim-bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+WORKDIR /workspace
+
+RUN python -m pip install --no-cache-dir \
+    jsonschema==4.25.1 \
+    metadrive-simulator==0.4.3 \
+    playwright==1.61.0 \
+    pytest==9.0.3 \
+    PyYAML==6.0.3 \
+    starlette==1.3.1 \
+    uvicorn==0.52.1 \
+    httpx2==2.9.1 \
+    && python -m playwright install --with-deps chromium
+
+RUN python -m metadrive.pull_asset \
+    && python -c 'from metadrive.version import asset_version; assert asset_version() == "0.4.3"'
+
+# These Linux wheels and digests mirror uv.lock.  Concurrent range requests keep
+# the network-bound image build inside the E2E gate's timeout on throttled links.
+RUN python - <<'PY'
+from concurrent.futures import ThreadPoolExecutor
+from hashlib import sha256
+from os import close, open as os_open, pwrite, O_CREAT, O_TRUNC, O_WRONLY
+from pathlib import Path
+from urllib.request import Request, urlopen
+
+wheels = (
+    (
+        "https://files.pythonhosted.org/packages/bb/5a/32f105f3bbb3bc090d7911c29b000320684073b91bb886f120f88deb1afe/eclipse_sumo-1.19.0-py2.py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "eclipse_sumo-1.19.0-py2.py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        71660221,
+        "3ead5b777520d72639b81c81344f0d8a13888cfc4f667ca5a2a46f1cfb650378",
+    ),
+    (
+        "https://files.pythonhosted.org/packages/20/78/a23a300110968586a9dbfd516ccd66906450d57567c9f60cddaeaaf10fa6/pybullet-3.2.7-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "pybullet-3.2.7-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        103196742,
+        "5d858abf7c12a21ef3ed351cf81dac1b5e486ec25c9ab59bfc84beb89034edff",
+    ),
+    (
+        "https://files.pythonhosted.org/packages/e6/42/f863318c2729f03b6ca0b2a8a876f945c668bd19415418080deea6124a2e/smarts-2.0.1-py3-none-any.whl",
+        "smarts-2.0.1-py3-none-any.whl",
+        5015672,
+        "14f40146e553883579ccbeeb793ac800d315686548b7d51e7640474987610950",
+    ),
+)
+chunk_size = 1024 * 1024
+jobs = []
+for url, filename, size, _ in wheels:
+    path = Path("/tmp") / filename
+    descriptor = os_open(path, O_CREAT | O_TRUNC | O_WRONLY, 0o644)
+    try:
+        for start in range(0, size, chunk_size):
+            jobs.append((url, descriptor, start, min(start + chunk_size, size) - 1))
+        path.touch()
+    finally:
+        close(descriptor)
+
+def fetch(job):
+    url, _, start, end = job
+    request = Request(url, headers={"Range": f"bytes={start}-{end}"})
+    with urlopen(request, timeout=120) as response:
+        if response.status != 206:
+            raise RuntimeError(f"range request returned HTTP {response.status}")
+        data = response.read()
+    if len(data) != end - start + 1:
+        raise RuntimeError(f"short range response for bytes {start}-{end}")
+    path = Path("/tmp") / next(filename for candidate, filename, _, _ in wheels if candidate == url)
+    descriptor = os_open(path, O_WRONLY)
+    try:
+        pwrite(descriptor, data, start)
+    finally:
+        close(descriptor)
+
+with ThreadPoolExecutor(max_workers=16) as executor:
+    list(executor.map(fetch, jobs))
+
+for _, filename, _, digest in wheels:
+    path = Path("/tmp") / filename
+    if sha256(path.read_bytes()).hexdigest() != digest:
+        raise RuntimeError(f"SHA-256 mismatch for {filename}")
+PY
+
+RUN python -m pip install --no-cache-dir \
+    /tmp/eclipse_sumo-1.19.0-py2.py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl \
+    /tmp/pybullet-3.2.7-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl \
+    'smarts[sumo] @ file:///tmp/smarts-2.0.1-py3-none-any.whl' \
+    && rm -f /tmp/*.whl
+
+RUN ln -s sumo/tools/traci /usr/local/lib/python3.11/site-packages/traci \
+    && ln -s sumo/tools/sumolib /usr/local/lib/python3.11/site-packages/sumolib
+
+RUN chmod 1777 "${PLAYWRIGHT_BROWSERS_PATH}" \
+    && chmod -R a+rwX "${PLAYWRIGHT_BROWSERS_PATH}/.links" \
+    && find /usr/local/lib/python3.11/site-packages/smarts/assets/vehicles \
+        -type d -exec chmod 1777 {} +
+
+COPY pyproject.toml uv.lock ./
+COPY src ./src
+COPY tests ./tests
+COPY examples ./examples
+
+RUN python -m pip install --no-cache-dir --no-deps .
+
+CMD ["python", "-m", "pytest", "-q", "tests/web/e2e"]

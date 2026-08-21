@@ -1,0 +1,9 @@
+{
+  "schema_version": "scenarioforge.tolerance-profile/v1",
+  "tolerances_version": "scenarioforge.p0a-tolerances/v1",
+  "position_m": 0.01,
+  "speed_mps": 0.01,
+  "heading_deg": 0.1,
+  "min_ttc_s": 0.05,
+  "completed_steps": 1
+}

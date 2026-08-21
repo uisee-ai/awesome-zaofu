@@ -21,6 +21,7 @@
 | 项目 | 产品定位 | 状态 | 快速开始 | 交付证据 | 许可证 |
 | --- | --- | --- | --- | --- | --- |
 | [ScenarioForge](autonomous-driving/scenarioforge/) | 版本化场景编排、MetaDrive 批量仿真、精确回放与回归对比 | Verified showcase | [README](autonomous-driving/scenarioforge/README.md) | [CASE](autonomous-driving/scenarioforge/CASE.md) | [Project license](autonomous-driving/scenarioforge/LICENSE) |
+| [ScenarioForge v2](autonomous-driving/scenarioforge-v2/) | 统一场景创作、MetaDrive/SMARTS 执行、证据与跟车 3D 回放 | Product snapshot | [README](autonomous-driving/scenarioforge-v2/README.md) | [CASE](autonomous-driving/scenarioforge-v2/CASE.md) | [Apache-2.0 + notices](autonomous-driving/scenarioforge-v2/THIRD_PARTY_NOTICES.md) |
 | [Alpamayo Web Studio](autonomous-driving/alpamayo-web-studio/) | 道路场景管理、视觉推理、轨迹生成与回归评测 | Product snapshot | [README](autonomous-driving/alpamayo-web-studio/README.md) | [CASE](autonomous-driving/alpamayo-web-studio/CASE.md) | [Apache-2.0](autonomous-driving/alpamayo-web-studio/LICENSE) |
 | [CAN Lab](autonomous-driving/canlab/) | DBC 浏览、确定性 CAN 回放、可追溯解码与健康分析 | Verified showcase | [README](autonomous-driving/canlab/README.md) | [CASE](autonomous-driving/canlab/CASE.md) | [Apache-2.0](LICENSE) + fixture notices |
 | [Sensor Workbench](autonomous-driving/sensor-workbench/) | nuScenes/OpenLane 多模态浏览、坐标投影与标注审核 | Product snapshot | [README](autonomous-driving/sensor-workbench/README.md) | [CASE](autonomous-driving/sensor-workbench/CASE.md) | [Apache-2.0](autonomous-driving/sensor-workbench/LICENSE) |
@@ -34,8 +35,10 @@
 
 ## 参考项目与第三方材料
 
-- [MetaDrive](https://github.com/metadriverse/metadrive) 是 ScenarioForge 使用的外部
-  仿真运行时，也为其场景仿真设计提供参考。本仓库不打包 MetaDrive 源码和资产归档。
+- [MetaDrive](https://github.com/metadriverse/metadrive) 是 ScenarioForge 案例使用的外部
+  仿真运行时，也为其场景仿真设计提供参考；ScenarioForge v2 还可选使用
+  [SMARTS](https://github.com/huawei-noah/SMARTS) 与 Eclipse SUMO。本仓库不打包这些
+  上游项目的源码归档。
 - [openDBC](https://github.com/commaai/opendbc) 和
   [cantools](https://github.com/cantools/cantools) 为 CAN Lab 提供经过版本锁定并保留
   原始许可声明的 DBC 测试语料。

@@ -1,0 +1,25 @@
+{
+  "schema_version": "scenarioforge.capability-descriptor/v1",
+  "backend_id": "metadrive",
+  "backend_version": "0.4.3",
+  "adapter_id": "scenarioforge.metadrive",
+  "adapter_version": "1.0.0",
+  "compiler_version": "1.0.0",
+  "supported_capabilities": [
+    "constraints.horizon-collision",
+    "coordinate.right-handed-x-forward-y-left",
+    "event.tick-brake",
+    "participant.ego",
+    "participant.social-vehicle",
+    "policy.constant-lane.v1",
+    "road.lanes.2",
+    "road.straight",
+    "units.si-tick"
+  ],
+  "extension_contracts": {
+    "metadrive": {
+      "schema_version": "scenarioforge.metadrive-extension/v1",
+      "allowed_fields": []
+    }
+  }
+}

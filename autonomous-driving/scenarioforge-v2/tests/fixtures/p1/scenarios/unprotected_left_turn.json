@@ -1,0 +1,38 @@
+{
+  "schema_version": "scenarioforge.authoring/v1",
+  "title": "Unprotected left turn",
+  "description": "Ego yields to a controlled oncoming vehicle before committing a right-hand-traffic left turn; another social vehicle remains observable.",
+  "seed": 43,
+  "road": {
+    "topology_kind": "intersection",
+    "coordinate_system": "right-handed-x-forward-y-left",
+    "units": {"distance": "m", "speed": "m/s", "heading": "deg", "time": "s"},
+    "lanes": [
+      {"id": "west-approach", "kind": "travel", "length_m": 70.0, "width_m": 3.5, "speed_limit_mps": 15.0, "centerline": [{"x_m": -70.0, "y_m": -1.75}, {"x_m": 0.0, "y_m": -1.75}], "predecessor_lane_ids": [], "successor_lane_ids": ["left-turn"]},
+      {"id": "left-turn", "kind": "turn", "length_m": 12.0, "width_m": 3.5, "speed_limit_mps": 8.0, "centerline": [{"x_m": 0.0, "y_m": -1.75}, {"x_m": 1.75, "y_m": 0.0}, {"x_m": 1.75, "y_m": 10.0}], "predecessor_lane_ids": ["west-approach"], "successor_lane_ids": ["north-exit"]},
+      {"id": "north-exit", "kind": "travel", "length_m": 60.0, "width_m": 3.5, "speed_limit_mps": 15.0, "centerline": [{"x_m": 1.75, "y_m": 10.0}, {"x_m": 1.75, "y_m": 70.0}], "predecessor_lane_ids": ["left-turn"], "successor_lane_ids": []},
+      {"id": "east-oncoming", "kind": "travel", "length_m": 140.0, "width_m": 3.5, "speed_limit_mps": 15.0, "centerline": [{"x_m": 70.0, "y_m": 1.75}, {"x_m": -70.0, "y_m": 1.75}], "predecessor_lane_ids": [], "successor_lane_ids": []}
+    ],
+    "conflict_zones": [{"id": "left-turn-conflict", "lane_ids": ["left-turn", "east-oncoming"], "polygon": [{"x_m": -3.0, "y_m": -3.0}, {"x_m": 4.0, "y_m": -3.0}, {"x_m": 4.0, "y_m": 5.0}, {"x_m": -3.0, "y_m": 5.0}]}]
+  },
+  "routes": [
+    {"id": "ego-route", "kind": "vehicle", "lane_ids": ["west-approach", "left-turn", "north-exit"], "goal": {"lane_id": "north-exit", "longitudinal_m": 50.0}},
+    {"id": "oncoming-route", "kind": "vehicle", "lane_ids": ["east-oncoming"], "goal": {"lane_id": "east-oncoming", "longitudinal_m": 130.0}},
+    {"id": "traffic-route", "kind": "vehicle", "lane_ids": ["east-oncoming"], "goal": {"lane_id": "east-oncoming", "longitudinal_m": 135.0}}
+  ],
+  "actors": [
+    {"id": "ego", "kind": "vehicle", "role": "ego", "dimensions": {"length_m": 4.8, "width_m": 1.9, "height_m": 1.6}, "spawn": {"lane_id": "west-approach", "longitudinal_m": 15.0, "lateral_m": 0.0, "speed_mps": 8.0, "heading_deg": 0.0}, "route_id": "ego-route", "behavior": {"profile": "deterministic"}},
+    {"id": "oncoming", "kind": "vehicle", "role": "social", "dimensions": {"length_m": 4.7, "width_m": 1.9, "height_m": 1.6}, "spawn": {"lane_id": "east-oncoming", "longitudinal_m": 20.0, "lateral_m": 0.0, "speed_mps": 12.0, "heading_deg": 180.0}, "route_id": "oncoming-route", "behavior": {"profile": "deterministic"}},
+    {"id": "traffic", "kind": "vehicle", "role": "social", "dimensions": {"length_m": 4.5, "width_m": 1.8, "height_m": 1.5}, "spawn": {"lane_id": "east-oncoming", "longitudinal_m": 65.0, "lateral_m": 0.0, "speed_mps": 10.0, "heading_deg": 180.0}, "route_id": "traffic-route", "behavior": {"profile": "normal"}}
+  ],
+  "static_obstacles": [],
+  "environment": {"weather": "clear", "time_of_day": "day", "road_surface": "dry", "visibility_m": 500.0},
+  "events": [
+    {"id": "ego-yields", "sequence": 0, "actor_id": "ego", "trigger": {"kind": "simulation_time", "time_s": 1.0}, "action": {"kind": "vehicle_control", "throttle_brake": -0.8, "steering": 0.0}},
+    {"id": "ego-commits-left", "sequence": 1, "actor_id": "ego", "trigger": {"kind": "simulation_time", "time_s": 3.0}, "action": {"kind": "vehicle_control", "throttle_brake": 0.5, "steering": 0.45}}
+  ],
+  "constraints": {"duration_s": 20.0, "collision_is_failure": true, "success_conditions": [{"id": "ego-arrives", "kind": "route_completed", "actor_ids": ["ego"], "route_id": "ego-route", "threshold": null}], "failure_conditions": [{"id": "turn-collision", "kind": "collision", "actor_ids": ["ego", "oncoming"], "route_id": null, "threshold": null}], "safety": {"minimum_separation_m": 1.0, "max_deceleration_mps2": 10.0}},
+  "parameters": [],
+  "policy": {"id": "scenarioforge.deterministic-control", "version": "2.0.0", "config": {"target_speed_mps": 8.0}},
+  "required_capabilities": ["actor.vehicle", "event.time-trigger", "road.intersection", "route.stable-id"]
+}

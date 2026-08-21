@@ -1,0 +1,6 @@
+<nodes>
+  <node id="west" x="0" y="0" type="dead_end"/>
+  <node id="merge" x="120" y="0" type="priority"/>
+  <node id="east" x="300" y="0" type="dead_end"/>
+  <node id="ramp-start" x="20" y="-35" type="dead_end"/>
+</nodes>

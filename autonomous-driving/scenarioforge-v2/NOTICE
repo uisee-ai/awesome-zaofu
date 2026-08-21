@@ -1,0 +1,9 @@
+ScenarioForge v2
+Copyright 2026 ScenarioForge contributors
+
+This product includes software developed by the three.js authors and road-network
+files generated for Eclipse SUMO. Their applicable notices and license boundaries
+are documented in THIRD_PARTY_NOTICES.md.
+
+MetaDrive and SMARTS are external runtime dependencies installed by the user. They
+are not bundled as source code in this directory.

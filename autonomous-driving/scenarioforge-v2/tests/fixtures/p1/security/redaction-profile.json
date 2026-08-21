@@ -1,0 +1,22 @@
+{
+  "schema_version": "scenarioforge.redaction-profile/v1",
+  "replacement": "<redacted>",
+  "forbidden_key_fragments": [
+    "secret",
+    "token",
+    "cookie",
+    "authorization",
+    "password",
+    "environment_value",
+    "file_content"
+  ],
+  "encoded_forms": ["raw", "url", "base64", "hex"],
+  "absolute_path_strategy": {
+    "project_descendant": "project-relative",
+    "other": "<redacted-path>"
+  },
+  "counterfactual": {
+    "redaction_enabled": false,
+    "expected_gate_result": "blocked"
+  }
+}

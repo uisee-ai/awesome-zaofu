@@ -1,0 +1,6 @@
+{
+  "schema_version": "scenarioforge.counterfactual/v1",
+  "counterfactual_id": "cancel-lead-brake",
+  "kind": "cancel_braking",
+  "expected_change": "key_event"
+}

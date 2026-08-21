@@ -1,0 +1,29 @@
+{
+  "schema_version": "scenarioforge.p1.asset-identities/v1",
+  "assets": [
+    {
+      "asset_id": "smarts-distribution",
+      "distribution": "smarts",
+      "version": "2.0.1",
+      "identity_source": "distribution_metadata"
+    },
+    {
+      "asset_id": "sumo-binary-bundle",
+      "distribution": "eclipse-sumo",
+      "version": "1.19.0",
+      "identity_source": "distribution_metadata"
+    },
+    {
+      "asset_id": "metadrive-assets",
+      "distribution": "metadrive-simulator",
+      "version": "0.4.3",
+      "identity_source": "metadrive/assets/version.txt"
+    },
+    {
+      "asset_id": "chromium-runtime",
+      "distribution": "playwright",
+      "version": "1.61.0",
+      "identity_source": "distribution_metadata"
+    }
+  ]
+}

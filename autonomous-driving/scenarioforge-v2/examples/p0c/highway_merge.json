@@ -1,0 +1,467 @@
+{
+  "schema_version": "scenarioforge.scenario/v2",
+  "scenario_id": "highway_merge",
+  "seed": 37,
+  "road": {
+    "schema_version": "scenarioforge.topology/v2",
+    "topology_kind": "ramp_merge",
+    "map_block_sequence": "S",
+    "lane_width_m": 3.5,
+    "coordinate_system": "right-handed-x-forward-y-left",
+    "units": {
+      "distance": "m",
+      "speed": "m/s",
+      "heading": "deg",
+      "time": "tick"
+    },
+    "lanes": [
+      {
+        "id": "ramp-merge",
+        "road_id": "entrance-ramp",
+        "engine_lane_index": {
+          "start_node": ">>",
+          "end_node": ">>>",
+          "lane_index": 0
+        },
+        "kind": "ramp",
+        "length_m": 180.0,
+        "predecessor_lane_ids": [],
+        "successor_lane_ids": [
+          "merged-lane"
+        ]
+      },
+      {
+        "id": "merged-lane",
+        "road_id": "mainline",
+        "engine_lane_index": {
+          "start_node": ">>",
+          "end_node": ">>>",
+          "lane_index": 1
+        },
+        "kind": "merge",
+        "length_m": 180.0,
+        "predecessor_lane_ids": [
+          "ramp-merge"
+        ],
+        "successor_lane_ids": []
+      },
+      {
+        "id": "mainline-wrong-lane",
+        "road_id": "opposing-mainline",
+        "engine_lane_index": {
+          "start_node": "->>>",
+          "end_node": "->>",
+          "lane_index": 0
+        },
+        "kind": "travel",
+        "length_m": 180.0,
+        "predecessor_lane_ids": [],
+        "successor_lane_ids": []
+      }
+    ],
+    "conflict_zones": [
+      {
+        "id": "ramp-conflict",
+        "lane_ids": [
+          "ramp-merge",
+          "merged-lane"
+        ],
+        "start_m": 35.0,
+        "end_m": 80.0
+      }
+    ]
+  },
+  "participants": [
+    {
+      "id": "ego",
+      "role": "ego",
+      "actor_type": "vehicle",
+      "spawn": {
+        "schema_version": "scenarioforge.actor-spawn/v2",
+        "lane_id": "ramp-merge",
+        "longitudinal_m": 15.0,
+        "lateral_m": 0.0,
+        "speed_mps": 20.0,
+        "heading_deg": 0.0
+      },
+      "route": {
+        "schema_version": "scenarioforge.route/v2",
+        "id": "ego-ramp-merge",
+        "lane_ids": [
+          "ramp-merge",
+          "merged-lane"
+        ],
+        "goal": {
+          "lane_id": "merged-lane",
+          "longitudinal_m": 60.0
+        }
+      }
+    },
+    {
+      "id": "front",
+      "role": "social",
+      "actor_type": "vehicle",
+      "spawn": {
+        "schema_version": "scenarioforge.actor-spawn/v2",
+        "lane_id": "merged-lane",
+        "longitudinal_m": 100.0,
+        "lateral_m": 0.0,
+        "speed_mps": 23.0,
+        "heading_deg": 0.0
+      },
+      "route": {
+        "schema_version": "scenarioforge.route/v2",
+        "id": "front-mainline",
+        "lane_ids": [
+          "merged-lane"
+        ],
+        "goal": {
+          "lane_id": "merged-lane",
+          "longitudinal_m": 160.0
+        }
+      }
+    },
+    {
+      "id": "rear",
+      "role": "social",
+      "actor_type": "vehicle",
+      "spawn": {
+        "schema_version": "scenarioforge.actor-spawn/v2",
+        "lane_id": "merged-lane",
+        "longitudinal_m": 0.0,
+        "lateral_m": 0.0,
+        "speed_mps": 18.0,
+        "heading_deg": 0.0
+      },
+      "route": {
+        "schema_version": "scenarioforge.route/v2",
+        "id": "rear-mainline",
+        "lane_ids": [
+          "merged-lane"
+        ],
+        "goal": {
+          "lane_id": "merged-lane",
+          "longitudinal_m": 160.0
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "initial_gap_m": 20.0,
+    "vehicle_speed_mps": 21.0,
+    "brake_tick": 4,
+    "brake_intensity": 0.7
+  },
+  "events": [
+    {
+      "id": "gap-selected",
+      "sequence": 0,
+      "type": "control_override",
+      "participant_id": "ego",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 5
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.1
+      }
+    },
+    {
+      "id": "gap-merge-control-2",
+      "sequence": 1,
+      "type": "control_override",
+      "participant_id": "ego",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 6
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.1
+      }
+    },
+    {
+      "id": "gap-merge-control-3",
+      "sequence": 2,
+      "type": "control_override",
+      "participant_id": "ego",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 7
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.1
+      }
+    },
+    {
+      "id": "gap-merge-control-4",
+      "sequence": 3,
+      "type": "control_override",
+      "participant_id": "ego",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 8
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.1
+      }
+    },
+    {
+      "id": "gap-merge-control-5",
+      "sequence": 4,
+      "type": "control_override",
+      "participant_id": "ego",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 9
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.1
+      }
+    },
+    {
+      "id": "gap-merge-control-6",
+      "sequence": 5,
+      "type": "control_override",
+      "participant_id": "ego",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 10
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.1
+      }
+    },
+    {
+      "id": "gap-merge-control-7",
+      "sequence": 6,
+      "type": "control_override",
+      "participant_id": "ego",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 11
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": -1.0,
+        "throttle_brake": 0.1
+      }
+    }
+  ],
+  "constraints": {
+    "schema_version": "scenarioforge.outcome-contract/v2",
+    "max_steps": 120,
+    "duration_s": 12.0,
+    "collision_is_failure": true,
+    "target_outcome": "safe_pass",
+    "success_predicates": [
+      {
+        "id": "merge-completed",
+        "kind": "merge_completed",
+        "participant_ids": [
+          "ego"
+        ],
+        "lane_ids": [
+          "merged-lane"
+        ]
+      }
+    ],
+    "failure_predicates": [
+      {
+        "id": "collision-observed",
+        "kind": "collision",
+        "participant_ids": [
+          "ego",
+          "front",
+          "rear"
+        ],
+        "lane_ids": []
+      },
+      {
+        "id": "ego-route-departure",
+        "kind": "boundary_violation",
+        "participant_ids": [
+          "ego"
+        ],
+        "lane_ids": []
+      },
+      {
+        "id": "wrong-mainline-lane-entered",
+        "kind": "wrong_lane",
+        "participant_ids": [
+          "ego"
+        ],
+        "lane_ids": [
+          "mainline-wrong-lane"
+        ]
+      },
+      {
+        "id": "merge-timeout",
+        "kind": "timeout",
+        "participant_ids": [
+          "ego"
+        ],
+        "lane_ids": []
+      }
+    ],
+    "expected_events": [
+      "gap-selected",
+      "gap-merge-control-2",
+      "gap-merge-control-3",
+      "gap-merge-control-4",
+      "gap-merge-control-5",
+      "gap-merge-control-6",
+      "gap-merge-control-7"
+    ],
+    "metric_definitions": [
+      {
+        "definition_id": "scenarioforge.metric.collision/v2",
+        "metric": "collision",
+        "unit": "boolean",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "front",
+            "rear"
+          ],
+          "topology_kinds": [
+            "ramp_merge"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "not_applicable",
+        "evidence_field": "collision"
+      },
+      {
+        "definition_id": "scenarioforge.metric.hard-braking/v2",
+        "metric": "hard_braking",
+        "unit": "m/s^2",
+        "applies_to": {
+          "participant_ids": [
+            "ego"
+          ],
+          "topology_kinds": [
+            "ramp_merge"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "threshold_pending_calibration",
+        "evidence_field": "minimum_acceleration_mps2"
+      },
+      {
+        "definition_id": "scenarioforge.metric.minimum-ttc/v2",
+        "metric": "minimum_ttc",
+        "unit": "s",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "front",
+            "rear"
+          ],
+          "topology_kinds": [
+            "ramp_merge"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "no_closing_pair",
+        "evidence_field": "min_ttc_s"
+      },
+      {
+        "definition_id": "scenarioforge.metric.completion-time/v2",
+        "metric": "completion_time",
+        "unit": "s",
+        "applies_to": {
+          "participant_ids": [
+            "ego"
+          ],
+          "topology_kinds": [
+            "ramp_merge"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "execution_incomplete",
+        "evidence_field": "completion_time_s"
+      },
+      {
+        "definition_id": "scenarioforge.metric.termination-reason/v2",
+        "metric": "termination_reason",
+        "unit": "category",
+        "applies_to": {
+          "participant_ids": [],
+          "topology_kinds": [
+            "ramp_merge"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "never_null_for_terminal_run",
+        "evidence_field": "termination_reason"
+      }
+    ]
+  },
+  "policy": {
+    "schema_version": "scenarioforge.deterministic-policy/v2",
+    "id": "scenarioforge.deterministic-control",
+    "version": "2.0.0",
+    "determinism": {
+      "fixed_seed_required": true,
+      "decision_order": "participant_order",
+      "floating_point_contract": "backend_bound"
+    },
+    "config": {
+      "default_action": {
+        "steering": 0.0,
+        "throttle_brake": 0.0
+      },
+      "participant_actions": [
+        {
+          "participant_id": "ego",
+          "steering": 0.0,
+          "throttle_brake": 0.1
+        },
+        {
+          "participant_id": "front",
+          "steering": 0.0,
+          "throttle_brake": 0.05
+        },
+        {
+          "participant_id": "rear",
+          "steering": 0.0,
+          "throttle_brake": 0.05
+        }
+      ]
+    }
+  },
+  "required_capabilities": [
+    "topology.versioned.v2",
+    "lane.stable-id.v2",
+    "route.stable-id.v2",
+    "actor.spawn.v2",
+    "trigger.tick.v2",
+    "policy.deterministic.v2",
+    "event.ordered.v2",
+    "metric.definition.v2",
+    "terminal.dual-axis.v2"
+  ],
+  "backend_extensions": {
+    "schema_version": "scenarioforge.backend-extensions/v2",
+    "extensions": {}
+  }
+}

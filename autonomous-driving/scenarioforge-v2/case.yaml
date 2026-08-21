@@ -1,0 +1,41 @@
+schema_version: awesome-zaofu.case.v1
+id: autonomous-driving/scenarioforge-v2
+name: ScenarioForge v2
+domain: autonomous-driving
+category: scenario-authoring-and-simulation
+maturity: product-snapshot
+source:
+  ref: scenarioforge-continuation
+  commit: 6d90539735602f7cfda865fa85a48099ea689fb1
+  packaging: source-only-git-archive
+workflows:
+  - prd
+  - issue
+tags:
+  - python
+  - metadrive
+  - smarts
+  - sumo
+  - scenario-authoring
+  - multi-agent
+  - threejs
+  - browser-e2e
+  - deterministic-replay
+verification:
+  dependency_lock: passed
+  python_contract_tests: 157-passed
+  web_smoke: chromium-passed-10-templates
+  full_real_backend_matrix: resource-constrained-not-claimed
+  license_boundary: reviewed
+generated_outputs_excluded:
+  - .zf-*
+  - .codex
+  - .scenarioforge-runs
+  - artifacts
+  - diagnostics
+  - docs/intake
+  - test-results
+  - playwright-report
+  - browser-traces-and-videos
+license: Apache-2.0-for-original-content; third-party-terms-retained
+safety: local-research-and-evaluation-only; no-vehicle-control

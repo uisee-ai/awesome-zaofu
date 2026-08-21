@@ -1,0 +1,8 @@
+<connections>
+  <connection from="west-in" to="east-out" fromLane="0" toLane="0"/>
+  <connection from="west-in" to="north-out" fromLane="0" toLane="0"/>
+  <connection from="east-in" to="west-out" fromLane="0" toLane="0"/>
+  <connection from="north-in" to="south-out" fromLane="0" toLane="0"/>
+  <connection from="south-in" to="north-out" fromLane="0" toLane="0"/>
+  <connection from="crosswalk-in" to="crosswalk-out" fromLane="0" toLane="0"/>
+</connections>

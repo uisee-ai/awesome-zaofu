@@ -1,0 +1,411 @@
+{
+  "schema_version": "scenarioforge.scenario/v2",
+  "scenario_id": "unprotected_left_turn",
+  "seed": 43,
+  "road": {
+    "schema_version": "scenarioforge.topology/v2",
+    "topology_kind": "intersection",
+    "map_block_sequence": "X",
+    "lane_width_m": 3.5,
+    "coordinate_system": "right-handed-x-forward-y-left",
+    "units": {
+      "distance": "m",
+      "speed": "m/s",
+      "heading": "deg",
+      "time": "tick"
+    },
+    "lanes": [
+      {
+        "id": "ego-inbound",
+        "road_id": "west-approach",
+        "engine_lane_index": {
+          "start_node": ">>",
+          "end_node": ">>>",
+          "lane_index": 0
+        },
+        "kind": "travel",
+        "length_m": 70.0,
+        "predecessor_lane_ids": [],
+        "successor_lane_ids": [
+          "ego-left-turn"
+        ]
+      },
+      {
+        "id": "ego-left-turn",
+        "road_id": "intersection",
+        "engine_lane_index": {
+          "start_node": ">>>",
+          "end_node": "1X2_0_",
+          "lane_index": 0
+        },
+        "kind": "turn",
+        "length_m": 22.0,
+        "predecessor_lane_ids": [
+          "ego-inbound"
+        ],
+        "successor_lane_ids": [
+          "ego-exit"
+        ]
+      },
+      {
+        "id": "ego-exit",
+        "road_id": "north-exit",
+        "engine_lane_index": {
+          "start_node": "1X2_0_",
+          "end_node": "1X2_1_",
+          "lane_index": 0
+        },
+        "kind": "travel",
+        "length_m": 35.0,
+        "predecessor_lane_ids": [
+          "ego-left-turn"
+        ],
+        "successor_lane_ids": []
+      },
+      {
+        "id": "oncoming-inbound",
+        "road_id": "east-approach",
+        "engine_lane_index": {
+          "start_node": "-1X1_1_",
+          "end_node": "-1X1_0_",
+          "lane_index": 0
+        },
+        "kind": "travel",
+        "length_m": 35.0,
+        "predecessor_lane_ids": [],
+        "successor_lane_ids": [
+          "oncoming-through"
+        ]
+      },
+      {
+        "id": "oncoming-through",
+        "road_id": "intersection",
+        "engine_lane_index": {
+          "start_node": "-1X1_0_",
+          "end_node": "->>>",
+          "lane_index": 0
+        },
+        "kind": "travel",
+        "length_m": 24.0,
+        "predecessor_lane_ids": [
+          "oncoming-inbound"
+        ],
+        "successor_lane_ids": [
+          "oncoming-exit"
+        ]
+      },
+      {
+        "id": "oncoming-exit",
+        "road_id": "west-exit",
+        "engine_lane_index": {
+          "start_node": "->>>",
+          "end_node": "->>",
+          "lane_index": 0
+        },
+        "kind": "travel",
+        "length_m": 70.0,
+        "predecessor_lane_ids": [
+          "oncoming-through"
+        ],
+        "successor_lane_ids": []
+      }
+    ],
+    "conflict_zones": [
+      {
+        "id": "left-turn-conflict",
+        "lane_ids": [
+          "ego-left-turn",
+          "oncoming-through"
+        ],
+        "start_m": 0.0,
+        "end_m": 20.0
+      }
+    ]
+  },
+  "participants": [
+    {
+      "id": "ego",
+      "role": "ego",
+      "actor_type": "vehicle",
+      "spawn": {
+        "schema_version": "scenarioforge.actor-spawn/v2",
+        "lane_id": "ego-inbound",
+        "longitudinal_m": 10.0,
+        "lateral_m": 0.0,
+        "speed_mps": 8.0,
+        "heading_deg": 0.0
+      },
+      "route": {
+        "schema_version": "scenarioforge.route/v2",
+        "id": "ego-left-turn-route",
+        "lane_ids": [
+          "ego-inbound",
+          "ego-left-turn",
+          "ego-exit"
+        ],
+        "goal": {
+          "lane_id": "ego-exit",
+          "longitudinal_m": 20.0
+        }
+      }
+    },
+    {
+      "id": "oncoming",
+      "role": "social",
+      "actor_type": "vehicle",
+      "spawn": {
+        "schema_version": "scenarioforge.actor-spawn/v2",
+        "lane_id": "oncoming-inbound",
+        "longitudinal_m": 5.0,
+        "lateral_m": 0.0,
+        "speed_mps": 14.0,
+        "heading_deg": 180.0
+      },
+      "route": {
+        "schema_version": "scenarioforge.route/v2",
+        "id": "oncoming-through-route",
+        "lane_ids": [
+          "oncoming-inbound",
+          "oncoming-through",
+          "oncoming-exit"
+        ],
+        "goal": {
+          "lane_id": "oncoming-exit",
+          "longitudinal_m": 20.0
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "initial_gap_m": 20.0,
+    "vehicle_speed_mps": 21.0,
+    "brake_tick": 4,
+    "brake_intensity": 0.7
+  },
+  "events": [
+    {
+      "id": "yield-started",
+      "sequence": 0,
+      "type": "control_override",
+      "participant_id": "ego",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 20
+      },
+      "duration_ticks": 19,
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": 0.0,
+        "throttle_brake": -1.0
+      }
+    },
+    {
+      "id": "left-turn-committed",
+      "sequence": 1,
+      "type": "control_override",
+      "participant_id": "ego",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 39
+      },
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": 0.0,
+        "throttle_brake": 0.5
+      }
+    }
+  ],
+  "constraints": {
+    "schema_version": "scenarioforge.outcome-contract/v2",
+    "max_steps": 180,
+    "duration_s": 18.0,
+    "collision_is_failure": true,
+    "target_outcome": "near_miss",
+    "success_predicates": [
+      {
+        "id": "yield-completed",
+        "kind": "yield_completed",
+        "participant_ids": [
+          "ego"
+        ],
+        "lane_ids": [
+          "ego-exit"
+        ]
+      }
+    ],
+    "failure_predicates": [
+      {
+        "id": "collision-observed",
+        "kind": "collision",
+        "participant_ids": [
+          "ego",
+          "oncoming"
+        ],
+        "lane_ids": []
+      },
+      {
+        "id": "ego-boundary-violation",
+        "kind": "boundary_violation",
+        "participant_ids": [
+          "ego"
+        ],
+        "lane_ids": []
+      },
+      {
+        "id": "wrong-route",
+        "kind": "wrong_lane",
+        "participant_ids": [
+          "ego"
+        ],
+        "lane_ids": [
+          "oncoming-through"
+        ]
+      },
+      {
+        "id": "turn-timeout",
+        "kind": "timeout",
+        "participant_ids": [
+          "ego"
+        ],
+        "lane_ids": []
+      }
+    ],
+    "expected_events": [
+      "yield-started",
+      "left-turn-committed"
+    ],
+    "metric_definitions": [
+      {
+        "definition_id": "scenarioforge.metric.collision/v2",
+        "metric": "collision",
+        "unit": "boolean",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "oncoming"
+          ],
+          "topology_kinds": [
+            "intersection"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "not_applicable",
+        "evidence_field": "collision"
+      },
+      {
+        "definition_id": "scenarioforge.metric.hard-braking/v2",
+        "metric": "hard_braking",
+        "unit": "m/s^2",
+        "applies_to": {
+          "participant_ids": [
+            "ego"
+          ],
+          "topology_kinds": [
+            "intersection"
+          ]
+        },
+        "threshold": {
+          "operator": "lte",
+          "value": -1.0
+        },
+        "null_semantics": "threshold_pending_calibration",
+        "evidence_field": "minimum_acceleration_mps2"
+      },
+      {
+        "definition_id": "scenarioforge.metric.minimum-ttc/v2",
+        "metric": "minimum_ttc",
+        "unit": "s",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "oncoming"
+          ],
+          "topology_kinds": [
+            "intersection"
+          ]
+        },
+        "threshold": {
+          "operator": "lte",
+          "value": 3.0
+        },
+        "null_semantics": "no_closing_pair",
+        "evidence_field": "min_ttc_s"
+      },
+      {
+        "definition_id": "scenarioforge.metric.completion-time/v2",
+        "metric": "completion_time",
+        "unit": "s",
+        "applies_to": {
+          "participant_ids": [
+            "ego"
+          ],
+          "topology_kinds": [
+            "intersection"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "execution_incomplete",
+        "evidence_field": "completion_time_s"
+      },
+      {
+        "definition_id": "scenarioforge.metric.termination-reason/v2",
+        "metric": "termination_reason",
+        "unit": "category",
+        "applies_to": {
+          "participant_ids": [],
+          "topology_kinds": [
+            "intersection"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "never_null_for_terminal_run",
+        "evidence_field": "termination_reason"
+      }
+    ]
+  },
+  "policy": {
+    "schema_version": "scenarioforge.deterministic-policy/v2",
+    "id": "scenarioforge.deterministic-control",
+    "version": "2.0.0",
+    "determinism": {
+      "fixed_seed_required": true,
+      "decision_order": "participant_order",
+      "floating_point_contract": "backend_bound"
+    },
+    "config": {
+      "default_action": {
+        "steering": 0.0,
+        "throttle_brake": 0.0
+      },
+      "participant_actions": [
+        {
+          "participant_id": "ego",
+          "steering": 0.0,
+          "throttle_brake": 0.5
+        },
+        {
+          "participant_id": "oncoming",
+          "steering": 0.0,
+          "throttle_brake": 0.15
+        }
+      ]
+    }
+  },
+  "required_capabilities": [
+    "topology.versioned.v2",
+    "lane.stable-id.v2",
+    "route.stable-id.v2",
+    "actor.spawn.v2",
+    "trigger.tick.v2",
+    "policy.deterministic.v2",
+    "event.ordered.v2",
+    "metric.definition.v2",
+    "terminal.dual-axis.v2"
+  ],
+  "backend_extensions": {
+    "schema_version": "scenarioforge.backend-extensions/v2",
+    "extensions": {}
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": "scenarioforge.p0c-security-matrix/v1",
+  "categories": [
+    "unknown_ids",
+    "traversal",
+    "absolute_paths",
+    "urls",
+    "symlinks",
+    "special_files",
+    "oversize",
+    "nan_inf",
+    "participant_mismatch",
+    "tick_gaps",
+    "xss",
+    "partial",
+    "digest_tampering"
+  ],
+  "policy": "all cases fail closed without host-path or payload disclosure"
+}

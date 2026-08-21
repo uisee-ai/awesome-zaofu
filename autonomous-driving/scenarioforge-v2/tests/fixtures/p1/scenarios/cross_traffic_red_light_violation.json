@@ -1,0 +1,33 @@
+{
+  "schema_version": "scenarioforge.authoring/v1",
+  "title": "Cross-traffic red-light violation",
+  "description": "A controlled cross-traffic vehicle enters a signalized conflict zone against red while ego and a social vehicle approach legally.",
+  "seed": 41,
+  "road": {
+    "topology_kind": "intersection",
+    "coordinate_system": "right-handed-x-forward-y-left",
+    "units": {"distance": "m", "speed": "m/s", "heading": "deg", "time": "s"},
+    "lanes": [
+      {"id": "eastbound", "kind": "travel", "length_m": 160.0, "width_m": 3.5, "speed_limit_mps": 16.0, "centerline": [{"x_m": -80.0, "y_m": -1.75}, {"x_m": 80.0, "y_m": -1.75}], "predecessor_lane_ids": [], "successor_lane_ids": []},
+      {"id": "southbound", "kind": "travel", "length_m": 160.0, "width_m": 3.5, "speed_limit_mps": 16.0, "centerline": [{"x_m": 1.75, "y_m": 80.0}, {"x_m": 1.75, "y_m": -80.0}], "predecessor_lane_ids": [], "successor_lane_ids": []}
+    ],
+    "conflict_zones": [{"id": "intersection-conflict", "lane_ids": ["eastbound", "southbound"], "polygon": [{"x_m": -4.0, "y_m": -4.0}, {"x_m": 4.0, "y_m": -4.0}, {"x_m": 4.0, "y_m": 4.0}, {"x_m": -4.0, "y_m": 4.0}]}]
+  },
+  "routes": [
+    {"id": "ego-route", "kind": "vehicle", "lane_ids": ["eastbound"], "goal": {"lane_id": "eastbound", "longitudinal_m": 150.0}},
+    {"id": "violator-route", "kind": "vehicle", "lane_ids": ["southbound"], "goal": {"lane_id": "southbound", "longitudinal_m": 150.0}},
+    {"id": "traffic-route", "kind": "vehicle", "lane_ids": ["eastbound"], "goal": {"lane_id": "eastbound", "longitudinal_m": 155.0}}
+  ],
+  "actors": [
+    {"id": "ego", "kind": "vehicle", "role": "ego", "dimensions": {"length_m": 4.8, "width_m": 1.9, "height_m": 1.6}, "spawn": {"lane_id": "eastbound", "longitudinal_m": 25.0, "lateral_m": 0.0, "speed_mps": 12.0, "heading_deg": 0.0}, "route_id": "ego-route", "behavior": {"profile": "deterministic"}},
+    {"id": "violator", "kind": "vehicle", "role": "social", "dimensions": {"length_m": 4.7, "width_m": 1.9, "height_m": 1.6}, "spawn": {"lane_id": "southbound", "longitudinal_m": 35.0, "lateral_m": 0.0, "speed_mps": 13.0, "heading_deg": -90.0}, "route_id": "violator-route", "behavior": {"profile": "aggressive"}},
+    {"id": "traffic", "kind": "vehicle", "role": "social", "dimensions": {"length_m": 4.5, "width_m": 1.8, "height_m": 1.5}, "spawn": {"lane_id": "eastbound", "longitudinal_m": 5.0, "lateral_m": 0.0, "speed_mps": 10.0, "heading_deg": 0.0}, "route_id": "traffic-route", "behavior": {"profile": "normal"}}
+  ],
+  "static_obstacles": [],
+  "environment": {"weather": "clear", "time_of_day": "day", "road_surface": "dry", "visibility_m": 500.0},
+  "events": [{"id": "cross-traffic-runs-red", "sequence": 0, "actor_id": "violator", "trigger": {"kind": "simulation_time", "time_s": 1.5}, "action": {"kind": "vehicle_control", "throttle_brake": 0.8, "steering": 0.0}}],
+  "constraints": {"duration_s": 15.0, "collision_is_failure": true, "success_conditions": [{"id": "ego-arrives", "kind": "route_completed", "actor_ids": ["ego"], "route_id": "ego-route", "threshold": null}], "failure_conditions": [{"id": "cross-traffic-collision", "kind": "collision", "actor_ids": ["ego", "violator"], "route_id": null, "threshold": null}], "safety": {"minimum_separation_m": 1.0, "max_deceleration_mps2": 10.0}},
+  "parameters": [],
+  "policy": {"id": "scenarioforge.deterministic-control", "version": "2.0.0", "config": {"target_speed_mps": 12.0, "signal_phase": "ego-green"}},
+  "required_capabilities": ["actor.vehicle", "event.time-trigger", "road.intersection", "route.stable-id"]
+}

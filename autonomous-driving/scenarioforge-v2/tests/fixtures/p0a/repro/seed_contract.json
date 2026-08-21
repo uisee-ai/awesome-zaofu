@@ -1,0 +1,21 @@
+{
+  "schema_version": "scenarioforge.seed-contract/v1",
+  "fields": [
+    {
+      "path": "$.parameters.initial_gap_m",
+      "choices": [
+        13.0,
+        15.0,
+        17.0
+      ]
+    },
+    {
+      "path": "$.parameters.brake_tick",
+      "choices": [
+        0,
+        1,
+        2
+      ]
+    }
+  ]
+}

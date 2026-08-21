@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes>
+  <vType id="traffic" accel="2.6" decel="4.5" emergencyDecel="4.5" vClass="passenger" speedFactor="1.0" speedDev="0.0" sigma="0.0" minGap="2.5" maxSpeed="15.0" />
+  <route id="oncoming" edges="east-in :center_1 west-out" />
+  <flow id="traffic-once" type="traffic" route="oncoming" departLane="0" departPos="65" departSpeed="10" arrivalLane="0" arrivalPos="80" begin="0" end="0.1" vehsPerHour="36000" />
+</routes>

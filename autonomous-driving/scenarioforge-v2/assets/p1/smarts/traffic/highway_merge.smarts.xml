@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes>
+  <vType id="rear" accel="2.6" decel="4.5" emergencyDecel="4.5" vClass="passenger" speedFactor="1.0" speedDev="0.0" sigma="0.0" minGap="2.5" maxSpeed="30.0" />
+  <vType id="traffic" accel="2.6" decel="4.5" emergencyDecel="4.5" vClass="passenger" speedFactor="1.0" speedDev="0.0" sigma="0.0" minGap="2.5" maxSpeed="30.0" />
+  <route id="mainline" edges="east-in :merge_1 east-out" />
+  <flow id="rear-once" type="rear" route="mainline" departLane="0" departPos="20" departSpeed="20" arrivalLane="0" arrivalPos="170" begin="0" end="0.1" vehsPerHour="36000" />
+  <flow id="traffic-once" type="traffic" route="mainline" departLane="0" departPos="90" departSpeed="21" arrivalLane="0" arrivalPos="175" begin="0" end="0.1" vehsPerHour="36000" />
+</routes>

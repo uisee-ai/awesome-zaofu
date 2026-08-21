@@ -1,0 +1,7 @@
+{
+  "schema_version": "scenarioforge.counterfactual/v1",
+  "counterfactual_id": "increase-lead-gap",
+  "kind": "increase_initial_gap",
+  "initial_gap_m": 100.0,
+  "expected_change": "key_event"
+}

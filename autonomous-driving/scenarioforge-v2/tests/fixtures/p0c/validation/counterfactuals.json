@@ -1,0 +1,50 @@
+{
+  "schema_version": "scenarioforge.p0c-counterfactuals/v1",
+  "counterfactuals": [
+    {
+      "preset_id": "construction_merge",
+      "baseline_source_spec_digest": "1d273fd601a77dc6b6af2281d45f9a25955781181b8cf1405464bc05fc06623a",
+      "baseline_outcome": "safe_pass",
+      "hazard": "lane closure and closed-region continuation",
+      "mutation": "remove_lane_closure",
+      "required_change": "outcome",
+      "acceptable_changes": ["ordered_events", "risk_metrics", "outcome"]
+    },
+    {
+      "preset_id": "highway_merge",
+      "baseline_source_spec_digest": "feb3f96934739fe5f8f3c5918c281387a07363bdaa036239ccd341a5a127ffd8",
+      "baseline_outcome": "safe_pass",
+      "hazard": "mainline front vehicle bounds the selected merge gap",
+      "mutation": "spread_mainline_gap",
+      "required_change": "risk_metrics",
+      "acceptable_changes": ["ordered_events", "risk_metrics", "outcome"]
+    },
+    {
+      "preset_id": "brake_lead",
+      "baseline_source_spec_digest": "776f0ae0d9d43bbda156811bdc55b26538fb7d1527db3fc2790ac6d0229f195a",
+      "baseline_outcome": "near_miss",
+      "hazard": "lead vehicle hard-brake override",
+      "mutation": "cancel_lead_brake",
+      "required_change": "ordered_events",
+      "acceptable_changes": ["ordered_events", "risk_metrics", "outcome"]
+    },
+    {
+      "preset_id": "dangerous_cut_in",
+      "baseline_source_spec_digest": "c68e393488498d4eb4e64afb5900dbd9a204ec2df7b44d974ce4299237146afd",
+      "baseline_outcome": "collision_failure",
+      "hazard": "nearby cutter forced laterally into ego lane",
+      "mutation": "separate_cut_in_vehicle",
+      "required_change": "outcome",
+      "acceptable_changes": ["ordered_events", "risk_metrics", "outcome"]
+    },
+    {
+      "preset_id": "unprotected_left_turn",
+      "baseline_source_spec_digest": "a59adabbfe77306eab858dd38c83e774435e268c15e8f5c779d8c569bc3d0841",
+      "baseline_outcome": "near_miss",
+      "hazard": "oncoming vehicle occupies the crossing conflict window",
+      "mutation": "advance_oncoming_clearance",
+      "required_change": "risk_metrics",
+      "acceptable_changes": ["ordered_events", "risk_metrics", "outcome"]
+    }
+  ]
+}

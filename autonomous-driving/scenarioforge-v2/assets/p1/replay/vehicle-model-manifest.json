@@ -1,0 +1,41 @@
+{
+  "schema_version": "scenarioforge.vehicle-model-manifest/v1",
+  "manifest_version": "1.0.0",
+  "asset": {
+    "asset_id": "scenarioforge.original-sedan",
+    "version": "1.0.0",
+    "resource_ref": "src/scenarioforge/web/static/app.js",
+    "runtime_ref": "app.js",
+    "sha256": "727e32720354eafdbd394f1174aba3f6f954438cc0976ac14bd6a354df703c67",
+    "license": {
+      "spdx_id": "CC0-1.0",
+      "copyright": "Dedicated to the public domain by the ScenarioForge project"
+    },
+    "source": {
+      "kind": "original-project-asset",
+      "name": "ScenarioForge Sedan v1",
+      "source_ref": "repo:Scenario_forge"
+    },
+    "coordinate_system": "right-handed-x-forward-y-up",
+    "local_forward_axis": "+x",
+    "bounding_box_m": {"length": 4.8, "width": 1.9, "height": 1.6},
+    "features": ["front", "rear", "body", "windows", "wheels", "headlights", "brake_lights"]
+  },
+  "canonical_instances": [
+    {"scenario_id": "competitive_lane_change", "participant_id": "challenger", "role": "social", "declared_dimensions_m": {"length": 4.7, "width": 1.9, "height": 1.6}},
+    {"scenario_id": "competitive_lane_change", "participant_id": "ego", "role": "ego", "declared_dimensions_m": {"length": 4.8, "width": 1.9, "height": 1.6}},
+    {"scenario_id": "competitive_lane_change", "participant_id": "traffic", "role": "social", "declared_dimensions_m": {"length": 4.5, "width": 1.8, "height": 1.5}},
+    {"scenario_id": "cross_traffic_red_light_violation", "participant_id": "ego", "role": "ego", "declared_dimensions_m": {"length": 4.8, "width": 1.9, "height": 1.6}},
+    {"scenario_id": "cross_traffic_red_light_violation", "participant_id": "traffic", "role": "social", "declared_dimensions_m": {"length": 4.5, "width": 1.8, "height": 1.5}},
+    {"scenario_id": "cross_traffic_red_light_violation", "participant_id": "violator", "role": "social", "declared_dimensions_m": {"length": 4.7, "width": 1.9, "height": 1.6}},
+    {"scenario_id": "highway_merge", "participant_id": "ego", "role": "ego", "declared_dimensions_m": {"length": 4.8, "width": 1.9, "height": 1.6}},
+    {"scenario_id": "highway_merge", "participant_id": "front", "role": "social", "declared_dimensions_m": {"length": 4.6, "width": 1.8, "height": 1.5}},
+    {"scenario_id": "highway_merge", "participant_id": "rear", "role": "social", "declared_dimensions_m": {"length": 4.6, "width": 1.8, "height": 1.5}},
+    {"scenario_id": "highway_merge", "participant_id": "traffic", "role": "social", "declared_dimensions_m": {"length": 4.5, "width": 1.8, "height": 1.5}},
+    {"scenario_id": "pedestrian_red_light_crossing", "participant_id": "ego", "role": "ego", "declared_dimensions_m": {"length": 4.8, "width": 1.9, "height": 1.6}},
+    {"scenario_id": "pedestrian_red_light_crossing", "participant_id": "traffic", "role": "social", "declared_dimensions_m": {"length": 4.5, "width": 1.8, "height": 1.5}},
+    {"scenario_id": "unprotected_left_turn", "participant_id": "ego", "role": "ego", "declared_dimensions_m": {"length": 4.8, "width": 1.9, "height": 1.6}},
+    {"scenario_id": "unprotected_left_turn", "participant_id": "oncoming", "role": "social", "declared_dimensions_m": {"length": 4.7, "width": 1.9, "height": 1.6}},
+    {"scenario_id": "unprotected_left_turn", "participant_id": "traffic", "role": "social", "declared_dimensions_m": {"length": 4.5, "width": 1.8, "height": 1.5}}
+  ]
+}

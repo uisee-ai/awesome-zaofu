@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<net version="1.16" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+
+    <location netOffset="0.00,35.00" convBoundary="0.00,0.00,300.00,35.00" origBoundary="0.00,-35.00,300.00,0.00" projParameter="!"/>
+
+    <edge id=":merge_0" function="internal">
+        <lane id=":merge_0_0" index="0" speed="27.00" length="17.66" shape="98.47,25.77 101.87,27.16 105.42,28.60 109.73,29.74 115.40,30.20"/>
+    </edge>
+    <edge id=":merge_1" function="internal">
+        <lane id=":merge_1_0" index="0" speed="30.00" length="17.69" shape="97.71,30.20 115.40,30.20"/>
+        <lane id=":merge_1_1" index="1" speed="30.00" length="17.69" shape="97.71,33.40 115.40,33.40"/>
+    </edge>
+
+    <edge id="east-in" from="west" to="merge" priority="2">
+        <lane id="east-in_0" index="0" speed="30.00" length="97.71" shape="0.00,30.20 97.71,30.20"/>
+        <lane id="east-in_1" index="1" speed="30.00" length="97.71" shape="0.00,33.40 97.71,33.40"/>
+    </edge>
+    <edge id="east-out" from="merge" to="east" priority="2">
+        <lane id="east-out_0" index="0" speed="30.00" length="184.60" shape="115.40,30.20 300.00,30.20"/>
+        <lane id="east-out_1" index="1" speed="30.00" length="184.60" shape="115.40,33.40 300.00,33.40"/>
+    </edge>
+    <edge id="ramp" from="ramp-start" to="merge" priority="1">
+        <lane id="ramp_0" index="0" speed="24.00" length="82.57" shape="20.53,-1.51 98.47,25.77"/>
+    </edge>
+
+    <junction id="east" type="dead_end" x="300.00" y="35.00" incLanes="east-out_0 east-out_1" intLanes="" shape="300.00,28.60 300.00,35.00"/>
+    <junction id="merge" type="priority" x="120.00" y="35.00" incLanes="ramp_0 east-in_0 east-in_1" intLanes=":merge_0_0 :merge_1_0 :merge_1_1" shape="115.40,35.00 115.40,28.60 111.80,28.47 109.16,28.10 107.02,27.48 104.92,26.63 102.40,25.55 99.00,24.26 97.94,27.28 97.71,28.60 97.71,35.00">
+        <request index="0" response="110" foes="110" cont="0"/>
+        <request index="1" response="000" foes="001" cont="0"/>
+        <request index="2" response="000" foes="001" cont="0"/>
+    </junction>
+    <junction id="ramp-start" type="dead_end" x="20.00" y="0.00" incLanes="" intLanes="" shape="20.00,-0.00 21.06,-3.02"/>
+    <junction id="west" type="dead_end" x="0.00" y="35.00" incLanes="" intLanes="" shape="0.00,35.00 0.00,28.60"/>
+
+    <connection from="east-in" to="east-out" fromLane="0" toLane="0" via=":merge_1_0" dir="s" state="M"/>
+    <connection from="east-in" to="east-out" fromLane="1" toLane="1" via=":merge_1_1" dir="s" state="M"/>
+    <connection from="ramp" to="east-out" fromLane="0" toLane="0" via=":merge_0_0" dir="s" state="m"/>
+
+    <connection from=":merge_0" to="east-out" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":merge_1" to="east-out" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":merge_1" to="east-out" fromLane="1" toLane="1" dir="s" state="M"/>
+
+</net>

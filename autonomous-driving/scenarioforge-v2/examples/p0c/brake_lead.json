@@ -1,0 +1,311 @@
+{
+  "schema_version": "scenarioforge.scenario/v2",
+  "scenario_id": "brake_lead",
+  "seed": 41,
+  "road": {
+    "schema_version": "scenarioforge.topology/v2",
+    "topology_kind": "straight",
+    "map_block_sequence": "S",
+    "lane_width_m": 3.5,
+    "coordinate_system": "right-handed-x-forward-y-left",
+    "units": {
+      "distance": "m",
+      "speed": "m/s",
+      "heading": "deg",
+      "time": "tick"
+    },
+    "lanes": [
+      {
+        "id": "following-lane",
+        "road_id": "test-corridor",
+        "engine_lane_index": {
+          "start_node": ">>",
+          "end_node": ">>>",
+          "lane_index": 0
+        },
+        "kind": "travel",
+        "length_m": 240.0,
+        "predecessor_lane_ids": [],
+        "successor_lane_ids": []
+      }
+    ],
+    "conflict_zones": []
+  },
+  "participants": [
+    {
+      "id": "ego",
+      "role": "ego",
+      "actor_type": "vehicle",
+      "spawn": {
+        "schema_version": "scenarioforge.actor-spawn/v2",
+        "lane_id": "following-lane",
+        "longitudinal_m": 10.0,
+        "lateral_m": 0.0,
+        "speed_mps": 22.0,
+        "heading_deg": 0.0
+      },
+      "route": {
+        "schema_version": "scenarioforge.route/v2",
+        "id": "ego-follow",
+        "lane_ids": [
+          "following-lane"
+        ],
+        "goal": {
+          "lane_id": "following-lane",
+          "longitudinal_m": 160.0
+        }
+      }
+    },
+    {
+      "id": "lead",
+      "role": "social",
+      "actor_type": "vehicle",
+      "spawn": {
+        "schema_version": "scenarioforge.actor-spawn/v2",
+        "lane_id": "following-lane",
+        "longitudinal_m": 38.0,
+        "lateral_m": 0.0,
+        "speed_mps": 22.0,
+        "heading_deg": 0.0
+      },
+      "route": {
+        "schema_version": "scenarioforge.route/v2",
+        "id": "lead-route",
+        "lane_ids": [
+          "following-lane"
+        ],
+        "goal": {
+          "lane_id": "following-lane",
+          "longitudinal_m": 180.0
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "initial_gap_m": 20.0,
+    "vehicle_speed_mps": 21.0,
+    "brake_tick": 4,
+    "brake_intensity": 0.7
+  },
+  "events": [
+    {
+      "id": "lead-hard-brake",
+      "sequence": 0,
+      "type": "control_override",
+      "participant_id": "lead",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 35
+      },
+      "duration_ticks": 6,
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": 0.0,
+        "throttle_brake": -1.0
+      }
+    },
+    {
+      "id": "ego-avoidance-brake",
+      "sequence": 1,
+      "type": "control_override",
+      "participant_id": "ego",
+      "trigger": {
+        "schema_version": "scenarioforge.trigger/v2",
+        "kind": "tick",
+        "tick": 40
+      },
+      "duration_ticks": 6,
+      "action": {
+        "schema_version": "scenarioforge.control-action/v2",
+        "steering": 0.0,
+        "throttle_brake": -0.7
+      }
+    }
+  ],
+  "constraints": {
+    "schema_version": "scenarioforge.outcome-contract/v2",
+    "max_steps": 120,
+    "duration_s": 12.0,
+    "collision_is_failure": true,
+    "target_outcome": "near_miss",
+    "success_predicates": [
+      {
+        "id": "routes-completed",
+        "kind": "route_completed",
+        "participant_ids": [
+          "ego",
+          "lead"
+        ],
+        "lane_ids": [
+          "following-lane"
+        ]
+      }
+    ],
+    "failure_predicates": [
+      {
+        "id": "collision-observed",
+        "kind": "collision",
+        "participant_ids": [
+          "ego",
+          "lead"
+        ],
+        "lane_ids": []
+      },
+      {
+        "id": "ego-boundary-violation",
+        "kind": "boundary_violation",
+        "participant_ids": [
+          "ego"
+        ],
+        "lane_ids": []
+      },
+      {
+        "id": "route-timeout",
+        "kind": "timeout",
+        "participant_ids": [
+          "ego",
+          "lead"
+        ],
+        "lane_ids": []
+      }
+    ],
+    "expected_events": [
+      "lead-hard-brake",
+      "ego-avoidance-brake"
+    ],
+    "metric_definitions": [
+      {
+        "definition_id": "scenarioforge.metric.collision/v2",
+        "metric": "collision",
+        "unit": "boolean",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "lead"
+          ],
+          "topology_kinds": [
+            "straight"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "not_applicable",
+        "evidence_field": "collision"
+      },
+      {
+        "definition_id": "scenarioforge.metric.hard-braking/v2",
+        "metric": "hard_braking",
+        "unit": "m/s^2",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "lead"
+          ],
+          "topology_kinds": [
+            "straight"
+          ]
+        },
+        "threshold": {
+          "operator": "lte",
+          "value": -1.0
+        },
+        "null_semantics": "threshold_pending_calibration",
+        "evidence_field": "minimum_acceleration_mps2"
+      },
+      {
+        "definition_id": "scenarioforge.metric.minimum-ttc/v2",
+        "metric": "minimum_ttc",
+        "unit": "s",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "lead"
+          ],
+          "topology_kinds": [
+            "straight"
+          ]
+        },
+        "threshold": {
+          "operator": "lte",
+          "value": 4.0
+        },
+        "null_semantics": "no_closing_pair",
+        "evidence_field": "min_ttc_s"
+      },
+      {
+        "definition_id": "scenarioforge.metric.completion-time/v2",
+        "metric": "completion_time",
+        "unit": "s",
+        "applies_to": {
+          "participant_ids": [
+            "ego",
+            "lead"
+          ],
+          "topology_kinds": [
+            "straight"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "execution_incomplete",
+        "evidence_field": "completion_time_s"
+      },
+      {
+        "definition_id": "scenarioforge.metric.termination-reason/v2",
+        "metric": "termination_reason",
+        "unit": "category",
+        "applies_to": {
+          "participant_ids": [],
+          "topology_kinds": [
+            "straight"
+          ]
+        },
+        "threshold": null,
+        "null_semantics": "never_null_for_terminal_run",
+        "evidence_field": "termination_reason"
+      }
+    ]
+  },
+  "policy": {
+    "schema_version": "scenarioforge.deterministic-policy/v2",
+    "id": "scenarioforge.deterministic-control",
+    "version": "2.0.0",
+    "determinism": {
+      "fixed_seed_required": true,
+      "decision_order": "participant_order",
+      "floating_point_contract": "backend_bound"
+    },
+    "config": {
+      "default_action": {
+        "steering": 0.0,
+        "throttle_brake": 0.0
+      },
+      "participant_actions": [
+        {
+          "participant_id": "ego",
+          "steering": 0.0,
+          "throttle_brake": 0.0
+        },
+        {
+          "participant_id": "lead",
+          "steering": 0.0,
+          "throttle_brake": 0.0
+        }
+      ]
+    }
+  },
+  "required_capabilities": [
+    "topology.versioned.v2",
+    "lane.stable-id.v2",
+    "route.stable-id.v2",
+    "actor.spawn.v2",
+    "trigger.tick.v2",
+    "policy.deterministic.v2",
+    "event.ordered.v2",
+    "metric.definition.v2",
+    "terminal.dual-axis.v2"
+  ],
+  "backend_extensions": {
+    "schema_version": "scenarioforge.backend-extensions/v2",
+    "extensions": {}
+  }
+}

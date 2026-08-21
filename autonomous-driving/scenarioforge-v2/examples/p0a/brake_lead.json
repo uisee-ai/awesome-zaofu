@@ -1,0 +1,98 @@
+{
+  "schema_version": "scenarioforge.scenario/v1",
+  "scenario_id": "brake-lead-happy",
+  "seed": 7,
+  "road": {
+    "template": "straight",
+    "lane_count": 2,
+    "lane_width_m": 3.5,
+    "length_m": 120.0,
+    "coordinate_system": "right-handed-x-forward-y-left",
+    "units": {
+      "distance": "m",
+      "speed": "m/s",
+      "heading": "deg",
+      "time": "tick"
+    }
+  },
+  "participants": [
+    {
+      "id": "ego",
+      "role": "ego",
+      "initial": {
+        "lane": 0,
+        "longitudinal_m": 5.0,
+        "speed_mps": 8.0,
+        "heading_deg": 0.0
+      },
+      "target": {
+        "lane": 0,
+        "longitudinal_m": 100.0
+      }
+    },
+    {
+      "id": "lead",
+      "role": "social",
+      "initial": {
+        "lane": 0,
+        "longitudinal_m": 25.0,
+        "speed_mps": 8.0,
+        "heading_deg": 0.0
+      },
+      "target": {
+        "lane": 0,
+        "longitudinal_m": 100.0
+      }
+    }
+  ],
+  "parameters": {
+    "initial_gap_m": 20.0,
+    "vehicle_speed_mps": 8.0,
+    "brake_tick": 2,
+    "brake_intensity": 1.0
+  },
+  "events": [
+    {
+      "id": "lead-brake",
+      "type": "vehicle_brake",
+      "participant_id": "lead",
+      "trigger": {
+        "kind": "tick",
+        "tick": 2
+      },
+      "action": {
+        "brake": 1.0
+      }
+    }
+  ],
+  "constraints": {
+    "max_steps": 6,
+    "collision_is_failure": true,
+    "success": {
+      "kind": "horizon_completed"
+    }
+  },
+  "policy": {
+    "id": "scenarioforge.constant-lane",
+    "version": "1.0.0",
+    "config": {
+      "steering": 0.0,
+      "throttle_brake": 0.0
+    }
+  },
+  "required_capabilities": [
+    "coordinate.right-handed-x-forward-y-left",
+    "units.si-tick",
+    "road.straight",
+    "road.lanes.2",
+    "participant.ego",
+    "participant.social-vehicle",
+    "event.tick-brake",
+    "policy.constant-lane.v1",
+    "constraints.horizon-collision"
+  ],
+  "backend_extensions": {
+    "schema_version": "scenarioforge.backend-extensions/v1",
+    "extensions": {}
+  }
+}

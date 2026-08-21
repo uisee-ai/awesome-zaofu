@@ -1,0 +1,9 @@
+{
+  "schema_version": "scenarioforge.replay-participant-appearance/v1",
+  "roles": {
+    "ego": {"color": "#32d6c5", "shape": "vehicle", "visual_pattern": "solid"},
+    "controlled_agent": {"color": "#8ea7ff", "shape": "vehicle", "visual_pattern": "striped"},
+    "social_vehicle": {"color": "#ffb454", "shape": "vehicle", "visual_pattern": "outline"},
+    "pedestrian": {"color": "#f88bc4", "shape": "pedestrian", "visual_pattern": "upright"}
+  }
+}

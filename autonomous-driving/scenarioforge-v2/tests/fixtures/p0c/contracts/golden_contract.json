@@ -1,0 +1,60 @@
+{
+  "canonical_digests": {
+    "capability_descriptor": "f3cf0757f9fb972b15bb89cfe3624cd2b82fa9e09c93443ac7740ac3daa26522",
+    "scenario_instance": "a9c103f00e80f215c2f4720f4168371542d278101de9b3dd85d8d37738d71aec",
+    "compile_report": "bd62d13922c52fc80388a038fe29481b6149472abaaafe67c2ce17748a2c550b",
+    "execution_plan": "af446d3ca24bdf3412a7b90d715a8f1230f9b4d641d15b3b15b1d89b035b9173"
+  },
+  "supported_capabilities": [
+    "actor.spawn.v2",
+    "event.ordered.v2",
+    "lane.stable-id.v2",
+    "metric.definition.v2",
+    "policy.deterministic.v2",
+    "route.stable-id.v2",
+    "terminal.dual-axis.v2",
+    "topology.versioned.v2",
+    "trigger.tick.v2"
+  ],
+  "requested_capability_order": [
+    "topology.versioned.v2",
+    "lane.stable-id.v2",
+    "route.stable-id.v2",
+    "actor.spawn.v2",
+    "trigger.tick.v2",
+    "policy.deterministic.v2",
+    "event.ordered.v2",
+    "metric.definition.v2",
+    "terminal.dual-axis.v2"
+  ],
+  "required_artifacts": [
+    "actions.json",
+    "events.json",
+    "metrics.json",
+    "trajectory.json",
+    "worker_result.json"
+  ],
+  "metric_order": [
+    "collision",
+    "hard_braking",
+    "minimum_ttc",
+    "completion_time",
+    "termination_reason"
+  ],
+  "tick_contract": {
+    "schema_version": "scenarioforge.tick-contract/v2",
+    "state_indexing": "S_N_at_tick_start",
+    "trigger_evaluation": "S_N_and_tick_N",
+    "action_application": "S_N_to_S_N_plus_1",
+    "event_effect_offset": 1,
+    "priority_order": [
+      "scenario_override",
+      "policy"
+    ],
+    "participant_order": [
+      "ego",
+      "cutter"
+    ],
+    "same_tick_events": "preserve_sequence_order"
+  }
+}

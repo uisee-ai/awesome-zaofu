@@ -1,0 +1,12 @@
+<edges>
+  <edge id="west-in" from="west" to="center" priority="2" numLanes="1" speed="16"/>
+  <edge id="west-out" from="center" to="west" priority="2" numLanes="1" speed="16"/>
+  <edge id="east-in" from="east" to="center" priority="2" numLanes="1" speed="16"/>
+  <edge id="east-out" from="center" to="east" priority="2" numLanes="1" speed="16"/>
+  <edge id="north-in" from="north" to="center" priority="2" numLanes="1" speed="16"/>
+  <edge id="north-out" from="center" to="north" priority="2" numLanes="1" speed="16"/>
+  <edge id="south-in" from="south" to="center" priority="2" numLanes="1" speed="16"/>
+  <edge id="south-out" from="center" to="south" priority="2" numLanes="1" speed="16"/>
+  <edge id="crosswalk-in" from="ped-west" to="center" priority="1" numLanes="1" speed="2" allow="passenger pedestrian"/>
+  <edge id="crosswalk-out" from="center" to="ped-east" priority="1" numLanes="1" speed="2" allow="passenger pedestrian"/>
+</edges>
