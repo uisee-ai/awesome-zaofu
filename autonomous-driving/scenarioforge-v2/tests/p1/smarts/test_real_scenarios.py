@@ -77,6 +77,13 @@ def test_all_five_canonical_scenarios_execute_exact_on_real_smarts(
             tracks["ego"][-1]["position_m"][1]
             - tracks["ego"][0]["position_m"][1]
         ) > 50.0
+        rendered_lane_ids = {
+            lane["lane_id"] for lane in evidence["road_geometry"]["lanes"]
+        }
+        assert ":center_5_0" in rendered_lane_ids
+        assert rendered_lane_ids.isdisjoint(
+            {":east_0_0", ":north_0_0", ":south_0_0", ":west_0_0"}
+        )
 
     output = publish_smarts_evidence(evidence, tmp_path)
     assert strict_loads(output.read_bytes()) == evidence

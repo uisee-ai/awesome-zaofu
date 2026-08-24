@@ -45,7 +45,7 @@ def test_real_smarts_lifecycle_crosses_the_adapter_only_as_versioned_dtos() -> N
                 schema_version="scenarioforge.action/v1",
                 agent_id=agent_id,
                 tick=1,
-                values={"throttle_brake": 0.0, "steering": 0.0},
+                values={"target_speed_mps": 8.0, "lane_change": 0},
             )
             for agent_id in controllable
         )

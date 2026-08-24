@@ -420,6 +420,52 @@ def test_browser_module_matches_the_frozen_tolerance_and_pose_contract() -> None
     }
 
 
+def test_follow_camera_ignores_small_heading_noise_without_lateral_screen_drift() -> None:
+    script = f"""
+      import {{createFollowCameraState}} from {json.dumps(REPLAY_MODULE.as_uri())};
+      let state = createFollowCameraState(
+        {{positionM: [0, 0], headingDeg: 0}},
+        null,
+        0,
+      );
+      const states = [state];
+      for (const [x, heading] of [[1, 0.08], [2, -0.1], [3, 0.12], [4, -0.06]]) {{
+        state = createFollowCameraState(
+          {{positionM: [x, 0], headingDeg: heading}},
+          state,
+          16,
+        );
+        states.push(state);
+      }}
+      const turning = createFollowCameraState(
+        {{positionM: [5, 0], headingDeg: 15}},
+        state,
+        16,
+      );
+      console.log(JSON.stringify({{states, turning}}));
+    """
+
+    completed = subprocess.run(
+        ["node", "--input-type=module", "--eval", script],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    result = json.loads(completed.stdout)
+
+    assert [state["filteredHeadingDeg"] for state in result["states"]] == [
+        pytest.approx(0.0)
+    ] * 5
+    assert [state["cameraPosition"][2] for state in result["states"]] == [
+        pytest.approx(0.0)
+    ] * 5
+    assert [state["lookAt"][2] for state in result["states"]] == [
+        pytest.approx(0.0)
+    ] * 5
+    assert 0.0 < result["turning"]["filteredHeadingDeg"] < 15.0
+
+
 class _PlaybackReader(PublishedEvidenceReader):
     def __init__(self, playback: dict[str, object]) -> None:
         self.value = playback

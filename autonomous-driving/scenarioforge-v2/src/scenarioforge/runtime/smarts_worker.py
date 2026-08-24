@@ -46,6 +46,26 @@ def _rounded(value: Any) -> float:
     return round(float(value), 9)
 
 
+def _is_peripheral_loopback_connector(
+    lane_id: str,
+    length: float,
+    centerline: Sequence[Sequence[float]],
+) -> bool:
+    """Hide SUMO boundary turnarounds that are not visible road surface.
+
+    SUMO closes dead-end approach edges with short internal U-turn connectors.
+    SMARTS needs those connectors in its native graph, but drawing each one as
+    asphalt creates a detached curved spur at the edge of the replay.  Real
+    intersection connectors are longer and remain part of the projection.
+    """
+
+    if not lane_id.startswith(":") or length > 8.0 or len(centerline) < 2:
+        return False
+    start = centerline[0]
+    end = centerline[-1]
+    return math.hypot(float(end[0]) - float(start[0]), float(end[1]) - float(start[1])) < 5.0
+
+
 def _road_geometry(road_map: Any, asset: Mapping[str, Any]) -> dict[str, Any]:
     """Sample the road geometry that the locked SMARTS map actually loaded."""
     from smarts.core.coordinates import RefLinePoint
@@ -110,6 +130,8 @@ def _road_geometry(road_map: Any, asset: Mapping[str, Any]) -> dict[str, Any]:
                         _rounded(y - direction_x * half_width),
                     ]
                 )
+            if _is_peripheral_loopback_connector(lane_id, length, centerline):
+                continue
             lanes.append(
                 {
                     "lane_id": lane_id,

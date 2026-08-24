@@ -154,9 +154,21 @@ export function interpolatePose(samples, requestedTimeS) {
   };
 }
 
-const smoothVector = (previous, desired, alpha) => desired.map((value, index) => (
-  previous[index] + (value - previous[index]) * alpha
-));
+const FOLLOW_HEADING_DEADBAND_DEG = 0.2;
+
+const stableFollowHeading = (headingDeg, previousState, alpha) => {
+  if (previousState === null) return normalizeHeadingDeg(headingDeg);
+  const previousHeading = Number(previousState.filteredHeadingDeg);
+  const startingHeading = finite(previousHeading)
+    ? previousHeading
+    : Number(previousState.sourceHeadingDeg);
+  if (!finite(startingHeading)) return normalizeHeadingDeg(headingDeg);
+  const delta = shortestHeadingDeltaDeg(startingHeading, headingDeg);
+  if (Math.abs(delta) <= FOLLOW_HEADING_DEADBAND_DEG) {
+    return normalizeHeadingDeg(startingHeading);
+  }
+  return normalizeHeadingDeg(startingHeading + delta * alpha);
+};
 
 export function createFollowCameraState(pose, previousState = null, elapsedMs = 0) {
   assert(pose !== null && typeof pose === "object", "ego pose is invalid");
@@ -164,28 +176,38 @@ export function createFollowCameraState(pose, previousState = null, elapsedMs = 
   const headingDeg = Number(read(pose, "heading_deg", "headingDeg"));
   assert(Array.isArray(position) && position.length === 2 && position.every(finite) && finite(headingDeg), "ego pose is invalid");
   assert(finite(elapsedMs) && elapsedMs >= 0, "camera elapsed time is invalid");
-  const headingRad = headingDeg * Math.PI / 180;
-  const forward = [Math.cos(headingRad), Math.sin(headingRad)];
   const tolerance = VISUAL_REPLAY_TOLERANCE_V1.followCamera;
+  const alpha = previousState === null
+    ? 1
+    : 1 - Math.exp(-Math.LN2 * elapsedMs / tolerance.dampingHalfLifeMs);
+  const filteredHeadingDeg = stableFollowHeading(headingDeg, previousState, alpha);
+  const headingRad = filteredHeadingDeg * Math.PI / 180;
+  const forward = [Math.cos(headingRad), Math.sin(headingRad)];
+  const sourceHeadingRad = headingDeg * Math.PI / 180;
+  const sourceForward = [Math.cos(sourceHeadingRad), Math.sin(sourceHeadingRad)];
   const desiredPosition = [
+    position[0] - sourceForward[0] * tolerance.rearOffsetM,
+    tolerance.heightOffsetM,
+    -(position[1] - sourceForward[1] * tolerance.rearOffsetM),
+  ];
+  const desiredLookAt = [
+    position[0] + sourceForward[0] * tolerance.lookAheadM,
+    0,
+    -(position[1] + sourceForward[1] * tolerance.lookAheadM),
+  ];
+  // Anchor translation to the recorded ego position so the vehicle does not
+  // drift across the screen.  Only heading is damped; the same filtered axis
+  // drives both camera position and look-at, avoiding phase mismatch.
+  const cameraPosition = [
     position[0] - forward[0] * tolerance.rearOffsetM,
     tolerance.heightOffsetM,
     -(position[1] - forward[1] * tolerance.rearOffsetM),
   ];
-  const desiredLookAt = [
+  const lookAt = [
     position[0] + forward[0] * tolerance.lookAheadM,
     0,
     -(position[1] + forward[1] * tolerance.lookAheadM),
   ];
-  const alpha = previousState === null
-    ? 1
-    : 1 - Math.exp(-Math.LN2 * elapsedMs / tolerance.dampingHalfLifeMs);
-  const cameraPosition = previousState === null
-    ? desiredPosition
-    : smoothVector(previousState.cameraPosition, desiredPosition, alpha);
-  const lookAt = previousState === null
-    ? desiredLookAt
-    : smoothVector(previousState.lookAt, desiredLookAt, alpha);
   return {
     schemaVersion: "scenarioforge.follow-camera-state/v1",
     mode: "ego-follow",
@@ -194,6 +216,8 @@ export function createFollowCameraState(pose, previousState = null, elapsedMs = 
     desiredPosition,
     desiredLookAt,
     dampingAlpha: alpha,
+    filteredHeadingDeg,
+    sourceHeadingDeg: normalizeHeadingDeg(headingDeg),
     stableHorizon: [0, 1, 0],
     sourceClassification: "display-derived",
   };
