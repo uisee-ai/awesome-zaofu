@@ -14,6 +14,7 @@ def test_web_replay_uses_the_controlled_vehicle_model_and_complete_road_cues() -
     assert "createVehicleModel" in source
     assert "new THREE.BoxGeometry(4.4, 1.25, 1.8)" not in source
     for behavior in (
+        "renderIntersectionSurface",
         "renderCurbs",
         "renderStopLines",
         "renderTrafficSignals",
@@ -22,6 +23,8 @@ def test_web_replay_uses_the_controlled_vehicle_model_and_complete_road_cues() -
         assert behavior in source
     assert "roadElements" in source
     assert "vehicleModelFeatures" in source
+    assert 'lane.kind !== "connector"' in source
+    assert 'roadElement: "intersection-surface"' in source
 
 
 def test_follow_camera_reports_calculated_view_error_instead_of_a_fixed_zero() -> None:
@@ -30,6 +33,8 @@ def test_follow_camera_reports_calculated_view_error_instead_of_a_fixed_zero() -
     assert "followCameraQuality" in source
     assert 'dataset.lookDirectionErrorDeg = "0"' not in source
     assert "quality.viewDirectionErrorDeg" in source
+    assert "cameraState.filteredHeadingDeg" in source
+    assert "rendered_ego_heading_deg" in source
 
 
 def test_vehicle_asset_is_embedded_in_the_existing_offline_application_bundle() -> None:

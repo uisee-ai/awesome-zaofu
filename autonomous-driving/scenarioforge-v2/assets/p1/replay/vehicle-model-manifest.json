@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "resource_ref": "src/scenarioforge/web/static/app.js",
     "runtime_ref": "app.js",
-    "sha256": "727e32720354eafdbd394f1174aba3f6f954438cc0976ac14bd6a354df703c67",
+    "sha256": "2576397704ba10f61e6c777d49e36e1d0b6b771ded00faea1d5624ddc89acf72",
     "license": {
       "spdx_id": "CC0-1.0",
       "copyright": "Dedicated to the public domain by the ScenarioForge project"

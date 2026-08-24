@@ -1405,12 +1405,19 @@ async function pollRun(runId, runsEndpoint = ENDPOINTS.runs) {
   }
 }
 
-function addRoadSurface(width, depth, centerX, centerZ) {
+function addRoadSurface(
+  width,
+  depth,
+  centerX,
+  centerZ,
+  {color = 0x26312e, userData = {}} = {},
+) {
   const geometry = new THREE.PlaneGeometry(width, depth);
-  const material = new THREE.MeshStandardMaterial({ color: 0x26312e, roughness: 0.92 });
+  const material = new THREE.MeshStandardMaterial({color, roughness: 0.92});
   const surface = new THREE.Mesh(geometry, material);
   surface.rotation.x = -Math.PI / 2;
   surface.position.set(centerX, -0.05, centerZ);
+  Object.assign(surface.userData, userData);
   state.scene.add(surface);
 }
 
@@ -1493,9 +1500,13 @@ function boundaryKey(points) {
   return forward < reverse ? forward : reverse;
 }
 
+const isVisibleRoadLane = (lane) => (
+  lane.kind !== "connector" && !lane.lane_id.startsWith("crosswalk-")
+);
+
 function renderCurbs(playback) {
   const boundaries = new Map();
-  playback.road.geometry.lanes.forEach((lane) => {
+  playback.road.geometry.lanes.filter(isVisibleRoadLane).forEach((lane) => {
     for (const points of [lane.left_boundary_m, lane.right_boundary_m]) {
       const key = boundaryKey(points);
       const record = boundaries.get(key) ?? {count: 0, points};
@@ -1518,6 +1529,40 @@ function renderCurbs(playback) {
     curbCount += Math.max(0, points.length - 1);
   });
   replayCanvas.dataset.curbSegmentCount = String(curbCount);
+}
+
+function renderIntersectionSurface(playback) {
+  if (playback.road.topology_kind !== "intersection") {
+    replayCanvas.dataset.intersectionSurface = "not-applicable";
+    return;
+  }
+  const points = playback.road.geometry.lanes
+    .filter((lane) => lane.kind === "connector")
+    .flatMap((lane) => [...lane.left_boundary_m, ...lane.right_boundary_m]);
+  if (points.length === 0) {
+    replayCanvas.dataset.intersectionSurface = "missing";
+    return;
+  }
+  const xs = points.map((point) => point[0]);
+  const ys = points.map((point) => point[1]);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  addRoadSurface(
+    maxX - minX,
+    maxY - minY,
+    (minX + maxX) / 2,
+    -(minY + maxY) / 2,
+    {
+      color: 0x45625a,
+      userData: {roadElement: "intersection-surface"},
+    },
+  );
+  replayCanvas.dataset.intersectionSurface = "unified";
+  replayCanvas.dataset.hiddenConnectorCount = String(
+    playback.road.geometry.lanes.filter((lane) => lane.kind === "connector").length,
+  );
 }
 
 function conflictCentre(playback) {
@@ -1691,7 +1736,8 @@ function renderRoad(playback) {
     ramp: 0x3e625c,
     turn: 0x4a5d58,
   };
-  geometry.lanes.forEach((lane) => {
+  renderIntersectionSurface(playback);
+  geometry.lanes.filter(isVisibleRoadLane).forEach((lane) => {
     addRoadStrip(lane.left_boundary_m, lane.right_boundary_m, {
       color: colors[lane.kind] ?? 0x45625a,
       elevation: -0.02,
@@ -1959,6 +2005,10 @@ function updateFollowCamera(egoPose, elapsedMs = 0) {
     elapsedMs,
   );
   const cameraState = state.followCameraState;
+  const egoMesh = state.meshes.get(state.replayScene.camera.egoParticipantId);
+  if (egoMesh !== undefined) {
+    egoMesh.rotation.y = THREE.MathUtils.degToRad(cameraState.filteredHeadingDeg);
+  }
   resizeRendererSurface();
   state.camera.position.set(...cameraState.cameraPosition);
   state.camera.up.set(...cameraState.stableHorizon);
@@ -1971,6 +2021,8 @@ function updateFollowCamera(egoPose, elapsedMs = 0) {
     source_tick: egoPose.lowerTick,
     position_m: egoPose.positionM,
     heading_deg: egoPose.headingDeg,
+    filtered_heading_deg: cameraState.filteredHeadingDeg,
+    rendered_ego_heading_deg: cameraState.filteredHeadingDeg,
     camera_position: cameraState.cameraPosition,
     look_at: cameraState.lookAt,
   });
