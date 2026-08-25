@@ -429,7 +429,7 @@ def test_follow_camera_ignores_small_heading_noise_without_lateral_screen_drift(
         0,
       );
       const states = [state];
-      for (const [x, heading] of [[1, 0.08], [2, -0.1], [3, 0.12], [4, -0.06]]) {{
+      for (const [x, heading] of [[1, 0.8], [2, -1.9], [3, 2.4], [4, -2.6]]) {{
         state = createFollowCameraState(
           {{positionM: [x, 0], headingDeg: heading}},
           state,
@@ -464,6 +464,52 @@ def test_follow_camera_ignores_small_heading_noise_without_lateral_screen_drift(
         pytest.approx(0.0)
     ] * 5
     assert 0.0 < result["turning"]["filteredHeadingDeg"] < 15.0
+
+
+def test_smarts_display_track_removes_controller_hunting_without_mutating_evidence() -> None:
+    script = f"""
+      import {{stabilizeDisplayTrack}} from {json.dumps(REPLAY_MODULE.as_uri())};
+      const samples = Array.from({{length: 21}}, (_, tick) => ({{
+        tick,
+        simulationTimeS: tick * 0.1,
+        positionM: [tick * 0.8, tick % 2 === 0 ? 0.11 : -0.11],
+        headingDeg: tick % 2 === 0 ? 2.8 : -2.5,
+        speedMps: 8,
+        collision: false,
+      }}));
+      const stabilized = stabilizeDisplayTrack(samples, {{lanes: [{{
+        lane_id: "main_0",
+        centerline_m: [[0, 0], [20, 0]],
+      }}]}});
+      console.log(JSON.stringify({{
+        source: samples,
+        stabilized,
+        lateralRange: Math.max(...stabilized.map((sample) => sample.displayPositionM[1]))
+          - Math.min(...stabilized.map((sample) => sample.displayPositionM[1])),
+        headingRange: Math.max(...stabilized.map((sample) => sample.displayHeadingDeg))
+          - Math.min(...stabilized.map((sample) => sample.displayHeadingDeg)),
+      }}));
+    """
+
+    completed = subprocess.run(
+        ["node", "--input-type=module", "--eval", script],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    result = json.loads(completed.stdout)
+
+    assert result["lateralRange"] < 1e-9
+    assert result["headingRange"] < 0.5
+    assert [item["positionM"] for item in result["source"]] == [
+        item["evidencePositionM"] for item in result["stabilized"]
+    ]
+    assert all(
+        item["sourceClassification"]
+        == "recorded-evidence-with-display-derived-pose"
+        for item in result["stabilized"]
+    )
 
 
 class _PlaybackReader(PublishedEvidenceReader):

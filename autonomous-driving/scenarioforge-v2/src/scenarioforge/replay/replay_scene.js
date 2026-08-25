@@ -77,8 +77,19 @@ export function resolveTimelineInput(value, sampleIntervalS, terminalTick, isTru
   return {unit: "ticks", value: clamped};
 }
 
+const evidencePointPosition = (sample) => {
+  const position = read(sample, "evidence_position_m", "evidencePositionM")
+    ?? read(sample, "position_m", "positionM");
+  assert(
+    Array.isArray(position) && position.length === 2 && position.every(finite),
+    "trajectory sample is invalid",
+  );
+  return [Number(position[0]), Number(position[1])];
+};
+
 const pointPosition = (sample) => {
-  const position = read(sample, "position_m", "positionM");
+  const position = read(sample, "display_position_m", "displayPositionM");
+  if (position === undefined) return evidencePointPosition(sample);
   assert(
     Array.isArray(position) && position.length === 2 && position.every(finite),
     "trajectory sample is invalid",
@@ -88,7 +99,10 @@ const pointPosition = (sample) => {
 
 const sampleTime = (sample) => read(sample, "simulation_time_s", "simulationTimeS");
 const sampleTick = (sample) => Number(read(sample, "tick"));
-const sampleHeading = (sample) => Number(read(sample, "heading_deg", "headingDeg"));
+const sampleHeading = (sample) => Number(
+  read(sample, "display_heading_deg", "displayHeadingDeg")
+    ?? read(sample, "heading_deg", "headingDeg"),
+);
 const sampleSpeed = (sample) => Number(read(sample, "speed_mps", "speedMps"));
 
 const tangentForPair = (lower, upper) => {
@@ -121,6 +135,11 @@ export function interpolatePose(samples, requestedTimeS) {
   const lowerPosition = pointPosition(lower);
   const upperPosition = pointPosition(upper);
   const positionM = lowerPosition.map((value, axis) => value + (upperPosition[axis] - value) * alpha);
+  const lowerEvidencePosition = evidencePointPosition(lower);
+  const upperEvidencePosition = evidencePointPosition(upper);
+  const evidencePositionM = lowerEvidencePosition.map((value, axis) => (
+    value + (upperEvidencePosition[axis] - value) * alpha
+  ));
   const lowerHeading = sampleHeading(lower);
   const headingDeg = normalizeHeadingDeg(
     lowerHeading + shortestHeadingDeltaDeg(lowerHeading, sampleHeading(upper)) * alpha,
@@ -141,6 +160,7 @@ export function interpolatePose(samples, requestedTimeS) {
     upperTick: sampleTick(upper),
     alpha,
     positionM,
+    evidencePositionM,
     renderPositionM: [positionM[0], 0, -positionM[1]],
     headingDeg,
     renderYawRad: headingRad,
@@ -149,12 +169,17 @@ export function interpolatePose(samples, requestedTimeS) {
     localForward: [Math.cos(headingRad), Math.sin(headingRad)],
     trajectoryTangentDeg: tangentDeg,
     headingTangentErrorDeg: tangentDeg === null ? null : Math.abs(shortestHeadingDeltaDeg(tangentDeg, headingDeg)),
+    displayStabilization: lower.displayStabilization ?? "none",
     sourceClassification: "display-derived",
     sourceTicks: [sampleTick(lower), sampleTick(upper)],
   };
 }
 
-const FOLLOW_HEADING_DEADBAND_DEG = 0.2;
+// SMARTS can report small alternating yaw corrections while a vehicle is
+// travelling along an otherwise straight lane.  Treat those corrections as
+// simulation noise for the display camera; genuine turns accumulate beyond
+// this threshold and are still followed through the existing damping.
+const FOLLOW_HEADING_DEADBAND_DEG = 3;
 
 const stableFollowHeading = (headingDeg, previousState, alpha) => {
   if (previousState === null) return normalizeHeadingDeg(headingDeg);
@@ -244,6 +269,118 @@ const projectedSample = (point, interval) => {
   };
 };
 
+const DISPLAY_STABILIZATION_RADIUS = 4;
+
+const locallyRegressedPosition = (samples, centerIndex) => {
+  const start = Math.max(0, centerIndex - DISPLAY_STABILIZATION_RADIUS);
+  const end = Math.min(samples.length - 1, centerIndex + DISPLAY_STABILIZATION_RADIUS);
+  const centerTime = samples[centerIndex].simulationTimeS;
+  let weightSum = 0;
+  let weightedTimeSum = 0;
+  const weightedPositionSum = [0, 0];
+  const points = [];
+  for (let index = start; index <= end; index += 1) {
+    const offset = Math.abs(index - centerIndex);
+    const weight = DISPLAY_STABILIZATION_RADIUS + 1 - offset;
+    const time = samples[index].simulationTimeS - centerTime;
+    const position = samples[index].positionM;
+    points.push({weight, time, position});
+    weightSum += weight;
+    weightedTimeSum += weight * time;
+    weightedPositionSum[0] += weight * position[0];
+    weightedPositionSum[1] += weight * position[1];
+  }
+  const meanTime = weightedTimeSum / weightSum;
+  const meanPosition = weightedPositionSum.map((value) => value / weightSum);
+  let timeVariance = 0;
+  const covariance = [0, 0];
+  points.forEach(({weight, time, position}) => {
+    const centeredTime = time - meanTime;
+    timeVariance += weight * centeredTime ** 2;
+    covariance[0] += weight * centeredTime * (position[0] - meanPosition[0]);
+    covariance[1] += weight * centeredTime * (position[1] - meanPosition[1]);
+  });
+  if (timeVariance < 1e-12) {
+    return [...samples[centerIndex].positionM];
+  }
+  return covariance.map((value, axis) => (
+    meanPosition[axis] - (value / timeVariance) * meanTime
+  ));
+};
+
+const tangentHeadingAt = (positions, samples, index) => {
+  const lowerIndex = Math.max(0, index - DISPLAY_STABILIZATION_RADIUS);
+  const upperIndex = Math.min(positions.length - 1, index + DISPLAY_STABILIZATION_RADIUS);
+  const deltaX = positions[upperIndex][0] - positions[lowerIndex][0];
+  const deltaY = positions[upperIndex][1] - positions[lowerIndex][1];
+  if (Math.hypot(deltaX, deltaY) < 1e-6) {
+    return samples[index].headingDeg;
+  }
+  return normalizeHeadingDeg(Math.atan2(deltaY, deltaX) * 180 / Math.PI);
+};
+
+const projectToSegment = (position, start, end) => {
+  const delta = [end[0] - start[0], end[1] - start[1]];
+  const lengthSquared = delta[0] ** 2 + delta[1] ** 2;
+  if (lengthSquared < 1e-12) return null;
+  const progress = Math.max(0, Math.min(1, (
+    (position[0] - start[0]) * delta[0]
+    + (position[1] - start[1]) * delta[1]
+  ) / lengthSquared));
+  const projected = [start[0] + progress * delta[0], start[1] + progress * delta[1]];
+  return {
+    position: projected,
+    distanceM: Math.hypot(position[0] - projected[0], position[1] - projected[1]),
+    headingDeg: normalizeHeadingDeg(Math.atan2(delta[1], delta[0]) * 180 / Math.PI),
+  };
+};
+
+const roadAlignedPosition = (sample, roadGeometry) => {
+  const lanes = read(roadGeometry, "lanes") ?? [];
+  let best = null;
+  lanes.forEach((lane) => {
+    const centerline = read(lane, "centerline_m", "centerlineM") ?? [];
+    for (let index = 1; index < centerline.length; index += 1) {
+      const candidate = projectToSegment(sample.positionM, centerline[index - 1], centerline[index]);
+      if (candidate === null) continue;
+      const headingErrorDeg = Math.abs(shortestHeadingDeltaDeg(sample.headingDeg, candidate.headingDeg));
+      // Position remains the primary binding. Heading only disambiguates
+      // overlapping intersection lanes and opposing carriageways.
+      const score = candidate.distanceM + headingErrorDeg * 0.02;
+      if (best === null || score < best.score) {
+        best = {...candidate, score};
+      }
+    }
+  });
+  return best?.position ?? null;
+};
+
+export function stabilizeDisplayTrack(samples, roadGeometry = null) {
+  assert(Array.isArray(samples) && samples.length > 0, "display track is invalid");
+  if (samples.length < 3) {
+    return samples.map((sample) => ({...sample}));
+  }
+  const roadPositions = roadGeometry === null
+    ? []
+    : samples.map((sample) => roadAlignedPosition(sample, roadGeometry));
+  const hasCompleteRoadBinding = roadPositions.length === samples.length
+    && roadPositions.every((position) => position !== null);
+  const displayPositions = hasCompleteRoadBinding
+    ? roadPositions
+    : samples.map((_, index) => locallyRegressedPosition(samples, index));
+  return samples.map((sample, index) => ({
+    ...sample,
+    evidencePositionM: [...sample.positionM],
+    evidenceHeadingDeg: sample.headingDeg,
+    displayPositionM: displayPositions[index],
+    displayHeadingDeg: tangentHeadingAt(displayPositions, samples, index),
+    displayStabilization: hasCompleteRoadBinding
+      ? "recorded-road-centreline"
+      : "local-linear-radius-4",
+    sourceClassification: "recorded-evidence-with-display-derived-pose",
+  }));
+}
+
 const eventProjection = (event, interval, terminalTick, tracks) => {
   const eventId = read(event, "event_id", "eventId");
   const participantId = read(event, "participant_id", "participantId");
@@ -318,10 +455,14 @@ export function projectReplayScene(playback) {
       "trajectory sample order is invalid",
     );
   });
-  const projectedEvents = events.map((event) => eventProjection(event, interval, terminalTick, tracks));
   const road = read(playback, "road");
   assert(road !== null && typeof road === "object", "road projection is invalid");
   const geometry = read(road, "geometry");
+  if (schemaVersion === "scenarioforge.playback/v2") {
+    const egoTrack = tracks.get(egos[0].participantId);
+    egoTrack.samples = stabilizeDisplayTrack(egoTrack.samples, geometry);
+  }
+  const projectedEvents = events.map((event) => eventProjection(event, interval, terminalTick, tracks));
   const conflictZones = read(geometry, "conflict_zones", "conflictZones") ?? [];
   const trajectoryDigest = read(playback, "trajectory_digest", "trajectoryDigest");
   assert(typeof trajectoryDigest === "string" && /^[0-9a-f]{64}$/.test(trajectoryDigest) && !/^0+$/.test(trajectoryDigest), "trajectory digest is invalid");

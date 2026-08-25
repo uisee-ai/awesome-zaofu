@@ -23,8 +23,10 @@ def test_web_replay_uses_the_controlled_vehicle_model_and_complete_road_cues() -
         assert behavior in source
     assert "roadElements" in source
     assert "vehicleModelFeatures" in source
-    assert 'lane.kind !== "connector"' in source
+    assert 'playback.road.topology_kind !== "intersection"' in source
     assert 'roadElement: "intersection-surface"' in source
+    assert 'roadElement: "intersection-corner-curb"' in source
+    assert "convexHull" in source
 
 
 def test_follow_camera_reports_calculated_view_error_instead_of_a_fixed_zero() -> None:

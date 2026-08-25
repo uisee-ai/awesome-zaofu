@@ -1421,6 +1421,27 @@ function addRoadSurface(
   state.scene.add(surface);
 }
 
+function addRoadPolygonSurface(points, {color = 0x45625a, userData = {}} = {}) {
+  if (points.length < 3) {
+    return;
+  }
+  const shape = new THREE.Shape();
+  shape.moveTo(points[0][0], points[0][1]);
+  points.slice(1).forEach((point) => shape.lineTo(point[0], point[1]));
+  shape.closePath();
+  const geometry = new THREE.ShapeGeometry(shape);
+  const material = new THREE.MeshStandardMaterial({
+    color,
+    roughness: 0.92,
+    side: THREE.DoubleSide,
+  });
+  const surface = new THREE.Mesh(geometry, material);
+  surface.rotation.x = -Math.PI / 2;
+  surface.position.y = -0.02;
+  Object.assign(surface.userData, userData);
+  state.scene.add(surface);
+}
+
 function addRoadStrip(left, right, {color, opacity = 1, elevation = 0, userData = {}}) {
   const positions = [];
   const indices = [];
@@ -1500,20 +1521,50 @@ function boundaryKey(points) {
   return forward < reverse ? forward : reverse;
 }
 
-const isVisibleRoadLane = (lane) => (
-  lane.kind !== "connector" && !lane.lane_id.startsWith("crosswalk-")
+const isVisibleRoadLane = (lane, playback) => (
+  !lane.lane_id.startsWith("crosswalk-")
+  && (lane.kind !== "connector" || playback.road.topology_kind !== "intersection")
 );
+
+function convexHull(points) {
+  const unique = [...new Map(points.map((point) => [
+    `${point[0].toFixed(6)}:${point[1].toFixed(6)}`,
+    point,
+  ])).values()].sort((left, right) => left[0] - right[0] || left[1] - right[1]);
+  if (unique.length <= 2) {
+    return unique;
+  }
+  const cross = (origin, left, right) => (
+    (left[0] - origin[0]) * (right[1] - origin[1])
+    - (left[1] - origin[1]) * (right[0] - origin[0])
+  );
+  const half = (ordered) => {
+    const result = [];
+    ordered.forEach((point) => {
+      while (result.length >= 2 && cross(result.at(-2), result.at(-1), point) <= 0) {
+        result.pop();
+      }
+      result.push(point);
+    });
+    return result;
+  };
+  const lower = half(unique);
+  const upper = half([...unique].reverse());
+  return [...lower.slice(0, -1), ...upper.slice(0, -1)];
+}
 
 function renderCurbs(playback) {
   const boundaries = new Map();
-  playback.road.geometry.lanes.filter(isVisibleRoadLane).forEach((lane) => {
-    for (const points of [lane.left_boundary_m, lane.right_boundary_m]) {
-      const key = boundaryKey(points);
-      const record = boundaries.get(key) ?? {count: 0, points};
-      record.count += 1;
-      boundaries.set(key, record);
-    }
-  });
+  playback.road.geometry.lanes
+    .filter((lane) => isVisibleRoadLane(lane, playback))
+    .forEach((lane) => {
+      for (const points of [lane.left_boundary_m, lane.right_boundary_m]) {
+        const key = boundaryKey(points);
+        const record = boundaries.get(key) ?? {count: 0, points};
+        record.count += 1;
+        boundaries.set(key, record);
+      }
+    });
   let curbCount = 0;
   boundaries.forEach(({count, points}) => {
     if (count !== 1) {
@@ -1543,23 +1594,38 @@ function renderIntersectionSurface(playback) {
     replayCanvas.dataset.intersectionSurface = "missing";
     return;
   }
-  const xs = points.map((point) => point[0]);
-  const ys = points.map((point) => point[1]);
-  const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys);
-  addRoadSurface(
-    maxX - minX,
-    maxY - minY,
-    (minX + maxX) / 2,
-    -(minY + maxY) / 2,
-    {
-      color: 0x45625a,
-      userData: {roadElement: "intersection-surface"},
-    },
+  const centre = points.reduce(
+    (total, point) => [total[0] + point[0] / points.length, total[1] + point[1] / points.length],
+    [0, 0],
   );
+  const approachBoundaryPoints = playback.road.geometry.lanes
+    .filter((lane) => isVisibleRoadLane(lane, playback))
+    .flatMap((lane) => [lane.left_boundary_m, lane.right_boundary_m])
+    .map((boundary) => (
+      [...boundary].sort((left, right) => (
+        Math.hypot(left[0] - centre[0], left[1] - centre[1])
+        - Math.hypot(right[0] - centre[0], right[1] - centre[1])
+      ))[0]
+    ));
+  const outline = convexHull(approachBoundaryPoints);
+  if (outline.length < 3) {
+    replayCanvas.dataset.intersectionSurface = "missing";
+    return;
+  }
+  addRoadPolygonSurface(outline, {
+    color: 0x45625a,
+    userData: {roadElement: "intersection-surface"},
+  });
+  outline.forEach((point, index) => {
+    const next = outline[(index + 1) % outline.length];
+    if (Math.abs(point[0] - next[0]) > 0.1 && Math.abs(point[1] - next[1]) > 0.1) {
+      addRoadLine([point, next], 0xd6e4dc, {
+        userData: {roadElement: "intersection-corner-curb"},
+      });
+    }
+  });
   replayCanvas.dataset.intersectionSurface = "unified";
+  replayCanvas.dataset.intersectionOutlinePoints = String(outline.length);
   replayCanvas.dataset.hiddenConnectorCount = String(
     playback.road.geometry.lanes.filter((lane) => lane.kind === "connector").length,
   );
@@ -1737,7 +1803,7 @@ function renderRoad(playback) {
     turn: 0x4a5d58,
   };
   renderIntersectionSurface(playback);
-  geometry.lanes.filter(isVisibleRoadLane).forEach((lane) => {
+  geometry.lanes.filter((lane) => isVisibleRoadLane(lane, playback)).forEach((lane) => {
     addRoadStrip(lane.left_boundary_m, lane.right_boundary_m, {
       color: colors[lane.kind] ?? 0x45625a,
       elevation: -0.02,
@@ -2020,6 +2086,8 @@ function updateFollowCamera(egoPose, elapsedMs = 0) {
   replayCanvas.dataset.followPose = JSON.stringify({
     source_tick: egoPose.lowerTick,
     position_m: egoPose.positionM,
+    evidence_position_m: egoPose.evidencePositionM,
+    display_stabilization: egoPose.displayStabilization ?? "none",
     heading_deg: egoPose.headingDeg,
     filtered_heading_deg: cameraState.filteredHeadingDeg,
     rendered_ego_heading_deg: cameraState.filteredHeadingDeg,
@@ -2087,6 +2155,9 @@ function setReplayTime(requestedTimeS, elapsedMs = 0) {
         heading_deg: pose.headingDeg,
       };
       replayCanvas.dataset.interpolationSourceTicks = pose.sourceTicks.join(",");
+      replayCanvas.dataset.egoDisplayStabilization = (
+        track.samples[0]?.displayStabilization ?? "none"
+      );
     }
   });
   const tick = Math.min(
