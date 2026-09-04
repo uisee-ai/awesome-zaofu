@@ -1,0 +1,52 @@
+schema_version: awesome-zaofu.case.v1
+id: autonomous-driving/highwaypilot-lab
+name: HighwayPilot Lab
+domain: autonomous-driving
+category: driving-decision-simulation-and-evaluation
+maturity: working-tree-snapshot
+source:
+  ref: highwaypilot-lab-v7-working-tree
+  commit: e3d2bcc9feea2ce6b92b1ed92651e1aaea6c7330
+  packaging: curated-source-materials
+  captured_at: 2026-09-04
+  working_tree: dirty-at-capture
+workflows:
+  - prd
+  - issue
+  - local-simulation
+tags:
+  - python
+  - highway-env
+  - gymnasium
+  - construction-v0
+  - threejs
+  - websocket
+  - deterministic-seed
+  - strategy-evaluation
+  - onnx-inference
+  - episode-replay
+verification:
+  source_paths: recorded
+  config_and_schema_review: recorded
+  focused_tests: not-rerun-during-material-preparation
+  full_release_gate: not-claimed
+  trainable_rl_quality: deferred
+  browser_performance_soak: not-claimed
+  license_boundary: references-root-notices
+generated_outputs_excluded:
+  - .zf-*
+  - .highwaypilot
+  - artifacts
+  - diagnostics
+  - dist
+  - browser-traces-and-videos
+  - recordings
+  - caches
+  - planning
+  - training/assets
+  - tests/registry
+  - tests/e2e/assembly
+  - tests/release/compliance
+  - tests/assembly/test_release.py
+license: Apache-2.0-for-original-content; third-party-terms-retained
+safety: local-research-and-evaluation-only; no-vehicle-control

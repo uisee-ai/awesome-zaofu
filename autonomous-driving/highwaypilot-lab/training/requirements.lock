@@ -1,0 +1,8 @@
+# Isolated training environment. These packages are not runtime dependencies.
+gymnasium==1.2.2
+highway-env==1.12.1
+numpy==2.4.6
+onnx==1.19.1
+onnxruntime==1.29.0
+stable-baselines3==2.7.1
+torch==2.8.0+cpu

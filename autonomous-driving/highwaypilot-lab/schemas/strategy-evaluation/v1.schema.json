@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "strategy-evaluation/v1",
+  "title": "HighwayPilot paired strategy evaluation",
+  "type": "object",
+  "required": ["schema_version", "seeds", "episodes_per_strategy", "strategy_order", "total_episodes", "episodes", "strategies"],
+  "properties": {
+    "schema_version": {"const": "strategy-evaluation/v1"},
+    "seeds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}},
+    "episodes_per_strategy": {"type": "integer", "minimum": 1},
+    "strategy_order": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "total_episodes": {"type": "integer", "minimum": 1},
+    "episodes": {"type": "array", "items": {"type": "object"}},
+    "strategies": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,44 @@
+{
+  "packages": [
+    {
+      "license": "MIT",
+      "name": "gymnasium",
+      "version": "1.3.0"
+    },
+    {
+      "license": "MIT",
+      "name": "highway-env",
+      "version": "1.12.1"
+    },
+    {
+      "license": "BSD-3-Clause",
+      "name": "numpy",
+      "version": "2.4.6"
+    },
+    {
+      "license": "Apache-2.0",
+      "name": "onnx",
+      "version": "1.19.1"
+    },
+    {
+      "license": "MIT",
+      "name": "onnxruntime",
+      "version": "1.29.0"
+    },
+    {
+      "license": "MIT",
+      "name": "stable-baselines3",
+      "version": "2.7.1"
+    },
+    {
+      "license": "BSD-3-Clause",
+      "name": "torch",
+      "version": "2.8.0+cpu"
+    }
+  ],
+  "runtime_included": false,
+  "schema_version": "training-sbom/v1",
+  "scope": "training_only",
+  "training_asset_manifest": "training/assets/construction-dqn-v1/manifest.json",
+  "training_asset_manifest_sha256": "7a8dd96885225e56a1be939ec666d77e9c5b6a209fce196ec77596cc7b876e87"
+}

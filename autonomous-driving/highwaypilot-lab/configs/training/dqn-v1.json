@@ -1,0 +1,27 @@
+{
+  "schema_version": "construction-dqn-training/v1",
+  "algorithm": "stable_baselines3.DQN",
+  "policy": "MlpPolicy",
+  "preset": "configs/presets/normal-v1.json",
+  "training_seed": 20260824,
+  "total_timesteps": 256,
+  "learning_rate": 0.0005,
+  "buffer_size": 512,
+  "learning_starts": 32,
+  "batch_size": 32,
+  "gamma": 0.99,
+  "train_frequency": 4,
+  "gradient_steps": 1,
+  "target_update_interval": 64,
+  "exploration_fraction": 0.25,
+  "exploration_final_epsilon": 0.05,
+  "network_architecture": [32, 32],
+  "maximum_episode_steps": 80,
+  "evaluation_episodes": 2,
+  "onnx_opset": 17,
+  "resource_limits": {
+    "max_model_bytes": 1048576,
+    "max_initialization_ms": 5000,
+    "max_inference_p95_ms": 50
+  }
+}

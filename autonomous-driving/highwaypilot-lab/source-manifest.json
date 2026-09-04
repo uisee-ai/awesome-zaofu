@@ -1,0 +1,25 @@
+{
+  "manifest_version": "highwaypilot-case/v1",
+  "captured_at": "2026-09-04",
+  "source_commit": "e3d2bcc9feea2ce6b92b1ed92651e1aaea6c7330",
+  "working_tree": "dirty-at-capture",
+  "hash_algorithm": "sha256",
+  "files": [
+    {"path": "README.md", "sha256": "a02627ff956086f7b25ea1eec905afe1b7dfb5d431488d43d53dc26a792f4973"},
+    {"path": "CASE.md", "sha256": "bf3f74f3b5eccc7fdf4af82adf95aeab8fc799fef8e36cc394049b9f3aca0c5f"},
+    {"path": "case.yaml", "sha256": "21a80933678097313b8f003e1fa972e62598fd90a4f13ab235aa42afd95a3676"},
+    {"path": "pyproject.toml", "sha256": "9932fea2ba727a8252fbca87316e870023f2f28f0f68b36f38534298f44381dd"},
+    {"path": "package.json", "sha256": "2b698af08f9b55a21860b202163d66c96de0aa68c671233a6c1178fb688a4b41"},
+    {"path": "schemas/construction-config/v1.schema.json", "sha256": "ed485612741f95031362c20ce5afc0275b2d5aca1a5b5d877fcd91b676b3a747"},
+    {"path": "src/highwaypilot_lab/simulation/gym_env.py", "sha256": "81134d576abd6a201c10c4703dac2cddac3bbf55a1c3e5c9c15a8c6c180ad7b0"},
+    {"path": "src/highwaypilot_lab/simulation/authority.py", "sha256": "b71b41a9bdf07c22a7d0e75075315eb7b6ce1955d5656bcb2aa86d131432e09f"},
+    {"path": "src/highwaypilot_lab/strategies/evaluation.py", "sha256": "cfa194944e08d918ea233dab026941bda7b8267e806b76af924e5ac744da662a"},
+    {"path": "models/construction-dqn-v1/manifest.json", "sha256": "2ab4da79c3934f97727bc229dbfedc988d7142ddcbcf359b2be7fd62f3ccf9ab"},
+    {"path": "models/construction-dqn-v1/model.onnx", "sha256": "ad401d90f608cda79b84087404b9d81241f48666ddcc6154b444d8df8f35f9c9"},
+    {"path": "configs/presets/normal-v1.json", "sha256": "62fd1013a867422f83ea6705efc2db49a93d425dc60af46341d5d6dbe3247db1"},
+    {"path": "web/src/hmi/renderer/HighwayScene.ts", "sha256": "a3dc930231fff0d52087c152735e2eeb1d91165ed067c3c461807db37f471215"},
+    {"path": "tests/simulation/test_gym_registration.py", "sha256": "1a8aedef1363c5a01eb779942b398ed399ead15f4c63fc5148362f052443aa94"},
+    {"path": "docs/reference/prd-acceptance-matrix.md", "sha256": "81c2dc73700707d05ca4e6b6f90a4b51bd039d5c9ce88f8ac4789750d82f0f19"}
+  ],
+  "note": "Hashes describe this standalone upload staging snapshot. Recalculate after any source or documentation edit."
+}

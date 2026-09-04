@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "highwaypilot-lab"
+version = "0.1.0"
+description = "Local 3D driving decision laboratory"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "fastapi>=0.116,<1",
+  "highway-env>=1.10,<2",
+  "jsonschema>=4.25,<5",
+  "numpy>=2.2,<3",
+  "onnxruntime>=1.22,<2",
+  "pydantic>=2.11,<3",
+  "rfc8785>=0.1,<1",
+  "uvicorn[standard]>=0.35,<1",
+]
+
+[dependency-groups]
+dev = [
+  "httpx2>=2.12,<3",
+  "pytest>=8.4,<10",
+  "pytest-cov>=6.2,<8",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/highwaypilot_lab"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+pythonpath = ["src"]
+testpaths = ["tests"]

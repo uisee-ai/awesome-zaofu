@@ -1,0 +1,97 @@
+:root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#e2e8f0;background:#050b14;color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -20%,#183153,#050b14 55%)}button,select{font:inherit;color:inherit;background:#111d2d;border:1px solid #2a3c55;border-radius:8px;padding:.55rem .75rem}button:hover{border-color:#38bdf8}.hmi{min-height:100vh;padding:1.2rem}.topbar,.status-strip,.workspace{max-width:1500px;margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center}.topbar h1{margin:.2rem 0 1rem;font-size:clamp(1.35rem,2.5vw,2.1rem)}.eyebrow{font-size:.7rem;letter-spacing:.18em;color:#38bdf8}.top-actions{display:flex;gap:.4rem}.status-strip{display:flex;gap:.65rem;margin-bottom:1rem}.status-strip span{background:#0d1725;border:1px solid #22334a;border-radius:999px;padding:.45rem .7rem;font-size:.78rem;color:#94a3b8}.status-strip strong{margin-left:.4rem;color:#e2e8f0}.onboarding{max-width:1500px;margin:0 auto 1rem;padding:.8rem 1rem;border-left:3px solid #38bdf8;background:#0c1a2b;display:flex;justify-content:space-between;align-items:center}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:1rem}.viewport-card,.control-rail section{background:rgba(11,22,36,.94);border:1px solid #20334c;border-radius:12px;box-shadow:0 18px 45px rgba(0,0,0,.25)}.viewport-card{min-height:650px;position:relative;overflow:hidden}.viewport-card canvas{width:100%;height:650px;display:block}.renderer-fallback{padding:3rem;text-align:center;color:#fda4af}.camera-switcher,.telemetry{position:absolute;display:flex;gap:.4rem;background:rgba(4,10,18,.82);backdrop-filter:blur(8px);padding:.45rem;border-radius:10px}.camera-switcher{top:.8rem;right:.8rem}.telemetry{bottom:.8rem;left:.8rem}.telemetry span{padding:.35rem .55rem;color:#94a3b8}.telemetry strong{display:block;color:#f8fafc}.control-rail{display:flex;flex-direction:column;gap:.7rem}.control-rail section{padding:.8rem}.control-rail h2{font-size:.88rem;color:#7dd3fc;margin:0 0 .7rem}.control-rail label{display:grid;grid-template-columns:70px 1fr;align-items:center;gap:.6rem;margin:.5rem 0}.primary{width:100%;background:#0284c7;border-color:#38bdf8;margin-top:.5rem}.button-grid{display:flex;flex-wrap:wrap;gap:.4rem}.button-grid button{flex:1}.manual button{min-width:48px}.control-rail dl{display:grid;grid-template-columns:1fr auto;margin:0;font-size:.82rem}.control-rail dd{color:#f8fafc}.notice{border-color:#f97316!important;color:#fdba74}@media(max-width:900px){.workspace{grid-template-columns:1fr}.viewport-card,.viewport-card canvas{min-height:420px;height:420px}.status-strip{overflow:auto}.onboarding{align-items:flex-start;gap:.8rem}.hmi{padding:.7rem}}
+:where(.control-hint,.replay-status){margin:.65rem 0 0;color:#94a3b8;font-size:.74rem;line-height:1.45}.replay-status{color:#7dd3fc;min-height:1.1em}
+
+/* Keep the control geometry stable when translated labels change width. */
+.topbar{height:90px;min-height:90px}.topbar h1{min-height:2.6rem;white-space:nowrap}.top-actions button{min-width:56px}
+.status-strip{height:35px;align-items:center}
+.onboarding{min-height:82px}
+.camera-switcher button{min-width:72px}.control-rail label{grid-template-columns:86px 1fr;min-height:36px}
+.config-actions{align-items:center}.config-actions button,.file-button{font-size:.72rem;padding:.45rem}.file-button{display:flex!important;grid-template-columns:none!important;cursor:pointer}.file-button input{display:none}
+
+/* Keep dense controls readable: wider desktop rail, grouped configuration, and
+   bounded library labels so long Episode ids never expand the page. */
+.workspace{grid-template-columns:minmax(0,1fr) minmax(350px,400px)}
+.control-rail section:first-child{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:.7rem;align-items:start}
+.control-rail section:first-child>h2,.control-rail section:first-child>.config-actions,.control-rail section:first-child>[data-testid="config-summary"],.control-rail section:first-child>details,.control-rail section:first-child>[data-action="compare"],.control-rail section:first-child>.evaluation-controls,.control-rail section:first-child>[data-testid="evaluation-status"],.control-rail section:first-child>[data-testid="comparison-status"],.control-rail section:first-child>.primary{grid-column:1/-1}
+.control-rail section:first-child>.scene-reset{grid-column:auto;width:100%;margin-top:.5rem}
+.control-rail section:first-child>label{min-width:0}
+.config-advanced .config-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.25rem .7rem}
+.config-advanced .config-grid label{grid-template-columns:1fr auto;margin:.2rem 0;min-height:28px;font-size:.74rem}
+.control-rail select[data-testid="episode-library-list"]{display:block;width:100%;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.76rem}
+.control-rail select[data-testid="episode-library-list"] option{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.control-hint,.replay-status{overflow-wrap:anywhere}
+@media(max-width:900px){.workspace{grid-template-columns:1fr}.control-rail section:first-child{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.control-rail section:first-child{display:block}.config-advanced .config-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.control-rail section:first-child>label{display:grid}}
+
+/* Layout pass: telemetry/camera overlays and simulation controls share the
+   viewport column instead of forcing every action into the right rail. */
+.workspace{max-width:1800px;grid-template-columns:minmax(0,1fr) minmax(350px,400px);grid-template-rows:auto auto;align-items:start}
+.control-rail{display:contents}
+.viewport-card{grid-column:1;grid-row:1;min-width:0}
+.control-rail>section:first-child{grid-column:2;grid-row:1}
+.control-rail>section:nth-child(2){grid-column:1;grid-row:2}
+.control-rail>section:nth-child(3){grid-column:2;grid-row:2}
+.control-rail>section:nth-child(4){grid-column:2;grid-row:3}
+.control-rail>section:nth-child(5){grid-column:2;grid-row:4}
+.control-rail>section:nth-child(6){grid-column:1/-1;grid-row:5}
+.camera-switcher{top:.8rem;left:.8rem;right:auto}
+.telemetry{top:.8rem;right:.8rem;bottom:auto;left:auto}
+.control-rail input,.control-rail select{width:100%;min-width:0;height:38px}
+.control-rail input::placeholder{color:#718096;opacity:1}
+@media(max-width:900px){.workspace{grid-template-columns:1fr;grid-template-rows:none}.viewport-card,.control-rail>section{grid-column:1!important;grid-row:auto!important}}
+
+/* Keep the rail measurable for layout/assistive tooling while placing the
+   simulation actions beneath the canvas on wide screens. */
+@media(min-width:901px){
+  .workspace{position:relative;padding-bottom:5.8rem}
+  .control-rail{display:flex;flex-direction:column;gap:.7rem;min-width:0}
+  .control-rail>section:nth-child(2){position:absolute;left:0;top:calc(100% - 5.8rem);width:calc(100% - 416px);z-index:2}
+}
+@media(max-width:900px){.control-rail{display:flex;flex-direction:column;gap:.7rem}.control-rail>section:nth-child(2){position:static;width:auto}}
+
+/* Final interaction layout: inputs use the same dark control surface as
+   selects, while the wide-screen workspace keeps the canvas and its actions
+   visually grouped. */
+.topbar,.status-strip,.onboarding{max-width:1800px;width:100%}
+.control-rail input{font:inherit;color:inherit;background:#111d2d;border:1px solid #2a3c55;border-radius:8px;padding:.55rem .75rem;outline:none}
+.control-rail input:focus,.control-rail select:focus{border-color:#38bdf8;box-shadow:0 0 0 2px rgba(56,189,248,.16)}
+.control-rail input::placeholder{color:#718096;opacity:1}
+.simulation-panel .main-controls,.simulation-panel .manual{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.4rem}
+.simulation-panel .main-controls>*,.simulation-panel .manual>*{width:100%;min-width:0}
+.camera-switcher{width:270px}
+.camera-switcher button{flex:1;min-width:0}
+.telemetry{top:.8rem;left:calc(.8rem + 270px + .7rem);right:auto;bottom:auto}
+.viewport-insights{position:absolute;top:4.7rem;left:.8rem;width:270px;display:flex;flex-direction:column;gap:.7rem;z-index:3}
+.viewport-insights section{background:rgba(11,22,36,.94);border:1px solid #20334c;border-radius:12px;padding:.8rem;box-shadow:0 18px 45px rgba(0,0,0,.25)}
+.viewport-insights h2{font-size:1rem;color:#7dd3fc;margin:0 0 .7rem}
+.viewport-insights dl{display:grid;grid-template-columns:1fr auto;margin:0;font-size:.9rem}
+.viewport-insights dd{color:#f8fafc}
+.viewport-insights p{font-size:.9rem;line-height:1.5;margin:.2rem 0 0}
+.field-unit{color:#94a3b8;font-size:.9em;white-space:nowrap}
+.simulation-panel .control-hint{font-size:1rem}
+.config-advanced .config-grid label{grid-template-columns:minmax(0,1fr) minmax(90px,1fr);font-size:1rem;gap:.6rem;min-height:38px}
+.config-advanced .config-grid label input{width:100%;min-width:0}
+@media(min-width:901px){
+  .workspace{padding-bottom:0}
+  .control-rail>section:nth-child(2){position:absolute;grid-column:auto;grid-row:auto;left:0;top:calc(650px + 1rem);width:calc(100% - 416px);z-index:2}
+  .control-rail>section:nth-child(3),.control-rail>section:nth-child(4){position:static;width:auto}
+}
+@media(max-width:900px){
+  .viewport-insights{position:static;width:auto;margin-top:.7rem}
+  .camera-switcher{width:max-content}
+  .telemetry{top:auto;left:.8rem;right:.8rem;bottom:.8rem;overflow:auto}
+  .control-rail>section:nth-child(2),.control-rail>section:nth-child(3),.control-rail>section:nth-child(4){position:static;width:auto}
+  .simulation-panel .main-controls,.simulation-panel .manual{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(min-width:901px) and (max-width:1250px){
+  .telemetry{left:.8rem;right:.8rem;top:4.5rem;max-width:calc(100% - 1.6rem);overflow:auto}
+}
+
+.strategy-comparison{grid-column:1/-1;max-width:100%;overflow-x:auto}
+.strategy-comparison-table{width:100%;border-collapse:collapse;font-size:.72rem;background:#091522;border:1px solid #20334c}
+.strategy-comparison-table th,.strategy-comparison-table td{padding:.45rem .5rem;border-bottom:1px solid #20334c;text-align:left;vertical-align:top;white-space:nowrap}
+.strategy-comparison-table th{color:#7dd3fc;background:#0d1b2b;font-weight:600}
+.strategy-comparison-table td:first-child{white-space:pre-line;min-width:150px;overflow-wrap:anywhere}
+.strategy-comparison-table button{font-size:.7rem;padding:.35rem .5rem;white-space:nowrap}
+.comparison-meta{margin:.2rem 0 .45rem}
+.evaluation-controls{display:grid;grid-template-columns:72px minmax(132px,1fr) 86px;gap:.4rem;align-items:end}.evaluation-controls label{display:block!important;margin:0!important;min-width:0}.evaluation-controls select{width:72px;margin-top:.25rem}.evaluation-controls button{min-width:0;padding-inline:.45rem;white-space:nowrap}.evaluation-result>summary,.evaluation-failures>summary{cursor:pointer}.evaluation-result-body{min-width:0;overflow-x:auto}.evaluation-failures{margin-top:.55rem}.evaluation-failures button{display:block;width:100%;margin:.3rem 0;text-align:left}.evaluation-save-notice{position:sticky;bottom:.35rem;margin:.45rem 0 0;padding:.5rem .6rem;border:1px solid #159bd3;border-radius:6px;background:#0b2638;color:#7dd3fc}.evaluation-save-notice[hidden]{display:none}

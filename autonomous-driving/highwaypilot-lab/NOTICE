@@ -1,0 +1,12 @@
+HighwayPilot Lab material package
+
+This notice does not assign an additional copyright holder. Copyright and license
+terms for original project content are governed by the project-root LICENSE.
+
+This material package includes references to software developed by the Three.js
+authors and other third-party packages. Their applicable notices and license
+boundaries are documented in THIRD_PARTY_NOTICES.md and the project-root
+THIRD_PARTY_NOTICES.md.
+
+HighwayEnv, Gymnasium, ONNX Runtime and other external dependencies are installed
+from package managers. Their source code is not bundled in this material package.

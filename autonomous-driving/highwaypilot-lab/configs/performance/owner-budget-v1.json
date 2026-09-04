@@ -1,0 +1,7 @@
+{
+  "schema_version": "performance-checkpoint/v1",
+  "checkpoint_id": "OWNER-PERF-BUDGET-V1",
+  "suite_id": "highwaypilot-local-smoke/v1",
+  "owner_budget_status": "pending",
+  "release_authorized": false
+}

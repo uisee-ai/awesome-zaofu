@@ -1,0 +1,67 @@
+{
+  "action_mapping": [
+    "LANE_LEFT",
+    "IDLE",
+    "LANE_RIGHT",
+    "FASTER",
+    "SLOWER"
+  ],
+  "byte_length": 7398,
+  "custom_ops": false,
+  "dependencies": [
+    {
+      "license": "BSD-3-Clause",
+      "name": "numpy",
+      "version": "2.4.6"
+    },
+    {
+      "license": "MIT",
+      "name": "onnxruntime",
+      "version": "1.29.0"
+    }
+  ],
+  "external_data": false,
+  "filename": "model.onnx",
+  "input": {
+    "dtype": "float32",
+    "name": "observation",
+    "shape": [
+      1,
+      10
+    ]
+  },
+  "license": {
+    "decision": "approved",
+    "decision_ref": "licenses/training/model-onnx.json",
+    "license_id": "LicenseRef-Zaofu-HPL-Model-v1"
+  },
+  "model_id": "construction-dqn-v1",
+  "operators": [
+    "Cast",
+    "Flatten",
+    "Gemm",
+    "Relu"
+  ],
+  "opset": 17,
+  "output": {
+    "dtype": "float32",
+    "name": "q_values",
+    "shape": [
+      1,
+      5
+    ]
+  },
+  "providers": [
+    "CPUExecutionProvider"
+  ],
+  "resource_limits": {
+    "max_inference_p95_ms": 50,
+    "max_initialization_ms": 5000,
+    "max_model_bytes": 1048576
+  },
+  "schema_version": "construction-dqn-model-manifest/v1",
+  "sha256": "ad401d90f608cda79b84087404b9d81241f48666ddcc6154b444d8df8f35f9c9",
+  "source": "project-trained synthetic construction-v0 interactions",
+  "training_code_commit": "b4642fbc6f6390da1029352733199dca6a32adb8",
+  "version": "1.0.0"
+}

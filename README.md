@@ -25,6 +25,7 @@
 | [Alpamayo Web Studio](autonomous-driving/alpamayo-web-studio/) | 道路场景管理、视觉推理、轨迹生成与回归评测 | Product snapshot | [README](autonomous-driving/alpamayo-web-studio/README.md) | [CASE](autonomous-driving/alpamayo-web-studio/CASE.md) | [Apache-2.0](autonomous-driving/alpamayo-web-studio/LICENSE) |
 | [CAN Lab](autonomous-driving/canlab/) | DBC 浏览、确定性 CAN 回放、可追溯解码与健康分析 | Verified showcase | [README](autonomous-driving/canlab/README.md) | [CASE](autonomous-driving/canlab/CASE.md) | [Apache-2.0](LICENSE) + fixture notices |
 | [Sensor Workbench](autonomous-driving/sensor-workbench/) | nuScenes/OpenLane 多模态浏览、坐标投影与标注审核 | Product snapshot | [README](autonomous-driving/sensor-workbench/README.md) | [CASE](autonomous-driving/sensor-workbench/CASE.md) | [Apache-2.0](autonomous-driving/sensor-workbench/LICENSE) |
+| [HighwayPilot Lab](autonomous-driving/highwaypilot-lab/) | HighwayEnv 施工并道三维驾驶决策实验、策略比较与 Episode 回放 | Working tree snapshot | [README](autonomous-driving/highwaypilot-lab/README.md) | [CASE](autonomous-driving/highwaypilot-lab/CASE.md) | [Apache-2.0](autonomous-driving/highwaypilot-lab/LICENSE) |
 
 每个项目的文档职责固定为：
 

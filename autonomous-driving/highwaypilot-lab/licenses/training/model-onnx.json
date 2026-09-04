@@ -1,0 +1,9 @@
+{
+  "decision": "approved",
+  "license_id": "LicenseRef-Zaofu-HPL-Model-v1",
+  "model_onnx_sha256": "ad401d90f608cda79b84087404b9d81241f48666ddcc6154b444d8df8f35f9c9",
+  "owner": "Zaofu HighwayPilot Lab contributors",
+  "schema_version": "asset-license-decision/v1",
+  "scope": "runtime_model",
+  "training_asset_decision": "separate"
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://highwaypilot.local/schemas/highwaypilot-replay/v1.schema.json",
+  "title": "HighwayPilot replay v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "episode_id", "initial_frame", "actions", "strategy", "seed",
+    "effective_config", "rng_contract", "versions", "reward_decomposition", "result",
+    "termination_reason", "ownership"
+  ],
+  "properties": {
+    "schema_version": {"const": "highwaypilot-replay/v1"},
+    "episode_id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9_-]+$"},
+    "initial_frame": {"type": "object"},
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["index", "action", "frame", "reward"],
+        "properties": {
+          "index": {"type": "integer", "minimum": 0},
+          "action": {"type": "string", "minLength": 1},
+          "frame": {"type": "object"},
+          "reward": {"type": "object", "additionalProperties": {"type": "number"}}
+        }
+      }
+    },
+    "strategy": {"type": "object"},
+    "seed": {"type": "integer"},
+    "effective_config": {"type": "object"},
+    "rng_contract": {"type": "object"},
+    "versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application", "highway_env", "gymnasium", "python", "git", "platform"],
+      "properties": {
+        "application": {"type": "string", "minLength": 1},
+        "highway_env": {"type": "string", "minLength": 1},
+        "gymnasium": {"type": "string", "minLength": 1},
+        "python": {"type": "string", "minLength": 1},
+        "git": {"type": "string", "minLength": 1},
+        "platform": {"type": "string", "minLength": 1}
+      }
+    },
+    "reward_decomposition": {"type": "object", "additionalProperties": {"type": "number"}},
+    "result": {"type": "string", "minLength": 1},
+    "termination_reason": {"type": "string", "minLength": 1},
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project_id", "temporary_session_id", "created_at"],
+      "properties": {
+        "project_id": {"type": "string", "minLength": 1},
+        "temporary_session_id": {"type": "string", "minLength": 1},
+        "created_at": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

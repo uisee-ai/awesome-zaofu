@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://highwaypilot.local/schemas/websocket/v1.schema.json",
+  "title": "HighwayPilot WebSocket client messages v1",
+  "oneOf": [
+    {"$ref": "#/$defs/command"},
+    {"$ref": "#/$defs/resume_offer"},
+    {"$ref": "#/$defs/resume_commit"}
+  ],
+  "$defs": {
+    "command": {
+      "type": "object",
+      "required": [
+        "protocol_version",
+        "type",
+        "session_id",
+        "command_id",
+        "attachment_epoch",
+        "simulation_generation",
+        "expected_state_seq",
+        "name",
+        "payload"
+      ],
+      "properties": {
+        "protocol_version": {"const": "highwaypilot-ws/v1"},
+        "type": {"const": "command"},
+        "session_id": {"type": "string", "minLength": 1},
+        "command_id": {"type": "string", "minLength": 1},
+        "attachment_epoch": {"type": "integer", "minimum": 0},
+        "simulation_generation": {"type": "integer", "minimum": 0},
+        "expected_state_seq": {"type": "integer", "minimum": 0},
+        "name": {
+          "enum": [
+            "manual.action",
+            "simulation.play",
+            "simulation.pause",
+            "simulation.step",
+            "simulation.reset",
+            "session.close"
+          ]
+        },
+        "payload": {"type": "object"}
+      },
+      "additionalProperties": false
+    },
+    "resume_offer": {
+      "type": "object",
+      "required": [
+        "protocol_version",
+        "type",
+        "session_id",
+        "resume_token",
+        "resume_attempt_id"
+      ],
+      "properties": {
+        "protocol_version": {"const": "highwaypilot-ws/v1"},
+        "type": {"const": "resume.offer"},
+        "session_id": {"type": "string", "minLength": 1},
+        "resume_token": {"type": "string", "pattern": "^[A-Za-z0-9_-]{43}$"},
+        "resume_attempt_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{22}$"}
+      },
+      "additionalProperties": false
+    },
+    "resume_commit": {
+      "type": "object",
+      "required": [
+        "protocol_version",
+        "type",
+        "session_id",
+        "resume_attempt_id",
+        "offer_id"
+      ],
+      "properties": {
+        "protocol_version": {"const": "highwaypilot-ws/v1"},
+        "type": {"const": "resume.commit"},
+        "session_id": {"type": "string", "minLength": 1},
+        "resume_attempt_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{22}$"},
+        "offer_id": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

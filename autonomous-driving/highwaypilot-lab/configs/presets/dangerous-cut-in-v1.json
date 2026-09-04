@@ -1,0 +1,13 @@
+{
+  "schema_version": "construction-config/v1",
+  "scenario_id": "construction-v0",
+  "seed": 404,
+  "road": {"lanes_count": 2, "lane_width_m": 4.0, "length_m": 1000.0, "speed_limit_mps": 30.0},
+  "construction": {"side": "right", "closed_lane_index": 1, "target_lane_index": 0, "zone_start_m": 260.0, "zone_end_m": 340.0, "warning_offsets_m": [120.0, 80.0, 40.0], "cone_spacing_m": 8.0},
+  "ego": {"initial_position_m": 40.0, "initial_speed_mps": 23.0},
+  "traffic": {"vehicles_count": 12, "min_speed_mps": 18.0, "max_speed_mps": 29.0, "density": 1.1, "aggressive_fraction": 0.4},
+  "scenario_events": {"dangerous_cut_in": true, "cut_in_trigger_distance_m": 90.0, "cut_in_vehicle_speed_mps": 17.0},
+  "simulation": {"duration_s": 30.0, "simulation_frequency_hz": 15, "policy_frequency_hz": 5},
+  "observation": {"vehicles_count": 8, "features": ["presence", "x", "y", "vx", "vy", "heading"], "absolute": true, "normalize": false, "order": "sorted"},
+  "reward": {"collision": -2.0, "speed": 0.4, "safe_lane": 0.25, "lane_change": -0.05, "merge_success": 2.0, "ttc": -0.5, "comfort": -0.02}
+}
